@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Base Unit Class
+//Lindsay Cox
+//Last Updated 23/10/11
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -14,47 +18,19 @@ namespace TTG
     public class Unit
     {
         public Rectangle UnitRect;
-        public Texture2D UnitTex;
-        public enum Type
+
+        Texture2D unitTex;
+
+        public virtual void Update()
         {
-            Light,
-            Heavy,
-            Ranged,
-            Aerial,
-            Hero
+            Animate();
         }
 
-        public Type UnitType;
-
-        public void Update()
+        public virtual void Draw(SpriteBatch spritebatch)
         {
-            switch (UnitType)
-            {
-                case Type.Aerial:
-                    {
-                        break;
-                    }
-                case Type.Heavy:
-                    {
-                        break;
-                    }
-                case Type.Hero:
-                    {
-                        break;
-                    }
-                case Type.Light:
-                    {
-                        break;
-                    }
-                case Type.Ranged:
-                    {
-                        break;
-                    }
-            }
+            spritebatch.Draw(unitTex, UnitRect, Color.White);
         }
 
-        public void Draw(SpriteBatch spritebatch)
-        {
-        }
+        
     }
 }

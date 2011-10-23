@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTG", "TTG\TTG\TTG.csproj", "{8D17F6D9-0992-4C4E-97AD-ED838C3ABF8C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "TTGContent", "TTG\TTGContent\TTGContent.contentproj", "{CA8F6B57-409B-4237-952E-88A79397EA3F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,8 +13,6 @@ Global
 		{8D17F6D9-0992-4C4E-97AD-ED838C3ABF8C}.Debug|x86.Build.0 = Debug|x86
 		{8D17F6D9-0992-4C4E-97AD-ED838C3ABF8C}.Release|x86.ActiveCfg = Release|x86
 		{8D17F6D9-0992-4C4E-97AD-ED838C3ABF8C}.Release|x86.Build.0 = Release|x86
-		{CA8F6B57-409B-4237-952E-88A79397EA3F}.Debug|x86.ActiveCfg = Debug|x86
-		{CA8F6B57-409B-4237-952E-88A79397EA3F}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
