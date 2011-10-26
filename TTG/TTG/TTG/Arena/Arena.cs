@@ -37,10 +37,13 @@ namespace TTG
         private List<Unit> _units;
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
+        private Random rand;
 
         public Arena()
         {
             _units = new List<Unit>();
+
+            rand = new Random();
 
             _animationsAttack = new Animation[1];
             _animationsMove = new Animation[1];
@@ -59,6 +62,12 @@ namespace TTG
             foreach (Unit unit in _units)
             {
                 unit.Update(gameTime);
+
+                if (unit.Position.X > 1280 + 100)
+                    unit.Kill();
+
+                if (unit.Position.X < -100)
+                    unit.Kill();
             }
 
             for (int i = 0; i < _units.Count; )
@@ -80,10 +89,12 @@ namespace TTG
 
         public Vector2 GetSpawnPosition(UnitTeam team)
         {
+            float y = rand.Next(400);
+
             if (team == UnitTeam.Player1)
-                return Vector2.Zero;
+                return new Vector2(0, y);
             else
-                return new Vector2(800, 60);
+                return new Vector2(800, y);
         }
 
         public void AddUnit(UnitEnum unit, UnitTeam team)

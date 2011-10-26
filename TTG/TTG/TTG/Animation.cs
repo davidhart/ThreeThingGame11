@@ -111,7 +111,7 @@ namespace TTG
         {
             Rectangle srcRect = _animation.GetFrameRect(_currentFrame);
 
-            spriteBatch.Draw(_animation.Texture, position, srcRect, Color.White, 0.0f, Vector2.Zero, 1.0f, spriteEffects, 0.0f);
+            spriteBatch.Draw(_animation.Texture, position, srcRect, Color.White, 0.0f, Vector2.Zero, 1.0f, spriteEffects, position.Y / 600.0f);
         }
     }
 }

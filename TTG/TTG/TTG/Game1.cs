@@ -22,12 +22,18 @@ namespace TTG
         Arena arena;
         Animation marineMove;
 
+        Random rand;
+
+        float elapsed = 0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 768;
+
+            rand = new Random();
         }
 
         protected override void Initialize()
@@ -41,8 +47,11 @@ namespace TTG
             spriteBatch = new SpriteBatch(GraphicsDevice);
             arena = new Arena();
             arena.LoadContent(Content);
-            arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-            arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+            for (int i = 0; i < 7; ++i)
+            {
+                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+            }
         }
 
         protected override void UnloadContent()
@@ -56,6 +65,24 @@ namespace TTG
                 this.Exit();
             }
 
+            elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            const float chancePerSec = 2;
+            const float probabliltyOfSpawn = 0.2f;
+            while (elapsed > 1 / chancePerSec)
+            {
+                if (rand.NextDouble() < probabliltyOfSpawn)
+                {
+                    arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+                }
+
+                if (rand.NextDouble() < probabliltyOfSpawn)
+                {
+                    arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+                }
+
+                elapsed -= 1 / chancePerSec;
+            }
+
             arena.Update(gameTime);
 
             base.Update(gameTime);
@@ -65,7 +92,7 @@ namespace TTG
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             arena.Draw(spriteBatch);
             spriteBatch.End();
 

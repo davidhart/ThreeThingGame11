@@ -136,6 +136,11 @@ namespace TTG
             _hitPoints = Math.Max(0, _hitPoints - damage);
         }
 
+        public void Kill()
+        {
+            _hitPoints = 0;
+        }
+
         public bool IsDead()
         {
             return _hitPoints <= 0;
