@@ -19,6 +19,9 @@ namespace TTG
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Marine test;
+        Animation marineMove;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -32,7 +35,9 @@ namespace TTG
 
         protected override void LoadContent()
         {
+            marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            test = new Marine(new Vector2(100, 100), marineMove, marineMove);
         }
 
         protected override void UnloadContent()
@@ -41,12 +46,12 @@ namespace TTG
 
         protected override void Update(GameTime gameTime)
         {
-            #region Debug Code
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
                 this.Exit();
             }
-            #endregion
+
+            test.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -55,8 +60,9 @@ namespace TTG
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            #region Debug Code
-            #endregion
+            spriteBatch.Begin();
+            test.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

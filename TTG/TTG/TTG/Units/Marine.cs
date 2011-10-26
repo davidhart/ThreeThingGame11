@@ -17,19 +17,15 @@ namespace TTG
 {
     public class Marine : Unit
     {
-        public override void Initialize(int startX, int startY, Texture2D idleTex, Texture2D moveTex, Texture2D atkTex)
+        public Marine(Vector2 position, Animation moveAnimation, Animation attackAnimation) : 
+            base(position)
         {
-            HP = 20;
-            Attack = 5;
-            Range = 30;
-            Speed = 10;
-            EnergyCost = 10;
-            base.Initialize(startX, startY, idleTex, moveTex, atkTex);
+            PlayAnimation(moveAnimation);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
+            base.Update(gameTime);
         }
     }
 }

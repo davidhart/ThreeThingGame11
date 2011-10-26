@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TTG.Units
 {
+    /*
     public class Juggernaught : Unit
     {
         public override void Initialize(int startX, int startY, Texture2D idleTex, Texture2D moveTex, Texture2D atkTex)
@@ -28,4 +29,5 @@ namespace TTG.Units
             base.Initialize(startX, startY, idleTex, moveTex, atkTex);
         }
     }
+    */
 }

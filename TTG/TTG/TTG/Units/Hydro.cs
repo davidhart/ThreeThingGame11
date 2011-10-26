@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TTG
 {
+    /*
     public class Hydro : Unit
     {
         public override void Draw(GameTime gametime, SpriteBatch spritebatch)
@@ -31,4 +32,5 @@ namespace TTG
             base.Update();
         }
     }
+    */
 }

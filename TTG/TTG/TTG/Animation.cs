@@ -1,199 +1,114 @@
-﻿//Animation Class
-//Lindsay Cox
-//Based on Animation Class from platformer kit
-//Last Updated 26/10/11
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace TTG
 {
     public class Animation
     {
-        //// <summary>
-        /// All frames in the animation arranged horizontally.
-        /// </summary>
         public Texture2D Texture
         {
             get
             {
-                return texture;
+                return _texture;
             }
         }
-        Texture2D texture;
+        private Texture2D _texture;
 
-        /// <summary>
-        /// Duration of time to show each frame.
-        /// </summary>
         public float FrameTime
         {
             get
             {
-                return frameTime;
+                return _frameTime;
             }
         }
-        float frameTime;
+        private float _frameTime;
 
-        /// <summary>
-        /// When the end of the animation is reached, should it
-        /// continue playing from the beginning?
-        /// </summary>
         public bool IsLooping
         {
             get
             {
-                return isLooping;
+                return _isLooping;
             }
         }
-        bool isLooping;
+        private bool _isLooping;
 
-        /// <summary>
-        /// Gets the number of frames in the animation.
-        /// </summary>
-        public int FrameCount
+        public int NumFrames
         {
             get
             {
-                return Texture.Width / FrameWidth;
+                return _numFrames;
             }
         }
+        private int _numFrames;
 
-        /// <summary>
-        /// Gets the width of a frame in the animation.
-        /// </summary>
-        public int FrameWidth
+        private int _numFramesWide;
+        private int _numFramesTall;
+        private int _startIndex;
+
+        public Animation(Texture2D texture, int numFramesWide, int numFramesTall, int startIndex, int numFrames, float frameTime, bool isLooping)
         {
-            // Assume square frames.
-            get
-            {
-                return Texture.Height;
-            }
+            _texture = texture;
+            _frameTime = frameTime;
+            _isLooping = isLooping;
+            _numFramesWide = numFramesWide;
+            _numFramesTall = numFramesTall;
+            _startIndex = startIndex;
+            _numFrames = numFrames;
         }
 
-        /// <summary>
-        /// Gets the height of a frame in the animation.
-        /// </summary>
-        public int FrameHeight
+        public Rectangle GetFrameRect(int frameID)
         {
-            get
-            {
-                return Texture.Height;
-            }
-        }
+            // Frame indices start at the top row incrementing left to right, top to bottom
+            int index = frameID + _startIndex;
 
-        /// <summary>
-        /// Constructors a new animation.
-        /// </summary>        
-        public Animation(Texture2D texture, float frameTime, bool isLooping)
-        {
-            this.texture = texture;
-            this.frameTime = frameTime;
-            this.isLooping = isLooping;
+            int width = Texture.Width / _numFramesWide;
+            int height = Texture.Height / _numFramesTall;
+
+            int x = (index % _numFramesWide) * width;
+            int y = (index / _numFramesWide) * height;
+
+            return new Rectangle(x, y, width, height);
         }
     }
 
-    /// <summary>
-    /// Controls playback of an Animation.
-    /// </summary>
-    struct AnimationPlayer
+    public class AnimationPlayer
     {
-        /// <summary>
-        /// Gets the animation which is currently playing.
-        /// </summary>
-        public Animation Animation
-        {
-            get
-            {
-                return animation;
-            }
-        }
-        Animation animation;
+        private Animation _animation;
+        private int _currentFrame;
+        private double _elapsedTime;
 
-        /// <summary>
-        /// Gets the index of the current frame in the animation.
-        /// </summary>
-        public int FrameIndex
-        {
-            get
-            {
-                return frameIndex;
-            }
-        }
-        int frameIndex;
-
-        /// <summary>
-        /// The amount of time in seconds that the current frame has been shown for.
-        /// </summary>
-        private float time;
-
-        /// <summary>
-        /// Gets a texture origin at the bottom center of each frame.
-        /// </summary>
-        public Vector2 Origin
-        {
-            get
-            {
-                return new Vector2(Animation.FrameWidth / 2.0f, Animation.FrameHeight);
-            }
-        }
-
-        /// <summary>
-        /// Begins or continues playback of an animation.
-        /// </summary>
         public void PlayAnimation(Animation animation)
         {
-            // If this animation is already running, do not restart it.
-            if (Animation == animation)
-            {
-                return;
-            }
-
-            // Start the new animation.
-            this.animation = animation;
-            this.frameIndex = 0;
-            this.time = 0.0f;
+            _animation = animation;
+            _currentFrame = 0;
+            _elapsedTime = 0.0f;
         }
 
-        /// <summary>
-        /// Advances the time position and draws the current frame of the animation.
-        /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        public void Update(GameTime gameTime)
         {
-            if (Animation == null)
+            _elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+            while (_elapsedTime > _animation.FrameTime)
             {
-                throw new NotSupportedException("No animation is currently playing.");
-            }
-
-            // Process passing time.
-            time += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            while (time > Animation.FrameTime)
-            {
-                time -= Animation.FrameTime;
-
                 // Advance the frame index; looping or clamping as appropriate.
-                if (Animation.IsLooping)
+                _elapsedTime -= _animation.FrameTime;
+
+                if (_animation.IsLooping)
                 {
-                    frameIndex = (frameIndex + 1) % Animation.FrameCount;
+                    _currentFrame = (_currentFrame + 1) % _animation.NumFrames;
                 }
                 else
                 {
-                    frameIndex = Math.Min(frameIndex + 1, Animation.FrameCount - 1);
+                    _currentFrame = Math.Min(_currentFrame + 1, _animation.NumFrames - 1);
                 }
             }
+        }
 
-            // Calculate the source rectangle of the current frame.
-            Rectangle source = new Rectangle(FrameIndex * Animation.Texture.Height, 0, Animation.Texture.Height, Animation.Texture.Height);
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        {
+            Rectangle srcRect = _animation.GetFrameRect(_currentFrame);
 
-            // Draw the current frame.
-            spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
+            spriteBatch.Draw(_animation.Texture, position, srcRect, Color.White, 0.0f, Vector2.Zero, 1.0f, spriteEffects, 0.0f);
         }
     }
 }
