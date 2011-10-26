@@ -108,10 +108,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Units\Gunship.cs" />
+    <Compile Include="Units\Hydro.cs" />
+    <Compile Include="Units\Juggernaught.cs" />
+    <Compile Include="Units\Marine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Unit.cs" />
+    <Compile Include="Units\Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
