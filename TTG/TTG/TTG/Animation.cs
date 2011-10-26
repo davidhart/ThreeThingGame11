@@ -80,9 +80,12 @@ namespace TTG
 
         public void PlayAnimation(Animation animation)
         {
-            _animation = animation;
-            _currentFrame = 0;
-            _elapsedTime = 0.0f;
+            if (_animation != animation)
+            {
+                _animation = animation;
+                _currentFrame = 0;
+                _elapsedTime = 0.0f;
+            }
         }
 
         public void Update(GameTime gameTime)

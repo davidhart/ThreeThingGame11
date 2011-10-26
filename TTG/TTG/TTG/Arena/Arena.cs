@@ -50,7 +50,7 @@ namespace TTG
         {
             Texture2D marineTexture = content.Load<Texture2D>("marine");
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
-            _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
+            _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 1, 0.1f, true);
 
         }
 
@@ -105,7 +105,6 @@ namespace TTG
                 {
                     Vector2 direction = unit.Position - attacker.Position;
                     float distance = direction.Length();
-                    Console.WriteLine(distance);
 
                     if (distance < attacker.FollowRange)
                     {
