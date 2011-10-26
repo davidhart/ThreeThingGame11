@@ -19,13 +19,15 @@ namespace TTG
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Marine test;
+        Arena arena;
         Animation marineMove;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 768;
         }
 
         protected override void Initialize()
@@ -37,7 +39,10 @@ namespace TTG
         {
             marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            test = new Marine(new Vector2(100, 100), marineMove, marineMove);
+            arena = new Arena();
+            arena.LoadContent(Content);
+            arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+            arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
         }
 
         protected override void UnloadContent()
@@ -51,7 +56,7 @@ namespace TTG
                 this.Exit();
             }
 
-            test.Update(gameTime);
+            arena.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -61,7 +66,7 @@ namespace TTG
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            test.Draw(spriteBatch);
+            arena.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
