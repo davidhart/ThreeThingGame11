@@ -18,34 +18,24 @@ namespace TTG
         Rectangle _uiRect, _mouseRect;
         bool _clicked = false;
         Arena _arena;
-
-        public enum UnitType
-        {
-            Marine,
-            Hydro,
-            Launcher,
-            Juggernaught,
-            Gunship
-        }
-
-        UnitType _spawnType;
+        UnitEnum _unitEnum;
 
         public UIBtn(
-            Texture2D inBtntex, 
+            Texture2D inBtntex,
             Texture2D inBtnTexClick,
             SoundEffect inBtnSE,
-            int xPos, 
+            int xPos,
             int yPos,
             Arena arena,
-            UnitType type)
+            UnitEnum unitEnum)
         {
             _uiButtonTex = inBtntex;
             _uiButtonTexClick = inBtnTexClick;
             _uiButtonSound = inBtnSE;
-            _uiRect = new Rectangle(xPos, yPos, 128, 128);
-            _mouseRect = new Rectangle(0, 0, 32, 32);
+            _uiRect = new Rectangle(xPos, yPos, 64, 64);
+            _mouseRect = new Rectangle(0, 0, 5, 5);
             _arena = arena;
-            _spawnType = type;
+            _unitEnum = unitEnum;
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -60,39 +50,19 @@ namespace TTG
             }
         }
 
-        public void Update(MouseState mousestate)
+        public void Update(MouseState newMousestate, MouseState oldMouseState)
         {
-            _mouseRect.X = mousestate.X;
-            _mouseRect.Y = mousestate.Y;
+            _mouseRect.X = newMousestate.X;
+            _mouseRect.Y = newMousestate.Y;
 
-            if (_mouseRect.Intersects(_uiRect) && mousestate.LeftButton == ButtonState.Pressed)
+            if (_mouseRect.Intersects(_uiRect) &&
+                newMousestate.LeftButton == ButtonState.Pressed &&
+                oldMouseState.LeftButton == ButtonState.Released)
             {
                 _clicked = true;
+                _arena.AddUnit(_unitEnum, UnitTeam.Player1);
+                _uiButtonSound.Play();
 
-                switch (_spawnType)
-                {
-                    case UnitType.Marine:
-                        {
-                            _arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-                            break;
-                        }
-                    case UnitType.Hydro:
-                        {
-                            break;
-                        }
-                    case UnitType.Launcher:
-                        {
-                            break;
-                        }
-                    case UnitType.Juggernaught:
-                        {
-                            break;
-                        }
-                    case UnitType.Gunship:
-                        {
-                            break;
-                        }
-                }
             }
             else
             {
@@ -100,30 +70,58 @@ namespace TTG
             }
         }
     }
+
     public class UI
     {
         Rectangle _bgRect;
         Texture2D _bgTex;
         UIBtn _marineBtn, _hydroBtn, _launcherBtn, _juggernaughtBtn, _gunshipBtn;
+        Arena _arena;
         public void Load(ContentManager content, Arena arena)
         {
             _bgRect = new Rectangle(
-                0, 720 - 200, (720 / 2), 200);
+                0, 720 - 100, (720 / 2), 100);
             _bgTex = content.Load<Texture2D>("UIBG");
             _marineBtn = new UIBtn(
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
-                content.Load<SoundEffect>("Marine1"),
-                128, (720 - 128), arena, UIBtn.UnitType.Marine);
+                content.Load<SoundEffect>("Talk1"), 
+                12, (720 - 80),
+                arena,
+                UnitEnum.Marine);
+
+            _hydroBtn = new UIBtn(
+                content.Load<Texture2D>("HydroSpawnBtn"),
+                content.Load<Texture2D>("HydroSpawnBtnClick"),
+                content.Load<SoundEffect>("HydroTalk1"),
+                80, 640,
+                arena,
+                UnitEnum.Marine);//Change this
+
+            _launcherBtn = new UIBtn(
+            content.Load<Texture2D>("LauncherSpawnBtn"),
+            content.Load<Texture2D>("LauncherSpawnBtnClick"),
+            content.Load<SoundEffect>("LauncherTalk1"),
+            148, 640,
+            arena,
+            UnitEnum.Marine);//Change this
+
+            _arena = arena;
+
         }
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(_bgTex, _bgRect, Color.White);
+            //spritebatch.Draw(_bgTex, _bgRect, Color.White);
             _marineBtn.Draw(spritebatch);
+            _hydroBtn.Draw(spritebatch);
+            _launcherBtn.Draw(spritebatch);
+            
         }
-        public void Update(MouseState mouse)
+        public void Update(MouseState newMouse, MouseState oldMouse)
         {
-            _marineBtn.Update(mouse);
+            _marineBtn.Update(newMouse, oldMouse);
+            _hydroBtn.Update(newMouse, oldMouse);
+            _launcherBtn.Update(newMouse, oldMouse);
         }
     }
 }

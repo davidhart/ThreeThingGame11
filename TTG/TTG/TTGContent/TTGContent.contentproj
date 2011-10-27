@@ -86,13 +86,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MarineTalk1.mp3">
-      <Name>MarineTalk1</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SongProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AlienTalk1.wav">
       <Name>AlienTalk1</Name>
       <Importer>WavImporter</Importer>
@@ -111,7 +104,7 @@
     <Compile Include="LauncherTalk1.mp3">
       <Name>LauncherTalk1</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
     <Compile Include="Repair.wav">
       <Name>Repair</Name>
@@ -125,6 +118,13 @@
     </Compile>
     <Compile Include="ShipTalk1.wav">
       <Name>ShipTalk1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Talk1.wav">
+      <Name>Talk1</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>

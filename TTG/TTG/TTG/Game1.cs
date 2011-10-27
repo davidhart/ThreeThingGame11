@@ -19,12 +19,24 @@ namespace TTG
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public enum State
+        {
+            Menu,
+            Playing
+        }
+
+        public State GameState = State.Playing;
+
         Arena arena;
         Animation marineMove;
+
+        UI arenaUI;
 
         Random rand;
 
         float elapsed = 0;
+
+        MouseState oldMouseState, newMouseState;
 
         public Game1()
         {
@@ -38,6 +50,8 @@ namespace TTG
 
         protected override void Initialize()
         {
+            this.IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -52,6 +66,8 @@ namespace TTG
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
             }
+            arenaUI = new UI();
+            arenaUI.Load(Content, arena);
         }
 
         protected override void UnloadContent()
@@ -60,40 +76,63 @@ namespace TTG
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            newMouseState = Mouse.GetState();
+            switch (GameState)
             {
-                this.Exit();
+                case State.Menu:
+                    {
+                        break;
+                    }
+                case State.Playing:
+                    {
+                        elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        const float chancePerSec = 2;
+                        const float probabliltyOfSpawn = 0.4f;
+                        while (elapsed > 1 / chancePerSec)
+                        {
+                            if (rand.NextDouble() < probabliltyOfSpawn)
+                            {
+                                //arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+                            }
+
+                            if (rand.NextDouble() < probabliltyOfSpawn)
+                            {
+                                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+                            }
+
+                            elapsed -= 1 / chancePerSec;
+                        }
+
+                        arena.Update(gameTime);
+                        arenaUI.Update(newMouseState, oldMouseState);
+                        break;
+                    }
+                    
             }
 
-            elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            const float chancePerSec = 2;
-            const float probabliltyOfSpawn = 0.2f;
-            while (elapsed > 1 / chancePerSec)
-            {
-                if (rand.NextDouble() < probabliltyOfSpawn)
-                {
-                    arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-                }
-
-                if (rand.NextDouble() < probabliltyOfSpawn)
-                {
-                    arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
-                }
-
-                elapsed -= 1 / chancePerSec;
-            }
-
-            arena.Update(gameTime);
-
+            oldMouseState = newMouseState;
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-            arena.Draw(spriteBatch);
+            switch (GameState)
+            {
+                case State.Menu:
+                    {
+                        break;
+                    }
+                case State.Playing:
+                    {
+                        arena.Draw(spriteBatch);
+                        arenaUI.Draw(spriteBatch);
+                        break;
+                    }
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);

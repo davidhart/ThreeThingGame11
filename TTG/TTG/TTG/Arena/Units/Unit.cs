@@ -49,6 +49,8 @@ namespace TTG
             _animationPlayer = new AnimationPlayer();
             _position = position;
 
+            _animationPlayer.PlayAnimation(animationMove);
+
             _animationMove = animationMove;
             _animationAttack = animationAttack;
 

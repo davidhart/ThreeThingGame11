@@ -64,18 +64,26 @@ namespace TTG
                 unit.Update(gameTime);
 
                 if (unit.Position.X > 1280 + 100)
+                {
                     unit.Kill();
+                }
 
                 if (unit.Position.X < -100)
+                {
                     unit.Kill();
+                }
             }
 
             for (int i = 0; i < _units.Count; )
             {
                 if (_units[i].IsDead())
+                {
                     _units.RemoveAt(i);
+                }
                 else
+                {
                     ++i;
+                }
             }
         }
 
@@ -92,9 +100,13 @@ namespace TTG
             float y = rand.Next(400);
 
             if (team == UnitTeam.Player1)
+            {
                 return new Vector2(0, y);
+            }
             else
+            {
                 return new Vector2(800, y);
+            }
         }
 
         public void AddUnit(UnitEnum unit, UnitTeam team)
