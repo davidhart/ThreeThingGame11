@@ -60,7 +60,7 @@ namespace TTG
             marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             arena = new Arena();
-            arena.LoadContent(Content);
+            arena.LoadContent(Content, GraphicsDevice);
             for (int i = 0; i < 7; ++i)
             {
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);

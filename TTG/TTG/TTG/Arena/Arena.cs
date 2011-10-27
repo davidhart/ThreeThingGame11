@@ -41,6 +41,8 @@ namespace TTG
         private Random rand;
         Music _bgm;
 
+        MarineShotBatch _marineShotBatch;
+
         public Arena()
         {
             _units = new List<Unit>();
@@ -51,12 +53,14 @@ namespace TTG
             _animationsMove = new Animation[1];
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             Texture2D marineTexture = content.Load<Texture2D>("marine");
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 1, 0.1f, true);
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
+
+            _marineShotBatch = new MarineShotBatch(device);
         }
 
         public void Update(GameTime gameTime)
@@ -88,6 +92,8 @@ namespace TTG
                     ++i;
                 }
             }
+
+            _marineShotBatch.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -96,6 +102,8 @@ namespace TTG
             {
                 unit.Draw(spritebatch);
             }
+
+            _marineShotBatch.Draw();
         }
 
         public Vector2 GetSpawnPosition(UnitTeam team)
@@ -144,6 +152,11 @@ namespace TTG
             }
 
             return target;
+        }
+
+        public void AddMarineShot(Unit attacker, Unit target)
+        {
+            _marineShotBatch.AddShot(attacker, target);
         }
     }
 }

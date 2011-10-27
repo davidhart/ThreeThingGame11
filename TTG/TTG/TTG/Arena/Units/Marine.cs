@@ -23,5 +23,11 @@ namespace TTG
             _attackRange = 200;
             _followRange = 280;
         }
+
+        protected override void OnAttack(Unit target)
+        {
+            _arena.AddMarineShot(this, target);
+            base.OnAttack(target);
+        }
     }
 }

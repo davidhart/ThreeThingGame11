@@ -19,7 +19,7 @@ namespace TTG
         protected float _attackSpeed;
         protected float _moveSpeed;
         protected int _hitPoints;
-        Unit _target;
+        private Unit _target;
 
         protected TargetUnitType _targetType;
         protected UnitType _type;
@@ -86,7 +86,7 @@ namespace TTG
                     {
                         _nextAttack += _attackSpeed;
                         _target.TakeDamage(_attackDamage);
-                        _animationPlayer.PlayAnimation(_animationAttack);
+                        OnAttack(_target);
                     }
                 }
                 else
@@ -162,6 +162,17 @@ namespace TTG
                 return false;
 
             return true;
+        }
+
+        public virtual Rectangle GetRect()
+        {
+            Rectangle r = _animationMove.GetFrameRect(0);
+            return new Rectangle(0, 0, r.Width, r.Height);
+        }
+
+        protected virtual void OnAttack(Unit target)
+        {
+            _animationPlayer.PlayAnimation(_animationAttack);
         }
     }
 }
