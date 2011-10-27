@@ -128,6 +128,8 @@ namespace TTG
 
                 if (targetDir < 0)
                     flip = SpriteEffects.FlipHorizontally;
+                else
+                    flip = SpriteEffects.None;
             }
 
             _animationPlayer.Draw(spritebatch, new Vector2((float)Math.Floor(_position.X), (float)Math.Floor(_position.Y)), flip);
