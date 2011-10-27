@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TTG
 {
@@ -38,6 +39,7 @@ namespace TTG
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
         private Random rand;
+        Music _bgm;
 
         public Arena()
         {
@@ -54,11 +56,12 @@ namespace TTG
             Texture2D marineTexture = content.Load<Texture2D>("marine");
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 1, 0.1f, true);
-
+            _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
         }
 
         public void Update(GameTime gameTime)
         {
+            _bgm.Play();
             foreach (Unit unit in _units)
             {
                 unit.Update(gameTime);

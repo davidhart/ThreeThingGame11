@@ -1,8 +1,4 @@
-﻿//Marine Class
-//Lindsay Cox
-//Last Updated 26/10/11
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;

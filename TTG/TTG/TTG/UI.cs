@@ -77,8 +77,11 @@ namespace TTG
         Texture2D _bgTex;
         UIBtn _marineBtn, _hydroBtn, _launcherBtn, _juggernaughtBtn, _gunshipBtn;
         Arena _arena;
+        SpriteFont _font;
         public void Load(ContentManager content, Arena arena)
         {
+            _font = content.Load<SpriteFont>("UIFont");
+
             _bgRect = new Rectangle(
                 0, 720 - 100, (720 / 2), 100);
             _bgTex = content.Load<Texture2D>("UIBG");
@@ -112,6 +115,7 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             //spritebatch.Draw(_bgTex, _bgRect, Color.White);
+            spritebatch.DrawString(_font, "ENERGY:", new Vector2(12, 600), Color.White);
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _launcherBtn.Draw(spritebatch);
