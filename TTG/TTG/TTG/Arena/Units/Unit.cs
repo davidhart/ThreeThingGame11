@@ -13,7 +13,10 @@ namespace TTG
 
         public float FollowRange
         {
-            get { return _followRange; }
+            get 
+            { 
+                return _followRange; 
+            }
         }
 
         protected float _attackSpeed;
@@ -28,7 +31,10 @@ namespace TTG
         protected Vector2 _position;
         public Vector2 Position
         {
-            get { return _position; }
+            get 
+            { 
+                return _position; 
+            }
         }
 
         protected Arena _arena;

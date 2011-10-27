@@ -40,11 +40,14 @@ namespace TTG
         private Animation[] _animationsMove;
         private Random rand;
         Music _bgm;
+        public int P1Energy, P2Energy, MaxEnergy;
 
         MarineShotBatch _marineShotBatch;
 
         public Arena()
         {
+            P1Energy = 200;
+            P2Energy = 200;
             _units = new List<Unit>();
 
             rand = new Random();
@@ -59,7 +62,6 @@ namespace TTG
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 1, 0.1f, true);
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
-
             _marineShotBatch = new MarineShotBatch(device);
         }
 

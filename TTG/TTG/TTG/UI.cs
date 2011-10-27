@@ -14,11 +14,12 @@ namespace TTG
     public class UIBtn
     {
         Texture2D _uiButtonTex, _uiButtonTexClick;
-        SoundEffect _uiButtonSound;
+        SoundEffect _uiButtonSound, _uiNoSpawnSound;
         Rectangle _uiRect, _mouseRect;
         bool _clicked = false;
         Arena _arena;
         UnitEnum _unitEnum;
+        int _energyUse;
 
         public UIBtn(
             Texture2D inBtntex,
@@ -27,7 +28,9 @@ namespace TTG
             int xPos,
             int yPos,
             Arena arena,
-            UnitEnum unitEnum)
+            UnitEnum unitEnum,
+            int energyUse,
+            SoundEffect noSpawn)
         {
             _uiButtonTex = inBtntex;
             _uiButtonTexClick = inBtnTexClick;
@@ -36,6 +39,8 @@ namespace TTG
             _mouseRect = new Rectangle(0, 0, 5, 5);
             _arena = arena;
             _unitEnum = unitEnum;
+            _energyUse = energyUse;
+            _uiNoSpawnSound = noSpawn;
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -57,11 +62,22 @@ namespace TTG
 
             if (_mouseRect.Intersects(_uiRect) &&
                 newMousestate.LeftButton == ButtonState.Pressed &&
-                oldMouseState.LeftButton == ButtonState.Released)
+                oldMouseState.LeftButton == ButtonState.Released &&
+                _arena.P1Energy >= _energyUse)
             {
                 _clicked = true;
                 _arena.AddUnit(_unitEnum, UnitTeam.Player1);
+                _arena.P1Energy -= _energyUse;
                 _uiButtonSound.Play();
+
+            }
+            else if (_mouseRect.Intersects(_uiRect) &&
+            newMousestate.LeftButton == ButtonState.Pressed &&
+            oldMouseState.LeftButton == ButtonState.Released &&
+            _arena.P1Energy < _energyUse)
+            {
+                _clicked = true;
+                _uiNoSpawnSound.Play();
 
             }
             else
@@ -91,7 +107,8 @@ namespace TTG
                 content.Load<SoundEffect>("Talk1"), 
                 12, (720 - 80),
                 arena,
-                UnitEnum.Marine);
+                UnitEnum.Marine, 10,
+                content.Load<SoundEffect>("NoSpawn"));
 
             _hydroBtn = new UIBtn(
                 content.Load<Texture2D>("HydroSpawnBtn"),
@@ -99,15 +116,19 @@ namespace TTG
                 content.Load<SoundEffect>("HydroTalk1"),
                 80, 640,
                 arena,
-                UnitEnum.Marine);//Change this
+                UnitEnum.Marine, 30,
+                content.Load<SoundEffect>("NoSpawn"));
 
             _launcherBtn = new UIBtn(
             content.Load<Texture2D>("LauncherSpawnBtn"),
             content.Load<Texture2D>("LauncherSpawnBtnClick"),
             content.Load<SoundEffect>("LauncherTalk1"),
             148, 640,
-            arena,
-            UnitEnum.Marine);//Change this
+            arena, //Change this
+            UnitEnum.Marine,
+            40,
+            content.Load<SoundEffect>("NoSpawn")
+            );
 
             _arena = arena;
 
@@ -115,7 +136,7 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             //spritebatch.Draw(_bgTex, _bgRect, Color.White);
-            spritebatch.DrawString(_font, "ENERGY:", new Vector2(12, 600), Color.White);
+            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(12, 600), Color.White);
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _launcherBtn.Draw(spritebatch);
