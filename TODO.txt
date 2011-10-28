@@ -1,0 +1,32 @@
+[Priority] Task
+
+Graphics:
+[1] Player's base
+[1] Icons in puzzle
+[2] Sprites and animations for hydro
+[3] Sprites and animations for launcher
+[4] Sprites and animations for gunship
+[1] Sprites and animations for Embers
+[2] Sprites and animations for Pyro
+[3] Sprites and animations for Rock Mech
+[4] Sprites and animations for  Dragon
+[4] Sprites for commander abilities
+[3] Graphics for title screen
+[2] UI buttons
+[1] HP bar
+[3] Particle effect graphics
+
+Sounds:
+[4] Enemy race
+[3] Puzzle matches, swap noises, combos etc
+[2] Death sounds, weapon sounds, base explosion
+
+Programming:
+[2] Particle systems for rockets, hydro/flame thrower, dead units
+[1] Match 3 Puzzle game
+[1] Health bars
+[4] Commander abilities
+
+Tweaks:
+[-] Button sound when not enough energy needs to be quieter
+[-] Move unit base stats into a separate struct and file to ease unit balance
