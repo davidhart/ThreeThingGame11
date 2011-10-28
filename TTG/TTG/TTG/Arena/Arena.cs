@@ -94,15 +94,15 @@ namespace TTG
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             Texture2D marineTexture = content.Load<Texture2D>("marine");
-            _animationsAttack[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 3, 0.1f, true);
-            _animationsMove[(int)UnitEnum.Marine] = new Animation(marineTexture, 3, 1, 0, 1, 0.1f, true);
+            _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marineWalk"), 4, 1, 0, 4, 0.15f, true);
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
             _marineShotBatch = new MarineShotBatch(device);
         }
 
         public void Update(GameTime gameTime)
         {
-            _bgm.Play();
+            //_bgm.Play();
             foreach (Unit unit in _units)
             {
                 unit.Update(gameTime);

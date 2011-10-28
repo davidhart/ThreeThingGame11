@@ -20,22 +20,13 @@ namespace TTG
 
         public MarineShot(Unit attacker, Unit target)
         {
-            _direction = target.Position - attacker.Position;
-
-            Vector2 offset;
-
-            if (_direction.X > 0)
-            {
-                offset = new Vector2(29, 45);
-            }
-            else
-            {
-                offset = new Vector2(3, 45);
-            }
+            Vector2 offset = new Vector2(30, 30);
 
             _start = attacker.Position + offset;
             Rectangle r = target.GetRect();
-            _end = target.Position + new Vector2(r.Width / 2, r.Height / 2); // TODO: random target point
+            _end = target.Position + Util.RandVector(r.Width, r.Height); // TODO: random target point
+
+            _direction = _end -  _start;
 
             _target = target;
             _attacker = attacker;

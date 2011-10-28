@@ -197,6 +197,7 @@ namespace TTG
         protected virtual void OnAttack(Unit target)
         {
             _animationPlayer.PlayAnimation(_animationAttack);
+            _animationPlayer.ResetAnimation();
         }
     }
 }

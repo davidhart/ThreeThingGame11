@@ -88,6 +88,12 @@ namespace TTG
             }
         }
 
+        public void ResetAnimation()
+        {
+            _currentFrame = 0;
+            _elapsedTime = 0.0f;
+        }
+
         public void Update(GameTime gameTime)
         {
             _elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;

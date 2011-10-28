@@ -120,6 +120,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Arena\Units\Unit.cs" />
     <Compile Include="UI.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
