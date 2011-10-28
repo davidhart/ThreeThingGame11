@@ -8,6 +8,14 @@ namespace TTG
     public class Unit
     {
         protected int _attackDamage;
+        public int AttackDamage
+        {
+            get
+            {
+                return _attackDamage;
+            }
+        }
+
         protected float _attackRange;
         protected float _followRange;
 
@@ -46,6 +54,9 @@ namespace TTG
 
         private float _nextAttack;
 
+        private float _hitCooldown;
+        private const float _hitDuration = 0.1f;
+
         public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
         {
             _targetType = TargetUnitType.Any;
@@ -63,6 +74,8 @@ namespace TTG
             _arena = arena;
 
             _target = null;
+
+            _hitCooldown = 0;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -117,6 +130,7 @@ namespace TTG
             }
 
             _animationPlayer.Update(gameTime);
+            _hitCooldown = Math.Max(0, _hitCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         public virtual void Draw(SpriteBatch spritebatch)
@@ -138,12 +152,16 @@ namespace TTG
                     flip = SpriteEffects.None;
             }
 
-            _animationPlayer.Draw(spritebatch, new Vector2((float)Math.Floor(_position.X), (float)Math.Floor(_position.Y)), flip);
+            Color color = Color.Lerp(Color.White, Color.IndianRed, _hitCooldown / _hitDuration);
+
+            spritebatch.Draw(_animationPlayer.GetCurrentFrameTexture(), new Vector2((float)Math.Floor(_position.X), (float)Math.Floor(_position.Y)), 
+                _animationPlayer.GetCurrentFrameRectangle(), color, 0, Vector2.Zero, 1, flip, _position.Y / 600);
         }
 
         public void TakeDamage(int damage)
         {
             _hitPoints = Math.Max(0, _hitPoints - damage);
+            _hitCooldown = _hitDuration;
         }
 
         public void Kill()

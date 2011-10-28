@@ -107,11 +107,14 @@ namespace TTG
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        public Rectangle GetCurrentFrameRectangle()
         {
-            Rectangle srcRect = _animation.GetFrameRect(_currentFrame);
+            return _animation.GetFrameRect(_currentFrame);
+        }
 
-            spriteBatch.Draw(_animation.Texture, position, srcRect, Color.White, 0.0f, Vector2.Zero, 1.0f, spriteEffects, position.Y / 600.0f);
+        public Texture2D GetCurrentFrameTexture()
+        {
+            return _animation.Texture;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace TTG
         private Vector2 _start;
         private Vector2 _end;
         private Vector2 _direction;
+        private Unit _target;
+        private Unit _attacker;
 
         public MarineShot(Unit attacker, Unit target)
         {
@@ -35,12 +37,17 @@ namespace TTG
             Rectangle r = target.GetRect();
             _end = target.Position + new Vector2(r.Width / 2, r.Height / 2); // TODO: random target point
 
+            _target = target;
+            _attacker = attacker;
             _elapsed = 0;
         }
 
         public void Update(GameTime gameTime)
         {
             _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_elapsed > _lifetime)
+                _target.TakeDamage(_attacker.AttackDamage);
         }
 
         public float PercentAlive()
@@ -104,7 +111,9 @@ namespace TTG
                 _shots[i].Update(gameTime);
 
                 if (_shots[i].IsDead())
+                {
                     _shots.RemoveAt(i);
+                }
                 else
                     ++i;
             }
