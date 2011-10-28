@@ -39,8 +39,41 @@ namespace TTG
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
         private Random rand;
-        Music _bgm;
-        public int P1Energy, P2Energy, MaxEnergy;
+
+        int _p1Energy, _p2Energy, _maxEnergy;
+        public int P1Energy
+        {
+            get
+            {
+                return _p1Energy;
+            }
+            set
+            {
+                _p1Energy = value;
+            }
+        }
+        public int P2Energy
+        {
+            get
+            {
+                return _p2Energy;
+            }
+            set
+            {
+                _p2Energy = value;
+            }
+        }
+        public int MaxEnergy
+        {
+            get
+            {
+                return _maxEnergy;
+            }
+            set
+            {
+                _maxEnergy = value;
+            }
+        }
 
         MarineShotBatch _marineShotBatch;
 
@@ -55,6 +88,8 @@ namespace TTG
             _animationsAttack = new Animation[1];
             _animationsMove = new Animation[1];
         }
+
+        Music _bgm;
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
