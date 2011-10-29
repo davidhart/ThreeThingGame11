@@ -31,7 +31,10 @@ namespace TTG
 
         Texture2D _blockSelection;
 
-        public PuzzleGrid(int gr, int gc, int xPos, int yPos)
+        // To replenish energy
+        Arena _arena;
+
+        public PuzzleGrid(int gr, int gc, int xPos, int yPos, Arena arena)
         {
             // Location to start drawing on screen
             _x = xPos;
@@ -45,6 +48,8 @@ namespace TTG
 
             _cursorX = -1;
             _cursorY = -1;
+
+            _arena = arena;
 
             //PopulateGrid();
         }
@@ -318,6 +323,7 @@ namespace TTG
                 foreach (Block b in xMatches)
                 {
                     b.Remove();
+                    _arena.P1Energy += b.GetEnergy();
                 }
 
                 matches = true;
@@ -328,6 +334,7 @@ namespace TTG
                 foreach (Block b in yMatches)
                 {
                     b.Remove();
+                    _arena.P1Energy += b.GetEnergy();
                 }
                 matches = true;
             }

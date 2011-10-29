@@ -11,11 +11,13 @@ namespace TTG
     {
         int _id;
         bool _remove;
+        int _energy;
 
         public Block(int id)
         {
             _id = id;
             _remove = false;
+            _energy = 5;
         }
 
         public Block(int id, bool remove)
@@ -27,6 +29,11 @@ namespace TTG
         public int GetID()
         {
             return _id;
+        }
+
+        public int GetEnergy()
+        {
+            return _energy;
         }
 
         public void Remove()
