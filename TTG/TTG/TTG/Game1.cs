@@ -11,21 +11,21 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TTG
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
+    public enum State
+    {
+        Menu,
+        Playing
+    }
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public enum State
-        {
-            Menu,
-            Playing
-        }
+       
+        public State GameState = State.Menu;
 
-        public State GameState = State.Playing;
+        TitleScreen titlescreen = new TitleScreen();
 
         Arena arena;
         Animation marineMove;
@@ -59,6 +59,7 @@ namespace TTG
 
         protected override void LoadContent()
         {
+            titlescreen.Load(Content);
             marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             arena = new Arena(1280, 200);
@@ -88,6 +89,7 @@ namespace TTG
             {
                 case State.Menu:
                     {
+                        titlescreen.Update(newMouseState, oldMouseState);
                         break;
                     }
                 case State.Playing:
@@ -133,12 +135,11 @@ namespace TTG
             {
                 case State.Menu:
                     {
+                        titlescreen.Draw(spriteBatch);
                         break;
                     }
                 case State.Playing:
                     {
-                        
-
                         arena.Draw(spriteBatch);
                         arena.DrawOntoScreen(new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
                         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
