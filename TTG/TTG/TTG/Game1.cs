@@ -59,7 +59,7 @@ namespace TTG
         {
             marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            arena = new Arena();
+            arena = new Arena(1280, 200);
             arena.LoadContent(Content, GraphicsDevice);
             for (int i = 0; i < 7; ++i)
             {
@@ -118,7 +118,6 @@ namespace TTG
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             switch (GameState)
             {
                 case State.Menu:
@@ -128,12 +127,13 @@ namespace TTG
                 case State.Playing:
                     {
                         arena.Draw(spriteBatch);
+                        arena.DrawOntoScreen(spriteBatch, new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
+                        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
                         arenaUI.Draw(spriteBatch);
+                        spriteBatch.End();
                         break;
                     }
             }
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }

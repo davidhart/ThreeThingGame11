@@ -35,10 +35,31 @@ namespace TTG
 
     public class Arena
     {
-        private List<Unit> _units;
+        private List<Target> _units;
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
-        private Random rand;
+        private Base _p1Base;
+        private Base _p2Base;
+
+        private int _displayHeight;
+        public int DisplayHeight
+        {
+            get
+            {
+                return _displayHeight;
+            }
+        }
+
+        private int _displayWidth;
+        public int DisplayWidth
+        {
+            get
+            {
+                return _displayWidth;
+            }
+        }
+
+        private RenderTarget2D _renderTarget;
 
         int _p1Energy, _p2Energy, _maxEnergy;
         public int P1Energy
@@ -76,14 +97,16 @@ namespace TTG
         }
 
         MarineShotBatch _marineShotBatch;
+        GraphicsDevice _graphics;
 
-        public Arena()
+        public Arena(int displayWidth, int displayHeight)
         {
             P1Energy = 200;
             P2Energy = 200;
-            _units = new List<Unit>();
+            _units = new List<Target>();
 
-            rand = new Random();
+            _displayWidth = displayWidth;
+            _displayHeight = displayHeight;
 
             _animationsAttack = new Animation[1];
             _animationsMove = new Animation[1];
@@ -93,28 +116,39 @@ namespace TTG
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
+            _graphics = device;
+            _renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
+                device.PresentationParameters.DepthStencilFormat);
+
             Texture2D marineTexture = content.Load<Texture2D>("marine");
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marineWalk"), 4, 1, 0, 4, 0.15f, true);
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
-            _marineShotBatch = new MarineShotBatch(device);
+            _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
+
+            Texture2D baseTexture = content.Load<Texture2D>("marine");
+            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player1, baseTexture);
+            _p2Base = new Base(new Vector2(_displayWidth - baseTexture.Width, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player2, content.Load<Texture2D>("marine"));
+
+            _units.Add(_p1Base);
+            _units.Add(_p2Base);
         }
 
         public void Update(GameTime gameTime)
         {
             //_bgm.Play();
-            foreach (Unit unit in _units)
+            foreach (Target target in _units)
             {
-                unit.Update(gameTime);
+                target.Update(gameTime);
 
-                if (unit.Position.X > 1280 + 100)
+                if (target.Position.X > 1280 + 100)
                 {
-                    unit.Kill();
+                    target.Kill();
                 }
 
-                if (unit.Position.X < -100)
+                if (target.Position.X < -100)
                 {
-                    unit.Kill();
+                    target.Kill();
                 }
             }
 
@@ -135,25 +169,42 @@ namespace TTG
 
         public void Draw(SpriteBatch spritebatch)
         {
-            foreach (Unit unit in _units)
+            _graphics.SetRenderTarget(_renderTarget);
+            _graphics.Clear(Color.Black);
+
+            spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+            foreach (Target target in _units)
             {
-                unit.Draw(spritebatch);
+                target.Draw(spritebatch);
             }
 
+            spritebatch.End();
+
             _marineShotBatch.Draw();
+
+            _graphics.SetRenderTarget(null);
+        }
+
+        public void DrawOntoScreen(SpriteBatch spritebatch, Vector2 position)
+        {
+            spritebatch.Begin();
+
+            spritebatch.Draw(_renderTarget, position, Color.White);
+
+            spritebatch.End();
         }
 
         public Vector2 GetSpawnPosition(UnitTeam team)
         {
-            float y = rand.Next(400);
+            float y = 40 + Util.Rand(_displayHeight - 80);
 
             if (team == UnitTeam.Player1)
             {
-                return new Vector2(0, y);
+                return new Vector2(40, y);
             }
             else
             {
-                return new Vector2(800, y);
+                return new Vector2(_displayWidth-40, y);
             }
         }
 
@@ -165,16 +216,16 @@ namespace TTG
             }
         }
 
-        public Unit AcquireTarget(Unit attacker)
+        public Target AcquireTarget(Unit attacker)
         {
-            Unit target = null;
+            Target bestTarget = null;
             float closest = -1;
 
-            foreach (Unit unit in _units)
+            foreach (Target target in _units)
             {
-                if (attacker.CanTarget(unit))
+                if (attacker.CanTarget(target))
                 {
-                    Vector2 direction = unit.Position - attacker.Position;
+                    Vector2 direction = target.Position - attacker.Position;
                     float distance = direction.Length();
 
                     if (distance < attacker.FollowRange)
@@ -182,16 +233,16 @@ namespace TTG
                         if (closest < 0 || distance < closest)
                         {
                             closest = distance;
-                            target = unit;
+                            bestTarget = target;
                         }
                     }
                 }
             }
 
-            return target;
+            return bestTarget;
         }
 
-        public void AddMarineShot(Unit attacker, Unit target)
+        public void AddMarineShot(Unit attacker, Target target)
         {
             _marineShotBatch.AddShot(attacker, target);
         }

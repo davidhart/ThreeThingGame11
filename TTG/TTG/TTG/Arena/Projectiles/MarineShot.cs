@@ -15,10 +15,10 @@ namespace TTG
         private Vector2 _start;
         private Vector2 _end;
         private Vector2 _direction;
-        private Unit _target;
+        private Target _target;
         private Unit _attacker;
 
-        public MarineShot(Unit attacker, Unit target)
+        public MarineShot(Unit attacker, Target target)
         {
             Vector2 offset = new Vector2(30, 30);
 
@@ -69,7 +69,7 @@ namespace TTG
         GraphicsDevice _graphics;
         BasicEffect _effect;
 
-        public MarineShotBatch(GraphicsDevice graphics)
+        public MarineShotBatch(GraphicsDevice graphics, int displayWidth, int displayHeight)
         {
             _graphics = graphics;
             _shots = new List<MarineShot>();
@@ -78,8 +78,8 @@ namespace TTG
 
             Matrix projectionMatrix = Matrix.CreateOrthographicOffCenter(
                 0,
-                (float)_graphics.Viewport.Width,
-                (float)_graphics.Viewport.Height,
+                (float)displayWidth,
+                (float)displayHeight,
                 0,
                 1.0f, 1000.0f);
 
@@ -90,7 +90,7 @@ namespace TTG
             _effect.View = viewMatrix;
         }
 
-        public void AddShot(Unit attacker, Unit target)
+        public void AddShot(Unit attacker, Target target)
         {
             _shots.Add(new MarineShot(attacker, target));
         }

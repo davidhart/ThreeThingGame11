@@ -21,10 +21,10 @@ namespace TTG
             _attackSpeed = 0.3f;
             _attackDamage = 3;
             _attackRange = 200;
-            _followRange = 280;
+            _followRange = 500;
         }
 
-        protected override void OnAttack(Unit target)
+        protected override void OnAttack(Target target)
         {
             _arena.AddMarineShot(this, target);
             base.OnAttack(target);

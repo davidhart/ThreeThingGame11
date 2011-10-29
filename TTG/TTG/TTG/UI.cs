@@ -105,7 +105,7 @@ namespace TTG
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
                 content.Load<SoundEffect>("Talk1"), 
-                12, (720 - 80),
+                12, 0,
                 arena,
                 UnitEnum.Marine, 10,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -114,7 +114,7 @@ namespace TTG
                 content.Load<Texture2D>("HydroSpawnBtn"),
                 content.Load<Texture2D>("HydroSpawnBtnClick"),
                 content.Load<SoundEffect>("HydroTalk1"),
-                80, 640,
+                12, 64,
                 arena,
                 UnitEnum.Marine, 30,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -123,7 +123,7 @@ namespace TTG
             content.Load<Texture2D>("LauncherSpawnBtn"),
             content.Load<Texture2D>("LauncherSpawnBtnClick"),
             content.Load<SoundEffect>("LauncherTalk1"),
-            148, 640,
+            12, 128,
             arena, //Change this
             UnitEnum.Marine,
             40,
@@ -136,7 +136,7 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             //spritebatch.Draw(_bgTex, _bgRect, Color.White);
-            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(12, 600), Color.White);
+            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(400, 500), Color.White);
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _launcherBtn.Draw(spritebatch);

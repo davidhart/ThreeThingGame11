@@ -5,7 +5,7 @@ using System;
 
 namespace TTG
 {
-    public class Unit
+    public abstract class Unit : Target
     {
         protected int _attackDamage;
         public int AttackDamage
@@ -29,56 +29,35 @@ namespace TTG
 
         protected float _attackSpeed;
         protected float _moveSpeed;
-        protected int _hitPoints;
-        private Unit _target;
+        private Target _target;
 
         protected TargetUnitType _targetType;
-        protected UnitType _type;
-        private UnitTeam _team;
-
-        protected Vector2 _position;
-        public Vector2 Position
-        {
-            get 
-            { 
-                return _position; 
-            }
-        }
-
-        protected Arena _arena;
 
         private AnimationPlayer _animationPlayer;
-
+        
+        protected Arena _arena;
         protected Animation _animationMove;
         protected Animation _animationAttack;
 
         private float _nextAttack;
 
-        private float _hitCooldown;
-        private const float _hitDuration = 0.1f;
-
         public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
+            : base(position, team)
         {
             _targetType = TargetUnitType.Any;
             _type = UnitType.Ground;
-            _team = team;
+            _arena = arena;
 
             _animationPlayer = new AnimationPlayer();
-            _position = position;
-
             _animationPlayer.PlayAnimation(animationMove);
 
             _animationMove = animationMove;
             _animationAttack = animationAttack;
 
-            _arena = arena;
-
             _target = null;
-
-            _hitCooldown = 0;
         }
 
-        public virtual void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             // attack
             _nextAttack -= (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -90,7 +69,7 @@ namespace TTG
 
             if (_target != null)
             {
-                Vector2 direction = _target._position - _position;
+                Vector2 direction = _target.Position - _position;
                 float distance = direction.Length();
 
                 if (distance > _followRange)
@@ -130,10 +109,10 @@ namespace TTG
             }
 
             _animationPlayer.Update(gameTime);
-            _hitCooldown = Math.Max(0, _hitCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
+            base.Update(gameTime);
         }
 
-        public virtual void Draw(SpriteBatch spritebatch)
+        public override void Draw(SpriteBatch spritebatch)
         {
             SpriteEffects flip = SpriteEffects.None;
 
@@ -144,7 +123,7 @@ namespace TTG
 
             if (_target != null && !_target.IsDead())
             {
-                float targetDir = _target._position.X - _position.X;
+                float targetDir = _target.Position.X - _position.X;
 
                 if (targetDir < 0)
                     flip = SpriteEffects.FlipHorizontally;
@@ -152,49 +131,31 @@ namespace TTG
                     flip = SpriteEffects.None;
             }
 
-            Color color = Color.Lerp(Color.White, Color.IndianRed, _hitCooldown / _hitDuration);
-
             spritebatch.Draw(_animationPlayer.GetCurrentFrameTexture(), new Vector2((float)Math.Floor(_position.X), (float)Math.Floor(_position.Y)), 
-                _animationPlayer.GetCurrentFrameRectangle(), color, 0, Vector2.Zero, 1, flip, _position.Y / 600);
+                _animationPlayer.GetCurrentFrameRectangle(), GetHitColor(), 0, Vector2.Zero, 1, flip, _position.Y / 600);
         }
 
-        public void TakeDamage(int damage)
+        public bool CanTarget(Target target)
         {
-            _hitPoints = Math.Max(0, _hitPoints - damage);
-            _hitCooldown = _hitDuration;
-        }
-
-        public void Kill()
-        {
-            _hitPoints = 0;
-        }
-
-        public bool IsDead()
-        {
-            return _hitPoints <= 0;
-        }
-
-        public bool CanTarget(Unit target)
-        {
-            if (target._team == _team)
+            if (target.Team == _team)
                 return false;
 
-            if (target._type == UnitType.Air && _targetType == TargetUnitType.GroundOnly)
+            if (target.Type == UnitType.Air && _targetType == TargetUnitType.GroundOnly)
                 return false;
 
-            if (target._type == UnitType.Ground && _targetType == TargetUnitType.AirOnly)
+            if (target.Type == UnitType.Ground && _targetType == TargetUnitType.AirOnly)
                 return false;
 
             return true;
         }
 
-        public virtual Rectangle GetRect()
+        public override Rectangle GetRect()
         {
             Rectangle r = _animationMove.GetFrameRect(0);
             return new Rectangle(0, 0, r.Width, r.Height);
         }
 
-        protected virtual void OnAttack(Unit target)
+        protected virtual void OnAttack(Target target)
         {
             _animationPlayer.PlayAnimation(_animationAttack);
             _animationPlayer.ResetAnimation();
