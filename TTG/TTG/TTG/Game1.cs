@@ -114,7 +114,7 @@ namespace TTG
                         arenaUI.Update(newMouseState, oldMouseState);
 
                         // Puzzle
-                        _puzzleGrid.Update(gameTime);
+                        _puzzleGrid.Update(gameTime, newMouseState, oldMouseState);
 
                         break;
                     }

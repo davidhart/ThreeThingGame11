@@ -29,6 +29,8 @@ namespace TTG
 
         Texture2D[] _blockTexture;
 
+        Texture2D _blockSelection;
+
         public PuzzleGrid(int gr, int gc, int xPos, int yPos)
         {
             // Location to start drawing on screen
@@ -83,7 +85,7 @@ namespace TTG
                             }
                         }
                         
-                        _grid[row, col] = new Block(blockType, _blockTexture[blockType], _x + (col * 64), _y + (row * 64));
+                        _grid[row, col] = new Block(blockType);
 
                         isBlockOK = true;
                     }
@@ -103,14 +105,17 @@ namespace TTG
             _blockTexture[2] = content.Load<Texture2D>("Block3");
             _blockTexture[3] = content.Load<Texture2D>("Block4");
             _blockTexture[4] = content.Load<Texture2D>("Block5");
+
+            _blockSelection = content.Load<Texture2D>("TileSelection");
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
         {
             // Player controls here
-            ms = Mouse.GetState();
+            ms = currentMouseState;
 
-            if (ms.LeftButton == ButtonState.Pressed)
+            if (currentMouseState.LeftButton == ButtonState.Pressed 
+                && oldMouseState.LeftButton != ButtonState.Pressed)
             {
                 SetCursor();
             }
@@ -118,16 +123,22 @@ namespace TTG
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //_graphics.Clear(Color.White);
-           
+            spriteBatch.Begin();
+        
             // Draw blocks in the grid here
             for (int row = 0; row < _rows; row++)
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    _grid[row, col].Draw(spriteBatch);
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
                 }
             }
+
+            // Draw selector if we have picked a tile to swap
+            if (_cursorX != -1 && _cursorY != -1)
+                spriteBatch.Draw(_blockSelection, new Rectangle(_cursorX * 64, _cursorY * 64, 64, 64), Color.White);
+
+            spriteBatch.End();
         }
 
         public void SetCursor()
@@ -142,6 +153,7 @@ namespace TTG
             {
                 _cursorX = cellX;
                 _cursorY = cellY;
+                return;
             }
 
             // Up
@@ -151,14 +163,32 @@ namespace TTG
                 _grid[_cursorY, _cursorX] = _grid[_cursorY - 1, _cursorX];
                 _grid[_cursorY - 1, _cursorX] = blockTemp;
             }
-
-            // Left
-            if (cellX == _cursorX - 1 && cellY == _cursorY)
+            // Down
+            else if (cellX == _cursorX && cellY == _cursorY + 1)
             {
                 Block blockTemp = _grid[_cursorY, _cursorX];
+                _grid[_cursorY, _cursorX] = _grid[_cursorY + 1, _cursorX];
+                _grid[_cursorY + 1, _cursorX] = blockTemp;
+            }
+            // Left
+            else if (cellX == _cursorX - 1 && cellY == _cursorY)
+            {
+                Block blockTemp = _grid[_cursorY, _cursorX];
+
                 _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX - 1];
                 _grid[_cursorY, _cursorX - 1] = blockTemp;
             }
+            // Right
+            else if (cellX == _cursorX + 1 && cellY == _cursorY)
+            {
+                Block blockTemp = _grid[_cursorY, _cursorX];
+                _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX + 1];
+                _grid[_cursorY, _cursorX + 1] = blockTemp;
+            }
+
+            // Reset cursor
+            _cursorX = -1;
+            _cursorY = -1;
         }
 
         public override string ToString()
