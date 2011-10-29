@@ -9,7 +9,29 @@ namespace TTG
 {
     public abstract class Target
     {
-        protected int _hitPoints;
+        private int _hitPoints;
+
+        public int HP
+        {
+            get
+            {
+                return _hitPoints;
+            }
+        }
+
+        private int _maxHP;
+        public int MaxHP
+        {
+            get
+            {
+                return _maxHP;
+            }
+            set
+            {
+                _maxHP = value;
+                _hitPoints = _maxHP;
+            }
+        }
 
         protected UnitType _type;
         public UnitType Type

@@ -14,7 +14,7 @@ namespace TTG
             base(position, team)
         {
             _texture = texture;
-            _hitPoints = 10000;
+            MaxHP = 10000;
         }
 
         public override Rectangle GetRect()

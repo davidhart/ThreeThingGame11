@@ -16,7 +16,7 @@ namespace TTG
         public Marine(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
             base(position, team, arena, animationMove, animationAttack)
         {
-            _hitPoints = 50;
+            MaxHP = 50;
             _moveSpeed = 50;
             _attackSpeed = 0.3f;
             _attackDamage = 3;

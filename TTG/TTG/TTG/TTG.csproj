@@ -116,6 +116,7 @@
     <Compile Include="Arena\Units\Juggernaught.cs" />
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
+    <Compile Include="HealthBar.cs" />
     <Compile Include="Music.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
