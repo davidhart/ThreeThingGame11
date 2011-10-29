@@ -145,7 +145,7 @@ namespace TTG
             _projectileBatch = new ProjectileBatch();
 
             _base1Texture = content.Load<Texture2D>("base");
-            _base2Texture = content.Load<Texture2D>("marine");
+            _base2Texture = content.Load<Texture2D>("VolcanoBase");
 
             Reset();
 
