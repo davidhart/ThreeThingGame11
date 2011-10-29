@@ -166,5 +166,11 @@ namespace TTG
             _hydroBtn.Update(newMouse, oldMouse);
             _launcherBtn.Update(newMouse, oldMouse);
         }
+
+        public void SetBases(Base p1Base, Base p2Base)
+        {
+            _p1HealthBar.SetBase(p1Base);
+            _p2HealthBar.SetBase(p2Base);
+        }
     }
 }

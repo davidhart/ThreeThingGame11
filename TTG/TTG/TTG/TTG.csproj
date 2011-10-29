@@ -119,7 +119,8 @@
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
     <Compile Include="BloomPostProcess.cs" />
-    <Compile Include="GameScreen.cs" />
+    <Compile Include="States\GameOverState.cs" />
+    <Compile Include="States\GameState.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Music.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,7 +130,8 @@
     <Compile Include="Puzzle\Block.cs" />
     <Compile Include="Puzzle\PuzzleGrid.cs" />
     <Compile Include="SE.cs" />
-    <Compile Include="TitleScreen.cs" />
+    <Compile Include="States\StatePlaying.cs" />
+    <Compile Include="States\TitleScreen.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

@@ -133,5 +133,10 @@ namespace TTG
                 }
             }
         }
+
+        public void Clear()
+        {
+            _shots.Clear();
+        }
     }
 }

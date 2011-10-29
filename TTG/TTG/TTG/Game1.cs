@@ -11,33 +11,39 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TTG
 {
-    public enum State
-    {
-        Menu,
-        Playing
-    }
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        GameState _currentState;
+
+        StatePlaying _playingState;
+        public GameState PlayState
+        {
+            get
+            {
+                return _playingState;
+            }
+        }
+
+        TitleScreen _titlescreen;
+        public GameState TitleScreenState
+        {
+            get
+            {
+                return _titlescreen;
+            }
+        }
+
+        GameOverState _gameOverSate;
+        public GameState GameOverState
+        {
+            get
+            {
+                return _gameOverSate;
+            }
+        }
+
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-
-       
-        public State GameState = State.Playing;
-
-        TitleScreen titlescreen = new TitleScreen();
-
-        Arena arena;
-        Animation marineMove;
-
-        PuzzleGrid _puzzleGrid;
-
-        UI arenaUI;
-
-        Random rand;
-
-        float elapsed = 0;
-
         MouseState oldMouseState, newMouseState;
 
         public Game1()
@@ -46,8 +52,6 @@ namespace TTG
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 768;
-
-            rand = new Random();
         }
 
         protected override void Initialize()
@@ -59,23 +63,16 @@ namespace TTG
 
         protected override void LoadContent()
         {
-            titlescreen.Load(Content);
-            marineMove = new Animation(Content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.05f, true);
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            arena = new Arena(1280, 200);
-            arena.LoadContent(Content, GraphicsDevice);
-            for (int i = 0; i < 7; ++i)
-            {
-                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-                arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
-            }
-            arenaUI = new UI();
-            arenaUI.Load(Content, arena);
+            _playingState = new StatePlaying(this);
+            _playingState.Load(Content, GraphicsDevice);
 
-            // Puzzle grid set up
-            _puzzleGrid = new PuzzleGrid(8, 8, GraphicsDevice.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 0);
-            _puzzleGrid.LoadContent(Content, GraphicsDevice);
-            _puzzleGrid.PopulateGrid();
+            _titlescreen = new TitleScreen(this);
+            _titlescreen.Load(Content, GraphicsDevice);
+
+            _gameOverSate = new GameOverState(this);
+            _gameOverSate.Load(Content, GraphicsDevice);
+
+            _currentState = _titlescreen;
         }
 
         protected override void UnloadContent()
@@ -85,43 +82,8 @@ namespace TTG
         protected override void Update(GameTime gameTime)
         {
             newMouseState = Mouse.GetState();
-            switch (GameState)
-            {
-                case State.Menu:
-                    {
-                        titlescreen.Update(newMouseState, oldMouseState);
-                        break;
-                    }
-                case State.Playing:
-                    {
-                        elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        const float chancePerSec = 2;
-                        const float probabliltyOfSpawn = 0.4f;
-                        while (elapsed > 1 / chancePerSec)
-                        {
-                            if (rand.NextDouble() < probabliltyOfSpawn)
-                            {
-                                //arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-                            }
 
-                            if (rand.NextDouble() < probabliltyOfSpawn)
-                            {
-                                arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
-                            }
-
-                            elapsed -= 1 / chancePerSec;
-                        }
-
-                        arena.Update(gameTime);
-                        arenaUI.Update(newMouseState, oldMouseState);
-
-                        // Puzzle
-                        _puzzleGrid.Update(gameTime, newMouseState, oldMouseState);
-
-                        break;
-                    }
-                    
-            }
+            _currentState.Update(gameTime, newMouseState, oldMouseState);
 
             oldMouseState = newMouseState;
             base.Update(gameTime);
@@ -131,29 +93,15 @@ namespace TTG
         {
             GraphicsDevice.Clear(Color.Black);
 
-            switch (GameState)
-            {
-                case State.Menu:
-                    {
-                        titlescreen.Draw(spriteBatch);
-                        break;
-                    }
-                case State.Playing:
-                    {
-                        arena.Draw(spriteBatch);
-                        arena.DrawOntoScreen(new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
-                        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                        arenaUI.Draw(spriteBatch);
-                        spriteBatch.End();
-
-                        // Draw puzzle element
-                        _puzzleGrid.Draw(spriteBatch);
-
-                        break;
-                    }
-            }
+            _currentState.Draw();
 
             base.Draw(gameTime);
+        }
+
+        public void ChangeState(GameState state)
+        {
+            _currentState = state;
+            _currentState.Reset();
         }
     }
 }

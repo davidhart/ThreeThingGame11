@@ -206,10 +206,13 @@ namespace TTG
         public void CheckGrid()
         {
             bool matches = false;
+
+            // Solve grid until no more matches
             do
             {
                 matches = false;
 
+                // Mark any matches as 'removed'
                 for (int r = 0; r < _rows; ++r)
                 {
                     for (int c = 0; c < _columns; ++c)
@@ -220,12 +223,11 @@ namespace TTG
                         }
                     }
                 }
-                // order grid
-
 
                 bool changed = false;
                 do
                 {
+                    // Move everything down 1 block
                     changed = false;
                     for (int row = _rows - 1; row > 0; row--)
                     {
@@ -236,20 +238,15 @@ namespace TTG
                                 _grid[row, col] = new Block(_grid[row - 1, col].GetID(), _grid[row - 1, col].Removed());//_grid[row, col];
                                 _grid[row - 1, col].Remove();
                                 changed = true;
-                                //row = _rows - 1;
                             }
                             else
                             {
                                 continue;
                             }
                         }
-
-                        //if (changed == true)
-                        //{
-                        //    row = 0;
-                        //}
                     }
 
+                    // Replace the removed blocks on the top row with new blocks
                     for (int col = 0; col < _columns; col++)
                     {
                         if (_grid[0, col].Removed())

@@ -53,6 +53,10 @@ namespace TTG
             }
         }
 
+        public void SetBase(Target target)
+        {
+            _target = target;
+        }
 
     }
 }

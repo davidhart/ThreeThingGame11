@@ -107,6 +107,9 @@ namespace TTG
         //HealthBar _p1HealthBar;
         //HealthBar _p2HealthBar;
 
+        Texture2D _base1Texture;
+        Texture2D _base2Texture;
+
         public Arena(int displayWidth, int displayHeight)
         {
             P1Energy = 200;
@@ -141,13 +144,10 @@ namespace TTG
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
             _projectileBatch = new ProjectileBatch();
 
-            Texture2D base1Texture = content.Load<Texture2D>("base");
-            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - base1Texture.Height / 2), UnitTeam.Player1, base1Texture);
-            Texture2D base2Texture = content.Load<Texture2D>("marine");
-            _p2Base = new Base(new Vector2(_displayWidth - base2Texture.Width, _displayHeight / 2 - base2Texture.Height / 2), UnitTeam.Player2, base2Texture);
+            _base1Texture = content.Load<Texture2D>("base");
+            _base2Texture = content.Load<Texture2D>("marine");
 
-            _units.Add(_p1Base);
-            _units.Add(_p2Base);
+            Reset();
 
             _battleBG = content.Load<Texture2D>("BattleBG");
 
@@ -165,6 +165,20 @@ namespace TTG
             _bloomEffect.BloomIntensity = 0.8f;
             _bloomEffect.BaseIntensity = 1.0f;
             _bloomEffect.Threshold = 0.4f;
+        }
+
+        public void Reset()
+        {
+            _units.Clear();
+
+            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - _base1Texture.Height / 2), UnitTeam.Player1, _base1Texture);
+            _p2Base = new Base(new Vector2(_displayWidth - _base2Texture.Width, _displayHeight / 2 - _base2Texture.Height / 2), UnitTeam.Player2, _base2Texture);
+
+            _units.Add(_p1Base);
+            _units.Add(_p2Base);
+
+            _projectileBatch.Clear();
+            _marineShotBatch.Clear();
         }
 
         public void Update(GameTime gameTime)

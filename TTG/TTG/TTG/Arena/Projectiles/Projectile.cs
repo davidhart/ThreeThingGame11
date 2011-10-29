@@ -99,5 +99,10 @@ namespace TTG
                 projectile.Draw(spritebatch);
             }
         }
+
+        public void Clear()
+        {
+            _projectiles.Clear();
+        }
     }
 }
