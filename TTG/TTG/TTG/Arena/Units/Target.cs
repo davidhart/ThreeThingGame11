@@ -98,5 +98,7 @@ namespace TTG
         {
             return Color.Lerp(Color.White, Color.IndianRed, _hitCooldown / _hitDuration);
         }
+
+        public abstract Vector2 GetMidPoint();
     }
 }

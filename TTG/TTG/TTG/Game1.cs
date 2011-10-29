@@ -64,7 +64,7 @@ namespace TTG
             for (int i = 0; i < 7; ++i)
             {
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
-                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+                arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
             }
             arenaUI = new UI();
             arenaUI.Load(Content, arena);
@@ -97,7 +97,7 @@ namespace TTG
 
                             if (rand.NextDouble() < probabliltyOfSpawn)
                             {
-                                arena.AddUnit(UnitEnum.Marine, UnitTeam.Player2);
+                                arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
                             }
 
                             elapsed -= 1 / chancePerSec;

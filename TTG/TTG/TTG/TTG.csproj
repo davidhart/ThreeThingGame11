@@ -110,7 +110,9 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\Projectiles\MarineShot.cs" />
+    <Compile Include="Arena\Projectiles\Projectile.cs" />
     <Compile Include="Arena\Units\Base.cs" />
+    <Compile Include="Arena\Units\Ember.cs" />
     <Compile Include="Arena\Units\Gunship.cs" />
     <Compile Include="Arena\Units\Hydro.cs" />
     <Compile Include="Arena\Units\Juggernaught.cs" />

@@ -69,7 +69,7 @@ namespace TTG
 
             if (_target != null)
             {
-                Vector2 direction = _target.Position - _position;
+                Vector2 direction = _target.GetMidPoint() - _position;
                 float distance = direction.Length();
 
                 if (distance > _followRange)
@@ -83,7 +83,7 @@ namespace TTG
                     while (_nextAttack <= 0)
                     {
                         _nextAttack += _attackSpeed;
-                        _target.TakeDamage(_attackDamage);
+                        //_target.TakeDamage(_attackDamage);
                         OnAttack(_target);
                     }
                 }
@@ -159,6 +159,12 @@ namespace TTG
         {
             _animationPlayer.PlayAnimation(_animationAttack);
             _animationPlayer.ResetAnimation();
+        }
+
+        public override Vector2 GetMidPoint()
+        {
+            Rectangle r = _animationMove.GetFrameRect(0);
+            return _position + new Vector2(r.Width, r.Height);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace TTG
     public enum UnitEnum
     {
         Marine = 0,
+        Ember = 1,
     };
 
     public enum UnitTeam
@@ -38,6 +39,7 @@ namespace TTG
         private List<Target> _units;
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
+        private Texture2D _emberProjectile;
         private Base _p1Base;
         private Base _p2Base;
 
@@ -97,6 +99,7 @@ namespace TTG
         }
 
         MarineShotBatch _marineShotBatch;
+        ProjectileBatch _projectileBatch;
         GraphicsDevice _graphics;
         HealthBar _p1HealthBar;
         HealthBar _p2HealthBar;
@@ -110,8 +113,8 @@ namespace TTG
             _displayWidth = displayWidth;
             _displayHeight = displayHeight;
 
-            _animationsAttack = new Animation[1];
-            _animationsMove = new Animation[1];
+            _animationsAttack = new Animation[2];
+            _animationsMove = new Animation[2];
         }
 
         Music _bgm;
@@ -123,11 +126,17 @@ namespace TTG
             _renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
                 device.PresentationParameters.DepthStencilFormat);
 
-            Texture2D marineTexture = content.Load<Texture2D>("marine");
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marineWalk"), 4, 1, 0, 4, 0.15f, true);
+
+            _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 1, 1, 0, 1, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 1, 1, 0, 1, 0.15f, true);
+
+            _emberProjectile = content.Load<Texture2D>("ember_proj");
+
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
+            _projectileBatch = new ProjectileBatch();
 
             Texture2D baseTexture = content.Load<Texture2D>("base");
             _p1Base = new Base(new Vector2(0, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player1, baseTexture);
@@ -181,6 +190,7 @@ namespace TTG
             }
 
             _marineShotBatch.Update(gameTime);
+            _projectileBatch.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -193,6 +203,8 @@ namespace TTG
             {
                 target.Draw(spritebatch);
             }
+
+            _projectileBatch.Draw(spritebatch);
 
             spritebatch.End();
 
@@ -231,6 +243,10 @@ namespace TTG
             {
                 _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this));
             }
+            else if (unit == UnitEnum.Ember)
+            {
+                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile));
+            }
         }
 
         public Target AcquireTarget(Unit attacker)
@@ -242,7 +258,7 @@ namespace TTG
             {
                 if (attacker.CanTarget(target))
                 {
-                    Vector2 direction = target.Position - attacker.Position;
+                    Vector2 direction = target.GetMidPoint() - attacker.GetMidPoint();
                     float distance = direction.Length();
 
                     if (distance < attacker.FollowRange)
@@ -262,6 +278,11 @@ namespace TTG
         public void AddMarineShot(Unit attacker, Target target)
         {
             _marineShotBatch.AddShot(attacker, target);
+        }
+
+        public void AddProjectile(Projectile projectile)
+        {
+            _projectileBatch.AddProjectile(projectile);
         }
     }
 }
