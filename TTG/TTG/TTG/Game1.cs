@@ -30,6 +30,8 @@ namespace TTG
         Arena arena;
         Animation marineMove;
 
+        PuzzleGrid _puzzleGrid;
+
         UI arenaUI;
 
         Random rand;
@@ -68,6 +70,11 @@ namespace TTG
             }
             arenaUI = new UI();
             arenaUI.Load(Content, arena);
+
+            // Puzzle grid set up
+            _puzzleGrid = new PuzzleGrid(8, 8, 0, 0);
+            _puzzleGrid.LoadContent(Content, GraphicsDevice);
+            _puzzleGrid.PopulateGrid();
         }
 
         protected override void UnloadContent()
@@ -105,6 +112,10 @@ namespace TTG
 
                         arena.Update(gameTime);
                         arenaUI.Update(newMouseState, oldMouseState);
+
+                        // Puzzle
+                        _puzzleGrid.Update(gameTime);
+
                         break;
                     }
                     
@@ -126,11 +137,17 @@ namespace TTG
                     }
                 case State.Playing:
                     {
+                        
+
                         arena.Draw(spriteBatch);
                         arena.DrawOntoScreen(new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
                         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                         arenaUI.Draw(spriteBatch);
                         spriteBatch.End();
+
+                        // Draw puzzle element
+                        _puzzleGrid.Draw(spriteBatch);
+
                         break;
                     }
             }
