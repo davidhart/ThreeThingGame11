@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace TTG
 {
@@ -10,6 +11,11 @@ namespace TTG
         /// </summary>
         static void Main(string[] args)
         {
+            // delete when done
+            PuzzleGrid _grid = new PuzzleGrid(8, 8);
+            Debug.Write(_grid.ToString());
+            //
+
             using (Game1 game = new Game1())
             {
                 game.Run();

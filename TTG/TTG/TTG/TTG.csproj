@@ -122,6 +122,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Arena\Units\Unit.cs" />
+    <Compile Include="Puzzle\Block.cs" />
+    <Compile Include="Puzzle\PuzzleGrid.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
