@@ -127,7 +127,7 @@ namespace TTG
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
 
-            Texture2D baseTexture = content.Load<Texture2D>("marine");
+            Texture2D baseTexture = content.Load<Texture2D>("base");
             _p1Base = new Base(new Vector2(0, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player1, baseTexture);
             _p2Base = new Base(new Vector2(_displayWidth - baseTexture.Width, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player2, content.Load<Texture2D>("marine"));
 

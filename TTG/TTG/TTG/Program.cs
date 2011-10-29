@@ -12,8 +12,8 @@ namespace TTG
         static void Main(string[] args)
         {
             // delete when done
-            PuzzleGrid _grid = new PuzzleGrid(8, 8);
-            Debug.Write(_grid.ToString());
+            //PuzzleGrid _grid = new PuzzleGrid(0, 0);
+            //Debug.Write(_grid.ToString());
             //
 
             using (Game1 game = new Game1())
