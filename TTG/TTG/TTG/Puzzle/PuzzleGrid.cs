@@ -206,17 +206,59 @@ namespace TTG
         public void CheckGrid()
         {
             bool matches = false;
-
-            for (int r = 0; r < _rows; ++r)
+            do
             {
-                for (int c = 0; c < _columns; ++c)
+                matches = false;
+
+                for (int r = 0; r < _rows; ++r)
                 {
-                    if (!_grid[r, c].Removed())
+                    for (int c = 0; c < _columns; ++c)
                     {
-                        matches |= CheckMatch(r, c);
+                        if (!_grid[r, c].Removed())
+                        {
+                            matches |= CheckMatch(r, c);
+                        }
                     }
                 }
-            }
+                // order grid
+
+
+                bool changed = false;
+                do
+                {
+                    changed = false;
+                    for (int row = _rows - 1; row > 0; row--)
+                    {
+                        for (int col = 0; col < _columns; col++)
+                        {
+                            if (_grid[row, col].Removed())
+                            {
+                                _grid[row, col] = new Block(_grid[row - 1, col].GetID(), _grid[row - 1, col].Removed());//_grid[row, col];
+                                _grid[row - 1, col].Remove();
+                                changed = true;
+                                //row = _rows - 1;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+
+                        //if (changed == true)
+                        //{
+                        //    row = 0;
+                        //}
+                    }
+
+                    for (int col = 0; col < _columns; col++)
+                    {
+                        if (_grid[0, col].Removed())
+                        {
+                            _grid[0, col] = new Block(Util.Rand(5));
+                        }
+                    }
+                } while (changed);
+            } while (matches);
         }
 
         public bool CheckMatch(int r, int c)

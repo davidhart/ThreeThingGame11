@@ -18,6 +18,12 @@ namespace TTG
             _remove = false;
         }
 
+        public Block(int id, bool remove)
+        {
+            _id = id;
+            _remove = remove;
+        }
+
         public int GetID()
         {
             return _id;
