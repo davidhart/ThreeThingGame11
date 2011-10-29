@@ -115,6 +115,7 @@ namespace TTG
         }
 
         Music _bgm;
+        BloomPostProcess _bloomEffect;
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
@@ -140,6 +141,13 @@ namespace TTG
 
             _p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
             _p2HealthBar.LoadContent(content);
+
+            _bloomEffect = new BloomPostProcess();
+            _bloomEffect.LoadContent(device, content, _displayWidth, _displayHeight);
+            _bloomEffect.BlurAmount = 5;
+            _bloomEffect.BloomIntensity = 0.8f;
+            _bloomEffect.BaseIntensity = 1.0f;
+            _bloomEffect.Threshold = 0.4f;
         }
 
         public void Update(GameTime gameTime)
@@ -178,7 +186,7 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             _graphics.SetRenderTarget(_renderTarget);
-            _graphics.Clear(Color.Tomato);
+            _graphics.Clear(Color.Black);
 
             spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (Target target in _units)
@@ -198,13 +206,9 @@ namespace TTG
             _graphics.SetRenderTarget(null);
         }
 
-        public void DrawOntoScreen(SpriteBatch spritebatch, Vector2 position)
+        public void DrawOntoScreen(Vector2 position)
         {
-            spritebatch.Begin();
-
-            spritebatch.Draw(_renderTarget, position, Color.White);
-
-            spritebatch.End();
+            _bloomEffect.Draw(_renderTarget, _renderTarget, position);
         }
 
         public Vector2 GetSpawnPosition(UnitTeam team)

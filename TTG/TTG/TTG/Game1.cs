@@ -127,7 +127,7 @@ namespace TTG
                 case State.Playing:
                     {
                         arena.Draw(spriteBatch);
-                        arena.DrawOntoScreen(spriteBatch, new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
+                        arena.DrawOntoScreen(new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
                         spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
                         arenaUI.Draw(spriteBatch);
                         spriteBatch.End();
