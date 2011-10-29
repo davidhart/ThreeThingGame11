@@ -84,7 +84,7 @@ namespace TTG
                                 continue;
                             }
                         }
-                        
+
                         _grid[row, col] = new Block(blockType);
 
                         isBlockOK = true;
@@ -114,7 +114,7 @@ namespace TTG
             // Player controls here
             ms = currentMouseState;
 
-            if (currentMouseState.LeftButton == ButtonState.Pressed 
+            if (currentMouseState.LeftButton == ButtonState.Pressed
                 && oldMouseState.LeftButton != ButtonState.Pressed)
             {
                 SetCursor();
@@ -124,13 +124,14 @@ namespace TTG
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-        
+
             // Draw blocks in the grid here
             for (int row = 0; row < _rows; row++)
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
+                    if (!_grid[row, col].Removed())
+                        spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
                 }
             }
 
@@ -165,6 +166,8 @@ namespace TTG
                 Block blockTemp = _grid[_cursorY, _cursorX];
                 _grid[_cursorY, _cursorX] = _grid[_cursorY - 1, _cursorX];
                 _grid[_cursorY - 1, _cursorX] = blockTemp;
+
+                CheckGrid();
             }
             // Down
             else if (cellX == _cursorX && cellY == _cursorY + 1)
@@ -172,6 +175,8 @@ namespace TTG
                 Block blockTemp = _grid[_cursorY, _cursorX];
                 _grid[_cursorY, _cursorX] = _grid[_cursorY + 1, _cursorX];
                 _grid[_cursorY + 1, _cursorX] = blockTemp;
+
+                CheckGrid();
             }
             // Left
             else if (cellX == _cursorX - 1 && cellY == _cursorY)
@@ -180,6 +185,8 @@ namespace TTG
 
                 _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX - 1];
                 _grid[_cursorY, _cursorX - 1] = blockTemp;
+
+                CheckGrid();
             }
             // Right
             else if (cellX == _cursorX + 1 && cellY == _cursorY)
@@ -187,11 +194,106 @@ namespace TTG
                 Block blockTemp = _grid[_cursorY, _cursorX];
                 _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX + 1];
                 _grid[_cursorY, _cursorX + 1] = blockTemp;
+
+                CheckGrid();
             }
 
             // Reset cursor
             _cursorX = -1;
             _cursorY = -1;
+        }
+
+        public void CheckGrid()
+        {
+            bool matches = false;
+
+            for (int r = 0; r < _rows; ++r)
+            {
+                for (int c = 0; c < _columns; ++c)
+                {
+                    if (!_grid[r, c].Removed())
+                    {
+                        matches |= CheckMatch(r, c);
+                    }
+                }
+            }
+        }
+
+        public bool CheckMatch(int r, int c)
+        {
+            int id = _grid[r, c].GetID();
+
+            List<Block> xMatches = new List<Block>();
+            xMatches.Add(_grid[r, c]);
+            List<Block> yMatches = new List<Block>();
+            yMatches.Add(_grid[r, c]);
+
+            // Check Left
+            for (int x = c - 1; x >= 0; --x)
+            {
+                if (id == _grid[r, x].GetID())
+                {
+                    xMatches.Add(_grid[r, x]);
+                }
+                else
+                    break;
+            }
+
+            // Check Right
+            for (int x = c + 1; x < _columns; ++x)
+            {
+                if (id == _grid[r, x].GetID())
+                {
+                    xMatches.Add(_grid[r, x]);
+                }
+                else
+                    break;
+            }
+
+            // Check Up
+            for (int y = r - 1; y >= 0; --y)
+            {
+                if (id == _grid[y, c].GetID())
+                {
+                    yMatches.Add(_grid[y, c]);
+                }
+                else
+                    break;
+            }
+
+            // Check Down
+            for (int y = r + 1; y < _rows; ++y)
+            {
+                if (id == _grid[y, c].GetID())
+                {
+                    yMatches.Add(_grid[y, c]);
+                }
+                else
+                    break;
+            }
+
+            bool matches = false;
+
+            if (xMatches.Count >= 3)
+            {
+                foreach (Block b in xMatches)
+                {
+                    b.Remove();
+                }
+
+                matches = true;
+            }
+
+            if (yMatches.Count >= 3)
+            {
+                foreach (Block b in yMatches)
+                {
+                    b.Remove();
+                }
+                matches = true;
+            }
+
+            return matches;
         }
 
         public override string ToString()
