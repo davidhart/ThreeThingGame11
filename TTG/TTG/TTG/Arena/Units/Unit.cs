@@ -41,7 +41,11 @@ namespace TTG
 
         private float _nextAttack;
 
-        public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
+        // Particle System Stuff!
+        protected DeathEmitter ps;
+        protected Vector2 psPosition;
+
+        public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack, Game1 game, Random rand, string ptextFilename)
             : base(position, team)
         {
             _targetType = TargetUnitType.Any;
@@ -55,6 +59,9 @@ namespace TTG
             _animationAttack = animationAttack;
 
             _target = null;
+
+             ps = new DeathEmitter(game, rand, ptextFilename);
+             ps.Enabled = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -165,6 +172,11 @@ namespace TTG
         {
             Rectangle r = _animationMove.GetFrameRect(0);
             return _position + new Vector2(r.Width, r.Height);
+        }
+
+        protected virtual void OnDeath()
+        {
+            ps.Enabled = true;
         }
     }
 }

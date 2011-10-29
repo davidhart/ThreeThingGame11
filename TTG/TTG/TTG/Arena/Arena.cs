@@ -263,11 +263,11 @@ namespace TTG
             }
         }
 
-        public void AddUnit(UnitEnum unit, UnitTeam team)
+        public void AddUnit(UnitEnum unit, UnitTeam team, Game1 game, Random rand)
         {
             if (unit == UnitEnum.Marine)
             {
-                _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this));
+                _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this, game, rand));
             }
             else if (unit == UnitEnum.Ember)
             {
