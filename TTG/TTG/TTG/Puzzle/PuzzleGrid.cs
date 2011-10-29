@@ -136,7 +136,7 @@ namespace TTG
 
             // Draw selector if we have picked a tile to swap
             if (_cursorX != -1 && _cursorY != -1)
-                spriteBatch.Draw(_blockSelection, new Rectangle(_cursorX * 64, _cursorY * 64, 64, 64), Color.White);
+                spriteBatch.Draw(_blockSelection, new Rectangle(_x + _cursorX * 64, _y + _cursorY * 64, 64, 64), Color.White);
 
             spriteBatch.End();
         }
@@ -148,6 +148,9 @@ namespace TTG
 
             int cellX = mx / 64;
             int cellY = my / 64;
+
+            if (cellX < 0 || cellX >= _rows || cellY < 0 || cellY >= _columns)
+                return; // If cell is out of bounds
 
             if (_cursorX == -1 && _cursorY == -1)
             {
