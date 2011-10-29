@@ -99,6 +99,7 @@ namespace TTG
         MarineShotBatch _marineShotBatch;
         GraphicsDevice _graphics;
         HealthBar _p1HealthBar;
+        HealthBar _p2HealthBar;
 
         public Arena(int displayWidth, int displayHeight)
         {
@@ -134,8 +135,11 @@ namespace TTG
             _units.Add(_p1Base);
             _units.Add(_p2Base);
 
-            _p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400);
+            _p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400, true);
             _p1HealthBar.LoadContent(content);
+
+            _p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
+            _p2HealthBar.LoadContent(content);
         }
 
         public void Update(GameTime gameTime)
@@ -174,7 +178,7 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             _graphics.SetRenderTarget(_renderTarget);
-            _graphics.Clear(Color.Black);
+            _graphics.Clear(Color.Tomato);
 
             spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (Target target in _units)
@@ -188,6 +192,7 @@ namespace TTG
 
             spritebatch.Begin();
             _p1HealthBar.Draw(spritebatch);
+            _p2HealthBar.Draw(spritebatch);
             spritebatch.End();
 
             _graphics.SetRenderTarget(null);

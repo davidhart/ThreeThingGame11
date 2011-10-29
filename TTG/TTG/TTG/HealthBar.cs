@@ -15,12 +15,14 @@ namespace TTG
         private Vector2 _position;
         private int _width;
         private Texture2D _barBGLeft, _barBGRight, _barBG, _bar;
+        private bool _flip;
 
-        public HealthBar(Target target, Vector2 position, int width)
+        public HealthBar(Target target, Vector2 position, int width, bool flip)
         {
             _position = position;
             _target = target;
             _width = width;
+            _flip = flip;
         }
 
         public void LoadContent(ContentManager content)
@@ -34,14 +36,21 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(_barBGLeft, _position, Color.White);
-            spritebatch.Draw(_barBG, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, _width - (int)_position.X - _barBGLeft.Width - _barBGRight.Width, _barBG.Height), Color.White);
-            spritebatch.Draw(_barBGRight, new Vector2(_position.X + _width - _barBGLeft.Width, _barBGRight.Width), Color.White);
+            spritebatch.Draw(_barBG, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, _width - _barBGLeft.Width - _barBGRight.Width, _barBG.Height), Color.White);
+            spritebatch.Draw(_barBGRight, new Vector2(_position.X + _width - _barBGLeft.Width, 0), Color.White);
 
             int barWidth = _width - _barBGLeft.Width - _barBGRight.Width;
 
             barWidth = (int)(barWidth * (float)_target.HP / _target.MaxHP);
 
-            spritebatch.Draw(_bar, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, barWidth, _bar.Height), Color.White);
+            if (_flip)
+            {
+                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, barWidth, _bar.Height), Color.White);
+            }
+            else
+            {
+                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _width - barWidth - _barBGRight.Width, (int)_position.Y, barWidth, _bar.Height), Color.White);
+            }
         }
 
 
