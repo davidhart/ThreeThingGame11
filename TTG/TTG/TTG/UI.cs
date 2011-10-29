@@ -21,6 +21,7 @@ namespace TTG
         UnitEnum _unitEnum;
         int _energyUse;
 
+
         public UIBtn(
             Texture2D inBtntex,
             Texture2D inBtnTexClick,
@@ -41,6 +42,7 @@ namespace TTG
             _unitEnum = unitEnum;
             _energyUse = energyUse;
             _uiNoSpawnSound = noSpawn;
+
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -89,23 +91,23 @@ namespace TTG
 
     public class UI
     {
-        Rectangle _bgRect;
-        Texture2D _bgTex;
+        Rectangle _bgRect, _hCommanderRect, _aCommanderRect, _puzzleBGRect;
+        Texture2D _bgTex, _hCommandertex, _aCommandertex, _puzzleBGTex;
         UIBtn _marineBtn, _hydroBtn, _launcherBtn, _juggernaughtBtn, _gunshipBtn;
         Arena _arena;
         SpriteFont _font;
+        HealthBar _p1HealthBar;
+        HealthBar _p2HealthBar;
+
         public void Load(ContentManager content, Arena arena)
         {
             _font = content.Load<SpriteFont>("UIFont");
-
-            _bgRect = new Rectangle(
-                0, 720 - 100, (720 / 2), 100);
             _bgTex = content.Load<Texture2D>("UIBG");
             _marineBtn = new UIBtn(
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
                 content.Load<SoundEffect>("Talk1"), 
-                12, 0,
+                100, 50,
                 arena,
                 UnitEnum.Marine, 10,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -114,7 +116,7 @@ namespace TTG
                 content.Load<Texture2D>("HydroSpawnBtn"),
                 content.Load<Texture2D>("HydroSpawnBtnClick"),
                 content.Load<SoundEffect>("HydroTalk1"),
-                12, 64,
+                100, 150,
                 arena,
                 UnitEnum.Marine, 30,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -123,24 +125,40 @@ namespace TTG
             content.Load<Texture2D>("LauncherSpawnBtn"),
             content.Load<Texture2D>("LauncherSpawnBtnClick"),
             content.Load<SoundEffect>("LauncherTalk1"),
-            12, 128,
+            100, 250,
             arena, //Change this
             UnitEnum.Marine,
             40,
             content.Load<SoundEffect>("NoSpawn")
             );
 
+            _hCommandertex = content.Load<Texture2D>("HumanCommander");
+            _hCommanderRect = new Rectangle(0, 522, _hCommandertex.Width, _hCommandertex.Height);
+            _aCommandertex = content.Load<Texture2D>("AlienCommander");
+            _aCommanderRect = new Rectangle(1280 - (_aCommandertex.Width + 5), 522, _hCommandertex.Width, _hCommandertex.Height);
             _arena = arena;
+            _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
+            _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
 
+            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48,537), 400, true);
+            _p1HealthBar.LoadContent(content);
+
+            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(1280 - 400 - 48, 537), 400, false);
+            _p2HealthBar.LoadContent(content);
+            _bgRect = new Rectangle(545, 539, 175, 25);
         }
         public void Draw(SpriteBatch spritebatch)
         {
-            //spritebatch.Draw(_bgTex, _bgRect, Color.White);
-            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(400, 500), Color.White);
+            spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
+            spritebatch.Draw(_bgTex, _bgRect, Color.White);
+            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(550, 537), Color.White);
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _launcherBtn.Draw(spritebatch);
-            
+            _p1HealthBar.Draw(spritebatch);
+            _p2HealthBar.Draw(spritebatch);
+            spritebatch.Draw(_hCommandertex, _hCommanderRect, _arena.GetBase1().GetHitColor());
+            spritebatch.Draw(_aCommandertex, _aCommanderRect, _arena.GetBase2().GetHitColor());
         }
         public void Update(MouseState newMouse, MouseState oldMouse)
         {

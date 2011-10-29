@@ -128,7 +128,7 @@ namespace TTG
                     {
                         arena.Draw(spriteBatch);
                         arena.DrawOntoScreen(new Vector2(0, GraphicsDevice.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
-                        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+                        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                         arenaUI.Draw(spriteBatch);
                         spriteBatch.End();
                         break;

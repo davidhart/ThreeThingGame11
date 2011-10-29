@@ -101,8 +101,8 @@ namespace TTG
         MarineShotBatch _marineShotBatch;
         ProjectileBatch _projectileBatch;
         GraphicsDevice _graphics;
-        HealthBar _p1HealthBar;
-        HealthBar _p2HealthBar;
+        //HealthBar _p1HealthBar;
+        //HealthBar _p2HealthBar;
 
         public Arena(int displayWidth, int displayHeight)
         {
@@ -138,18 +138,19 @@ namespace TTG
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
             _projectileBatch = new ProjectileBatch();
 
-            Texture2D baseTexture = content.Load<Texture2D>("base");
-            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player1, baseTexture);
-            _p2Base = new Base(new Vector2(_displayWidth - baseTexture.Width, _displayHeight / 2 - baseTexture.Height / 2), UnitTeam.Player2, content.Load<Texture2D>("marine"));
+            Texture2D base1Texture = content.Load<Texture2D>("base");
+            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - base1Texture.Height / 2), UnitTeam.Player1, base1Texture);
+            Texture2D base2Texture = content.Load<Texture2D>("marine");
+            _p2Base = new Base(new Vector2(_displayWidth - base2Texture.Width, _displayHeight / 2 - base2Texture.Height / 2), UnitTeam.Player2, base2Texture);
 
             _units.Add(_p1Base);
             _units.Add(_p2Base);
 
-            _p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400, true);
-            _p1HealthBar.LoadContent(content);
+            //_p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400, true);
+            //_p1HealthBar.LoadContent(content);
 
-            _p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
-            _p2HealthBar.LoadContent(content);
+            //_p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
+            //_p2HealthBar.LoadContent(content);
 
             _bloomEffect = new BloomPostProcess();
             _bloomEffect.LoadContent(device, content, _displayWidth, _displayHeight);
@@ -211,8 +212,8 @@ namespace TTG
             _marineShotBatch.Draw();
 
             spritebatch.Begin();
-            _p1HealthBar.Draw(spritebatch);
-            _p2HealthBar.Draw(spritebatch);
+            //_p1HealthBar.Draw(spritebatch);
+            //_p2HealthBar.Draw(spritebatch);
             spritebatch.End();
 
             _graphics.SetRenderTarget(null);
@@ -280,6 +281,15 @@ namespace TTG
             _marineShotBatch.AddShot(attacker, target);
         }
 
+        public Base GetBase1()
+        {
+            return _p1Base;
+        }
+
+        public Base GetBase2()
+        {
+            return _p2Base;
+        }
         public void AddProjectile(Projectile projectile)
         {
             _projectileBatch.AddProjectile(projectile);

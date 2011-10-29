@@ -45,11 +45,11 @@ namespace TTG
 
             if (_flip)
             {
-                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, barWidth, _bar.Height), Color.White);
+                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, barWidth, _bar.Height), _target.GetHitColor());
             }
             else
             {
-                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _width - barWidth - _barBGRight.Width, (int)_position.Y, barWidth, _bar.Height), Color.White);
+                spritebatch.Draw(_bar, new Rectangle((int)_position.X + _width - barWidth - _barBGRight.Width, (int)_position.Y, barWidth, _bar.Height), _target.GetHitColor());
             }
         }
 
