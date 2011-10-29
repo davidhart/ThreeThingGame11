@@ -101,6 +101,9 @@ namespace TTG
         MarineShotBatch _marineShotBatch;
         ProjectileBatch _projectileBatch;
         GraphicsDevice _graphics;
+        Texture2D _battleBG;
+        Rectangle _bgRect;
+
         //HealthBar _p1HealthBar;
         //HealthBar _p2HealthBar;
 
@@ -145,6 +148,10 @@ namespace TTG
 
             _units.Add(_p1Base);
             _units.Add(_p2Base);
+
+            _battleBG = content.Load<Texture2D>("BattleBG");
+
+            _bgRect = new Rectangle(0, 0, _battleBG.Width, _battleBG.Height);
 
             //_p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400, true);
             //_p1HealthBar.LoadContent(content);
@@ -198,6 +205,10 @@ namespace TTG
         {
             _graphics.SetRenderTarget(_renderTarget);
             _graphics.Clear(Color.Black);
+
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spritebatch.Draw(_battleBG, _bgRect, Color.White);
+            spritebatch.End();
 
             spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (Target target in _units)

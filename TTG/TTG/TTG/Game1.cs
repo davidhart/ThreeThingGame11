@@ -23,7 +23,7 @@ namespace TTG
         SpriteBatch spriteBatch;
 
        
-        public State GameState = State.Menu;
+        public State GameState = State.Playing;
 
         TitleScreen titlescreen = new TitleScreen();
 
