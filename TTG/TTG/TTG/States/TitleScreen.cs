@@ -99,8 +99,14 @@ namespace TTG
                 content.Load<Texture2D>("QuitBtn"),
                 content.Load<Texture2D>("QuitBtnSelected"),
                 select, new Rectangle(640 - 128, 500, 256, 128));
+            _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
 
             _spriteBatch = new SpriteBatch(graphics);
+        }
+
+        void _quitBtn_OnPress(object sender, EventArgs e)
+        {
+            _parent.Exit();
         }
 
         void _startBtn_OnPress(object sender, EventArgs e)

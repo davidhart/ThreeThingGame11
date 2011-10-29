@@ -42,7 +42,7 @@ namespace TTG
             arenaUI.Load(content, arena);
 
             // Puzzle grid set up
-            _puzzleGrid = new PuzzleGrid(8, 8, graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16);
+            _puzzleGrid = new PuzzleGrid(8, 8, graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16, arena);
             _puzzleGrid.LoadContent(content, graphics);
             _puzzleGrid.PopulateGrid();
         }
