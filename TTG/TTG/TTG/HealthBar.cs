@@ -37,7 +37,7 @@ namespace TTG
         {
             spritebatch.Draw(_barBGLeft, _position, Color.White);
             spritebatch.Draw(_barBG, new Rectangle((int)_position.X + _barBGLeft.Width, (int)_position.Y, _width - _barBGLeft.Width - _barBGRight.Width, _barBG.Height), Color.White);
-            spritebatch.Draw(_barBGRight, new Vector2(_position.X + _width - _barBGLeft.Width, 0), Color.White);
+            spritebatch.Draw(_barBGRight, new Vector2(_position.X + _width - _barBGLeft.Width, _position.Y), Color.White);
 
             int barWidth = _width - _barBGLeft.Width - _barBGRight.Width;
 
