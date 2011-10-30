@@ -15,8 +15,8 @@ namespace TTG.Units
     public class Juggernaught : Unit
     {
        SoundEffect _spawnSE; 
-       public Juggernaught(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Game1 game, Random rand) : 
-            base(position, team, arena, animationMove, animationAttack, game, rand, "particle_03")
+       public Juggernaught(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
+            base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 150;
             _moveSpeed = 20;
@@ -26,11 +26,11 @@ namespace TTG.Units
             _followRange = 500;
             _spawnSE = arena.JugRiderSpawnSE;
         }
-       public override void OnDeath()
+       public override void OnDeath(DeathEmitter de)
        {
            _spawnSE.Play();
            _arena.AddUnit(UnitEnum.JugRider, UnitTeam.Player1);
-           base.OnDeath();
+           base.OnDeath(de);
        }
     }
 }

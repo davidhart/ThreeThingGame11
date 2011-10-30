@@ -2,25 +2,44 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TTG
 {
-    public abstract class PEmitter : DrawableGameComponent
+    public abstract class PEmitter
     {
         #region Vars
-        private Game1 game;
-        public Vector2 pos;
+        private Vector2 Pos;
+        public Vector2 pos
+        {
+            set
+            {
+                Pos = value;
+                foreach (Particle p in aliveParticles)
+                {
+                    p.Position = value;
+                }
+            }
+        }
+
         private List<Particle> aliveParticles;
         public int ParticleCount
         {
             get { return aliveParticles.Count; }
         }
         private Queue<Particle> deadParticles;
-        private Texture2D texture;
+        public Texture2D texture;
         private Vector2 origin;
         private Random rand;
         private float curTime = 0.0f;
+
+        private bool active;
+        public bool Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
         #endregion
 
         #region Abstract Vars
@@ -47,13 +66,11 @@ namespace TTG
 
         protected BlendState blend;
 
-        protected SpriteBatch sb;
+        protected bool cycleOnce;
         #endregion
 
-        protected PEmitter(Game1 game, Random rand)
-            : base(game)
+        protected PEmitter(Random rand)
         {
-            this.game = game;
             this.rand = rand;
         }
 
@@ -68,28 +85,31 @@ namespace TTG
             Vector2 direction = PickRandomDirection();
 
             float vel = Particle.RandomBetween(minInitSpeed, maxInitSpeed, rand);
-            float accel = Particle.RandomBetween(minAccel, maxAccel, rand);
+            float accelY = Particle.RandomBetween(minAccel, maxAccel, rand);
             float life = Particle.RandomBetween(minLife, maxLife, rand);
             float scale = Particle.RandomBetween(minSize, maxSize, rand);
             float rotSpeed = Particle.RandomBetween(minRotSpeed, maxRotSpeed, rand);
 
-            p.Initialize(this.pos,
+            Vector2 Gravity = Vector2.Zero;
+            Gravity.Y = accelY;
+
+            p.Initialize(this.Pos,
                 vel * direction,
-                accel * direction,
+                Gravity,
                 life,
                 scale,
                 rotSpeed,
                 rand);
         }
 
-        public override void Initialize()
+        public void Initialize(ContentManager cm, string texture)
         {
             aliveParticles = new List<Particle>();
             deadParticles = new Queue<Particle>();
 
-            InitializeConstants();
+            InitializeConstants(cm, texture);
 
-            if (timeBetweenRelease != 0.0f)
+            if (!cycleOnce)
             {
                 for (int i = 0; i < maxNumParticles; ++i)
                 {
@@ -107,25 +127,20 @@ namespace TTG
                     aliveParticles.Add(p);
                 }
             }
-
-            base.Initialize();
         }
 
-        protected override void LoadContent()
+        public void LoadContent(ContentManager content, string filename)
         {
-            texture = game.Content.Load<Texture2D>(textureFilename);
+            texture = content.Load<Texture2D>(filename);
 
             origin.X = texture.Width / 2;
             origin.Y = texture.Height / 2;
-
-            base.LoadContent();
         }
 
-        protected abstract void InitializeConstants();
+        protected abstract void InitializeConstants(ContentManager cm, string content);
 
-        public override void Update(GameTime gameTime)
+        public void Update(float dt)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             curTime += dt;
 
             // Update Current Particles
@@ -144,7 +159,7 @@ namespace TTG
             }
 
             // Release new one if needed
-            if ((curTime >= timeBetweenRelease) && (timeBetweenRelease != 0.0f))
+            if ((curTime >= timeBetweenRelease) && (!cycleOnce))
             {
                 if (deadParticles.Count != 0)
                 {
@@ -154,13 +169,11 @@ namespace TTG
                 // Reset timer
                 curTime = 0.0f;
             }
-
-            base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public virtual void Draw(SpriteBatch sb)
         {
-            sb.Begin(SpriteSortMode.Deferred, blend);
+            sb.Begin(SpriteSortMode.Immediate, blend);
 
             foreach (Particle p in aliveParticles)
             {
@@ -175,8 +188,6 @@ namespace TTG
             }
 
             sb.End();
-
-            base.Draw(gameTime);
         }
     }
 }

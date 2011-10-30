@@ -45,7 +45,7 @@ namespace TTG
         protected DeathEmitter ps;
         protected Vector2 psPosition;
 
-        public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack, Game1 game, Random rand, string ptextFilename)
+        public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
             : base(position, team)
         {
             _targetType = TargetUnitType.Any;
@@ -59,9 +59,6 @@ namespace TTG
             _animationAttack = animationAttack;
 
             _target = null;
-
-             ps = new DeathEmitter(game, rand, ptextFilename);
-             ps.Enabled = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -121,8 +118,6 @@ namespace TTG
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            ps.SB = spritebatch;
-
             SpriteEffects flip = SpriteEffects.None;
 
             if (_team == UnitTeam.Player2)
@@ -176,9 +171,11 @@ namespace TTG
             return _position + new Vector2(r.Width, r.Height);
         }
 
-        public override void OnDeath()
+        public override void OnDeath(DeathEmitter de)
         {
-            ps.Enabled = true;
+            Rectangle r = _animationMove.GetFrameRect(0);
+            de.Active = true;
+            de.pos = _position + new Vector2(r.Width, r.Height);
         }
     }
 }

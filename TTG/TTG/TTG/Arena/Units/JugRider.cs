@@ -12,8 +12,8 @@ namespace TTG
 {
     public class JugRider : Unit
     {
-         public JugRider(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Game1 game, Random rand) : 
-            base(position, team, arena, animationMove, animationAttack, game, rand, "particle_03")
+         public JugRider(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
+            base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 30;
             _moveSpeed = 50;
@@ -22,5 +22,10 @@ namespace TTG
             _attackRange = 50;
             _followRange = 500;
         }
+
+         public override void OnDeath(DeathEmitter de)
+         {
+             base.OnDeath(de);
+         }
     }
 }

@@ -12,8 +12,8 @@ namespace TTG
     {
         Texture2D _projectile;
 
-        public Ember(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Texture2D projectile, Game1 game, Random rand) :
-            base(position, team, arena, animationMove, animationAttack, game, rand, "particle_03")
+        public Ember(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Texture2D projectile) :
+            base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 50;
             _moveSpeed = 200;
@@ -30,9 +30,9 @@ namespace TTG
             base.OnAttack(target);
         }
 
-        public override void OnDeath()
+        public override void  OnDeath(DeathEmitter de)
         {
-            base.OnDeath();
+ 	        
         }
     }
 }

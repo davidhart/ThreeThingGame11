@@ -13,8 +13,8 @@ namespace TTG
 {
     public class Marine : Unit
     {
-        public Marine(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Game1 game, Random rand) : 
-            base(position, team, arena, animationMove, animationAttack, game, rand, "particle_03")
+        public Marine(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
+            base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 50;
             _moveSpeed = 50;
@@ -30,9 +30,9 @@ namespace TTG
             base.OnAttack(target);
         }
 
-        public override void OnDeath()
+        public override void OnDeath(DeathEmitter de)
         {
-            base.OnDeath();
+            base.OnDeath(de);
         }
     }
 }

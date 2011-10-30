@@ -14,7 +14,6 @@ namespace TTG
         PuzzleGrid _puzzleGrid;
         SpriteBatch spriteBatch;
         GraphicsDevice _graphics;
-        Random rand;
 
         Arena arena;
         UI arenaUI;
@@ -32,9 +31,7 @@ namespace TTG
             _graphics = graphics;
             spriteBatch = new SpriteBatch(graphics);
 
-            Random rand = new Random();
-
-            arena = new Arena(1280, 200, base._parent, rand);
+            arena = new Arena(1280, 200);
             arena.LoadContent(content, graphics);
             
             for (int i = 0; i < 7; ++i)

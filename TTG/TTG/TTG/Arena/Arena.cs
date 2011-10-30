@@ -115,10 +115,12 @@ namespace TTG
 
         Texture2D _base1Texture;
         Texture2D _base2Texture;
-        Game1 game;
-        Random rand;
 
         SoundEffect _jugRiderSpawn;
+
+        //Particle
+        List<DeathEmitter> _deadEmitters;
+        Random rand;
 
         public SoundEffect JugRiderSpawnSE
         {
@@ -132,7 +134,7 @@ namespace TTG
             }
         }
 
-        public Arena(int displayWidth, int displayHeight, Game1 game, Random rand)
+        public Arena(int displayWidth, int displayHeight)
         {
             P1Energy = 200;
             P2Energy = 200;
@@ -144,8 +146,8 @@ namespace TTG
             _animationsAttack = new Animation[2];
             _animationsMove = new Animation[2];
 
-            this.game = game;
-            this.rand = rand;
+            _deadEmitters = new List<DeathEmitter>(20);
+            rand = new Random();
         }
 
         Music _bgm;
@@ -184,6 +186,17 @@ namespace TTG
 
             //_p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
             //_p2HealthBar.LoadContent(content);
+
+            //Particles
+            List<string> textures = new List<string>();
+            textures.Add("Particles/MarineArmour");
+
+            for (int i = 0; i < 20; ++i)
+            {
+                DeathEmitter temp = new DeathEmitter(rand);
+                temp.Initialize(content, textures[0]);
+                _deadEmitters.Add(temp);
+            }
 
             _bloomEffect = new BloomPostProcess();
             _bloomEffect.LoadContent(device, content, _displayWidth, _displayHeight);
@@ -229,13 +242,26 @@ namespace TTG
             {
                 if (_units[i].IsDead())
                 {
-                    _units[i].OnDeath();
+                    for (int j = 0; j < _deadEmitters.Count - 1; ++j)
+                    {
+                        if (!_deadEmitters[j].Active)
+                        {
+                            _units[i].OnDeath(_deadEmitters[j]);
+                            break;
+                        }
+                    }
                     _units.RemoveAt(i);
                 }
                 else
                 {
                     ++i;
                 }
+            }
+
+            foreach (DeathEmitter de in _deadEmitters)
+            {
+                if (de.Active)
+                    de.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
             _marineShotBatch.Update(gameTime);
@@ -263,10 +289,11 @@ namespace TTG
 
             _marineShotBatch.Draw();
 
-            spritebatch.Begin();
-            //_p1HealthBar.Draw(spritebatch);
-            //_p2HealthBar.Draw(spritebatch);
-            spritebatch.End();
+            foreach (DeathEmitter de in _deadEmitters)
+            {
+                if (de.Active)
+                    de.Draw(spritebatch);
+            }
 
             _graphics.SetRenderTarget(null);
         }
@@ -294,11 +321,11 @@ namespace TTG
         {
             if (unit == UnitEnum.Marine)
             {
-                _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this, game, rand));
+                _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this));
             }
             else if (unit == UnitEnum.Ember)
             {
-                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile, game, rand));
+                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile));
             }
         }
 
