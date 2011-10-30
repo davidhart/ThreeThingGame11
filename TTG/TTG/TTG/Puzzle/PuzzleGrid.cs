@@ -31,7 +31,7 @@ namespace TTG
         Texture2D[] _blockTextureL;
 
         Texture2D _blockSelection;
-        const float _fadeOutTime = 0.5f;
+        const float _fadeOutTime = 0.8f;
 
         // To replenish energy
         Arena _arena;
@@ -164,8 +164,6 @@ namespace TTG
                 _energy = 0;
                 _combo = 0;
                 SetCursor();
-                _energy *= _combo;
-                _arena.P1Energy += _energy;
             }
         }
 
@@ -188,13 +186,14 @@ namespace TTG
             if (_matches)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                float alpha = 1 - _countDown / _fadeOutTime;
+
                 for (int row = 0; row < _rows; row++)
                 {
                     for (int col = 0; col < _columns; col++)
                     {
                         if (_grid[row, col].Removed())
                         {
-                            float alpha = 1 - _countDown * _fadeOutTime;
                             spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), new Color(alpha, alpha, alpha));
                         }
                     }
@@ -209,7 +208,7 @@ namespace TTG
                 spriteBatch.Draw(_blockSelection, new Rectangle(_x + _cursorX * 64, _y + _cursorY * 64, 64, 64), Color.White);
 
             spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns), 10), Color.Black);
-            spriteBatch.DrawString(_font, _energy.ToString(), new Vector2(_x + (64 * _columns) + 50, 50), Color.Black);
+            spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 50, 50), Color.Black);
 
             if (_combo > 1)
             {
@@ -327,6 +326,12 @@ namespace TTG
 
             if (_matches)
                 _countDown = _fadeOutTime;
+            else
+            {
+                _arena.P1Energy += _energy * _combo;
+                _energy = 0;
+                _combo = 0;
+            }
         }
 
         public void SolveGrid()
