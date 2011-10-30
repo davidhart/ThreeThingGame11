@@ -96,6 +96,7 @@ namespace TTG
                 content.Load<Texture2D>("Helpbtn"),
                 content.Load<Texture2D>("HelpbtnSelected"),
                 select, new Rectangle(640 - 128, 380, 256, 128));
+            _helpBtn.OnPress += new TitleButton.PressedEventHandler(_helpBtn_OnPress);
 
             _quitBtn = new TitleButton(
                 content.Load<Texture2D>("QuitBtn"),
@@ -104,6 +105,11 @@ namespace TTG
             _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
 
             _spriteBatch = new SpriteBatch(graphics);
+        }
+
+        void _helpBtn_OnPress(object sender, EventArgs e)
+        {
+            ChangeScreen(_parent.HelpScreen);
         }
 
         void _quitBtn_OnPress(object sender, EventArgs e)

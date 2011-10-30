@@ -44,6 +44,15 @@ namespace TTG
         }
 
         GraphicsDeviceManager graphics;
+
+        HelpScreen _helpScreen;
+        public GameState HelpScreen
+        {
+            get
+            {
+                return _helpScreen;
+            }
+        }
         MouseState oldMouseState, newMouseState;
 
         public Game1()
@@ -71,6 +80,9 @@ namespace TTG
 
             _gameOverSate = new GameOverState(this);
             _gameOverSate.Load(Content, GraphicsDevice);
+
+            _helpScreen = new HelpScreen(this);
+            _helpScreen.Load(Content, GraphicsDevice);
 
             _currentState = _titlescreen;
         }

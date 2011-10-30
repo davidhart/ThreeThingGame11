@@ -136,6 +136,7 @@
     <Compile Include="Puzzle\Block.cs" />
     <Compile Include="Puzzle\PuzzleGrid.cs" />
     <Compile Include="SE.cs" />
+    <Compile Include="States\HelpScreen.cs" />
     <Compile Include="States\StatePlaying.cs" />
     <Compile Include="States\TitleScreen.cs" />
     <Compile Include="UI.cs" />
