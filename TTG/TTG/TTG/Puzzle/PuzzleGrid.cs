@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-//using System.Diagnostics;
+using System.Diagnostics;
 
 namespace TTG
 {
@@ -34,6 +34,11 @@ namespace TTG
         // To replenish energy
         Arena _arena;
 
+        // Font to draw score and combo multiplier
+        SpriteFont _font;
+        int _energy;
+        int _combo;
+
         public PuzzleGrid(int gr, int gc, int xPos, int yPos, Arena arena)
         {
             // Location to start drawing on screen
@@ -50,6 +55,9 @@ namespace TTG
             _cursorY = -1;
 
             _arena = arena;
+
+            _energy = 0;
+            _combo = 0;
 
             //PopulateGrid();
         }
@@ -102,6 +110,8 @@ namespace TTG
         {
             _graphics = device;
 
+            _font = content.Load<SpriteFont>("UIFont");
+
             // Load block images here
             _blockTexture = new Texture2D[5];
 
@@ -122,7 +132,11 @@ namespace TTG
             if (currentMouseState.LeftButton == ButtonState.Pressed
                 && oldMouseState.LeftButton != ButtonState.Pressed)
             {
+                _energy = 0;
+                _combo = 0;
                 SetCursor();
+                _energy *= _combo;
+                _arena.P1Energy += _energy;
             }
         }
 
@@ -143,6 +157,14 @@ namespace TTG
             // Draw selector if we have picked a tile to swap
             if (_cursorX != -1 && _cursorY != -1)
                 spriteBatch.Draw(_blockSelection, new Rectangle(_x + _cursorX * 64, _y + _cursorY * 64, 64, 64), Color.White);
+
+            spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns), 10), Color.Black);
+            spriteBatch.DrawString(_font, _energy.ToString(), new Vector2(_x + (64 * _columns) + 50, 50), Color.Black);
+
+            if (_combo > 1)
+            {
+                spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 50, 100), Color.Black);
+            }
 
             spriteBatch.End();
         }
@@ -320,22 +342,37 @@ namespace TTG
 
             if (xMatches.Count >= 3)
             {
+                int blockEnergy = 0;
                 foreach (Block b in xMatches)
                 {
+                    blockEnergy = b.GetEnergy();
                     b.Remove();
-                    _arena.P1Energy += b.GetEnergy();
+                    
                 }
+                _combo++;
+                _energy += blockEnergy * xMatches.Count;
+                Debug.WriteLine("Combo: " + _combo);
+                Debug.WriteLine("Energy: " + _energy);
+                //_arena.P1Energy += _energy;
 
                 matches = true;
             }
 
             if (yMatches.Count >= 3)
             {
+                int blockEnergy = 0;
                 foreach (Block b in yMatches)
                 {
+                    blockEnergy = b.GetEnergy();
                     b.Remove();
-                    _arena.P1Energy += b.GetEnergy();
+                    
                 }
+                _combo++;
+                _energy += blockEnergy * yMatches.Count;
+                Debug.WriteLine("Combo: " + _combo);
+                Debug.WriteLine("Energy: " + _energy);
+                //_arena.P1Energy += _energy;
+
                 matches = true;
             }
 

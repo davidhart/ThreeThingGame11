@@ -24,6 +24,7 @@ namespace TTG
         {
             _id = id;
             _remove = remove;
+            _energy = 5;
         }
 
         public int GetID()
