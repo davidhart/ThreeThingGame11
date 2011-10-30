@@ -14,6 +14,7 @@ namespace TTG
         PuzzleGrid _puzzleGrid;
         SpriteBatch spriteBatch;
         GraphicsDevice _graphics;
+        KeyboardState _prevKeyState;
 
         Arena arena;
         UI arenaUI;
@@ -49,6 +50,8 @@ namespace TTG
             _puzzleGrid.PopulateGrid();
 
             _font = content.Load<SpriteFont>("UIFont");
+
+            _prevKeyState = Keyboard.GetState();
         }
 
         public override void Reset()

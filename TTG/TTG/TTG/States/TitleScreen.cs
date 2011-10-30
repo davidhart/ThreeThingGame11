@@ -87,18 +87,18 @@ namespace TTG
             _startBtn = new TitleButton(
                 content.Load<Texture2D>("StartBtn"),
                 content.Load<Texture2D>("StartBtnSelected"),
-                select, new Rectangle (640 - 128, 300, 256, 128));
+                select, new Rectangle (640 - 128, 250, 256, 128));
             _startBtn.OnPress += new TitleButton.PressedEventHandler(_startBtn_OnPress);
 
             _helpBtn = new TitleButton(
                 content.Load<Texture2D>("Helpbtn"),
                 content.Load<Texture2D>("HelpbtnSelected"),
-                select, new Rectangle(640 - 128, 400, 256, 128));
+                select, new Rectangle(640 - 128, 380, 256, 128));
 
             _quitBtn = new TitleButton(
                 content.Load<Texture2D>("QuitBtn"),
                 content.Load<Texture2D>("QuitBtnSelected"),
-                select, new Rectangle(640 - 128, 500, 256, 128));
+                select, new Rectangle(640 - 128, 510, 256, 128));
             _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
 
             _spriteBatch = new SpriteBatch(graphics);

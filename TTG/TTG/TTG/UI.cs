@@ -45,6 +45,17 @@ namespace TTG
 
         }
 
+        public void Press()
+        {
+            if (_arena.P1Energy >= _energyUse)
+            {
+                _clicked = true;
+                _arena.AddUnit(_unitEnum, UnitTeam.Player1);
+                _arena.P1Energy -= _energyUse;
+                _uiButtonSound.Play();
+            }
+        }
+
         public void Draw(SpriteBatch spritebatch)
         {
             if (_clicked)
@@ -64,13 +75,9 @@ namespace TTG
 
             if (_mouseRect.Intersects(_uiRect) &&
                 newMousestate.LeftButton == ButtonState.Pressed &&
-                oldMouseState.LeftButton == ButtonState.Released &&
-                _arena.P1Energy >= _energyUse)
+                oldMouseState.LeftButton == ButtonState.Released)
             {
-                _clicked = true;
-                _arena.AddUnit(_unitEnum, UnitTeam.Player1);
-                _arena.P1Energy -= _energyUse;
-                _uiButtonSound.Play();
+                Press();
 
             }
             else if (_mouseRect.Intersects(_uiRect) &&
@@ -98,6 +105,7 @@ namespace TTG
         SpriteFont _font;
         HealthBar _p1HealthBar;
         HealthBar _p2HealthBar;
+        KeyboardState _prevKeyState;
 
         public void Load(ContentManager content, Arena arena)
         {
@@ -144,6 +152,8 @@ namespace TTG
 
             _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(1280 - 338 - 48, 537), 338, false);
             _p2HealthBar.LoadContent(content);
+
+            _prevKeyState = Keyboard.GetState();
         }
         public void Draw(SpriteBatch spritebatch)
         {
@@ -162,6 +172,27 @@ namespace TTG
             _marineBtn.Update(newMouse, oldMouse);
             _hydroBtn.Update(newMouse, oldMouse);
             _launcherBtn.Update(newMouse, oldMouse);
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.D1) && _prevKeyState.IsKeyUp(Keys.D1))
+            {
+                _marineBtn.Press();
+            }
+
+            if (state.IsKeyDown(Keys.D2) && _prevKeyState.IsKeyUp(Keys.D2))
+            {
+                _hydroBtn.Press();
+            }
+
+            if (state.IsKeyDown(Keys.D3) && _prevKeyState.IsKeyUp(Keys.D3))
+            {
+                _launcherBtn.Press();
+            }
+
+
+
+            _prevKeyState = state;
         }
 
         public void SetBases(Base p1Base, Base p2Base)
