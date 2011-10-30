@@ -31,6 +31,7 @@ namespace TTG
         Texture2D[] _blockTextureL;
 
         Texture2D _blockSelection;
+        const float _fadeOutTime = 0.5f;
 
         // To replenish energy
         Arena _arena;
@@ -41,6 +42,9 @@ namespace TTG
         SpriteFont _font;
         int _energy;
         int _combo;
+
+        bool _matches;
+        float _countDown;
 
         public PuzzleGrid(int gr, int gc, int xPos, int yPos, Arena arena)
         {
@@ -61,6 +65,9 @@ namespace TTG
 
             _energy = 0;
             _combo = 0;
+
+            _countDown = 0;
+            _matches = false;
 
             //PopulateGrid();
         }
@@ -142,8 +149,16 @@ namespace TTG
 
             _idleTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            _countDown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_countDown < 0)
+            {
+                SolveGrid();
+                CheckGrid();
+            }
+
             if (currentMouseState.LeftButton == ButtonState.Pressed
-                && oldMouseState.LeftButton != ButtonState.Pressed)
+                && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
             {
                 _idleTime = 0;
                 _energy = 0;
@@ -163,12 +178,31 @@ namespace TTG
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    if (!_grid[row, col].Removed())
-                    {
-                        spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
-                    }
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
                 }
             }
+
+            spriteBatch.End();
+
+            // If animating blend out matches
+            if (_matches)
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                for (int row = 0; row < _rows; row++)
+                {
+                    for (int col = 0; col < _columns; col++)
+                    {
+                        if (_grid[row, col].Removed())
+                        {
+                            float alpha = 1 - _countDown * _fadeOutTime;
+                            spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), new Color(alpha, alpha, alpha));
+                        }
+                    }
+                }
+                spriteBatch.End();
+            }
+
+            spriteBatch.Begin();
 
             // Draw selector if we have picked a tile to swap
             if (_cursorX != -1 && _cursorY != -1)
@@ -276,57 +310,58 @@ namespace TTG
 
         public void CheckGrid()
         {
-            bool matches = false;
-
             // Solve grid until no more matches
+            _matches = false;
+
+            // Mark any matches as 'removed'
+            for (int r = 0; r < _rows; ++r)
+            {
+                for (int c = 0; c < _columns; ++c)
+                {
+                    if (!_grid[r, c].Removed())
+                    {
+                        _matches |= CheckMatch(r, c);
+                    }
+                }
+            }
+
+            if (_matches)
+                _countDown = _fadeOutTime;
+        }
+
+        public void SolveGrid()
+        {
+            bool changed = false;
             do
             {
-                matches = false;
-
-                // Mark any matches as 'removed'
-                for (int r = 0; r < _rows; ++r)
+                // Move everything down 1 block
+                changed = false;
+                for (int row = _rows - 1; row > 0; row--)
                 {
-                    for (int c = 0; c < _columns; ++c)
+                    for (int col = 0; col < _columns; col++)
                     {
-                        if (!_grid[r, c].Removed())
+                        if (_grid[row, col].Removed())
                         {
-                            matches |= CheckMatch(r, c);
+                            _grid[row, col] = new Block(_grid[row - 1, col].GetID(), _grid[row - 1, col].Removed());//_grid[row, col];
+                            _grid[row - 1, col].Remove();
+                            changed = true;
+                        }
+                        else
+                        {
+                            continue;
                         }
                     }
                 }
 
-                bool changed = false;
-                do
+                // Replace the removed blocks on the top row with new blocks
+                for (int col = 0; col < _columns; col++)
                 {
-                    // Move everything down 1 block
-                    changed = false;
-                    for (int row = _rows - 1; row > 0; row--)
+                    if (_grid[0, col].Removed())
                     {
-                        for (int col = 0; col < _columns; col++)
-                        {
-                            if (_grid[row, col].Removed())
-                            {
-                                _grid[row, col] = new Block(_grid[row - 1, col].GetID(), _grid[row - 1, col].Removed());//_grid[row, col];
-                                _grid[row - 1, col].Remove();
-                                changed = true;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
+                        _grid[0, col] = new Block(Util.Rand(5));
                     }
-
-                    // Replace the removed blocks on the top row with new blocks
-                    for (int col = 0; col < _columns; col++)
-                    {
-                        if (_grid[0, col].Removed())
-                        {
-                            _grid[0, col] = new Block(Util.Rand(5));
-                        }
-                    }
-                } while (changed);
-            } while (matches);
+                }
+            } while (changed);
         }
 
         public bool CheckMatch(int r, int c)
