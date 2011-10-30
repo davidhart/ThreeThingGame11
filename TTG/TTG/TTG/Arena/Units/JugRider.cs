@@ -17,11 +17,17 @@ namespace TTG
         {
             MaxHP = 30;
             _moveSpeed = 50;
-            _attackSpeed = 0.3f;
-            _attackDamage = 50;
+            _attackSpeed = 0.1f;
+            _attackDamage = 100;
             _attackRange = 50;
             _followRange = 500;
         }
+
+         protected override void OnAttack(Target target)
+         {
+             _arena.AddMarineShot(this, target, Color.Red, Color.Yellow);
+             base.OnAttack(target);
+         }
 
          public override void OnDeath(PEmitter de)
          {

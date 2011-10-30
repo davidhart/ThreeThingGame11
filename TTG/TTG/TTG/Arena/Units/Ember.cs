@@ -18,7 +18,7 @@ namespace TTG
             MaxHP = 50;
             _moveSpeed = 200;
             _attackSpeed = 5.0f;
-            _attackDamage = 100;
+            _attackDamage = 7;
             _attackRange = 300;
             _followRange = 500;
             _projectile = projectile;

@@ -14,7 +14,9 @@ namespace TTG
         Marine = 0,
         Ember = 1,
         Juggernaught = 2,
-        JugRider = 3
+        JugRider = 3,
+        Hydro = 4,
+        Launcher = 5
     };
 
     public enum UnitTeam
@@ -104,7 +106,7 @@ namespace TTG
             }
         }
 
-        MarineShotBatch _marineShotBatch;
+        MarineShotBatch _marineShotBatch, _hydroShotBatch;
         ProjectileBatch _projectileBatch;
         GraphicsDevice _graphics;
         Texture2D _battleBG;
@@ -144,8 +146,8 @@ namespace TTG
             _displayWidth = displayWidth;
             _displayHeight = displayHeight;
 
-            _animationsAttack = new Animation[2];
-            _animationsMove = new Animation[2];
+            _animationsAttack = new Animation[10];
+            _animationsMove = new Animation[10];
 
             _deadHumanEmitters = new List<MarineDeathEmitter>(20);
             _deadEnemyEmitters = new List<EnemyDeathEmitter>(20);
@@ -168,10 +170,20 @@ namespace TTG
             _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 3, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 0, 3, 0.15f, true);
 
+            _animationsAttack[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerAnim"), 3, 1, 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerShoot1"), 1, 1, 0, 1, 0.1f, false);
+
+            _animationsAttack[(int)UnitEnum.JugRider] = new Animation(content.Load<Texture2D>("ridershoot"), 3, 1, 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.JugRider] = new Animation(content.Load<Texture2D>("Riderwalk"), 4, 1, 0 , 4, 0.15f, true);
+
+            _animationsAttack[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("hydroshoot"), 3, 1, 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("hydrowalk"), 4, 1, 0, 4, 0.15f, true);
+
             _emberProjectile = content.Load<Texture2D>("ember_proj");
 
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
+            _hydroShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
             _projectileBatch = new ProjectileBatch();
 
             _base1Texture = content.Load<Texture2D>("base");
@@ -354,16 +366,35 @@ namespace TTG
             }
         }
 
-        public void AddUnit(UnitEnum unit, UnitTeam team)
+        public Unit AddUnit(UnitEnum unit, UnitTeam team)
         {
+            Unit u = null;
             if (unit == UnitEnum.Marine)
             {
-                _units.Add(new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this));
+                u = new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
+            }
+            else if (unit == UnitEnum.Juggernaught)
+            {
+                u = new Juggernaught(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
+            }
+            else if (unit == UnitEnum.JugRider)
+            {
+                u = new JugRider(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.JugRider], _animationsAttack[(int)UnitEnum.JugRider], team, this);
+            }
+            else if (unit == UnitEnum.Hydro)
+            {
+                u = new Hydro(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Hydro], _animationsAttack[(int)UnitEnum.Hydro], team, this);
+            }
+            else if (unit == UnitEnum.Launcher)
+            {
             }
             else if (unit == UnitEnum.Ember)
             {
-                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile));
+                u =new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile);
             }
+
+            _units.Add(u);
+            return u;
         }
 
         public Target AcquireTarget(Unit attacker)
@@ -392,9 +423,9 @@ namespace TTG
             return bestTarget;
         }
 
-        public void AddMarineShot(Unit attacker, Target target)
+        public void AddMarineShot(Unit attacker, Target target, Color color1, Color color2)
         {
-            _marineShotBatch.AddShot(attacker, target);
+            _marineShotBatch.AddShot(attacker, target, color1, color2);
         }
 
         public Base GetBase1()

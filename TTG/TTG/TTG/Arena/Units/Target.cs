@@ -61,6 +61,11 @@ namespace TTG
             {
                 return _position;
             }
+
+            set
+            {
+                _position = value;
+            }
         }
 
         public Target(Vector2 position, UnitTeam team)

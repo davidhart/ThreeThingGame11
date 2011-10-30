@@ -15,22 +15,25 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TTG
 {
-    /*
+    
     public class Hydro : Unit
     {
-        public override void Draw(GameTime gametime, SpriteBatch spritebatch)
+        public Hydro(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
+            base(position, team, arena, animationMove, animationAttack)
         {
-            HP = 40;
-            Attack = 15;
-            Range = 10;
-            Speed = 10;
-            EnergyCost = 30;
-            base.Draw(gametime, spritebatch);
+            MaxHP = 70;
+            _moveSpeed = 50;
+            _attackSpeed = 0.3f;
+            _attackDamage = 3;
+            _attackRange = 150;
+            _followRange = 500;
         }
-        public override void Update()
+
+        protected override void OnAttack(Target target)
         {
-            base.Update();
+            _arena.AddMarineShot(this, target, Color.Blue,Color.White);
+            base.OnAttack(target);
         }
     }
-    */
+    
 }

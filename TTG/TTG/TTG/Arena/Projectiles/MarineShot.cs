@@ -18,7 +18,35 @@ namespace TTG
         private Target _target;
         private Unit _attacker;
 
-        public MarineShot(Unit attacker, Target target)
+        Color _color1;
+        public Color Color1
+        {
+            get
+            {
+                return _color1;
+            }
+            set
+            {
+                _color1 = value;
+            }
+
+        }
+
+
+        Color _color2;
+        public Color Color2
+        {
+            get
+            {
+                return _color2;
+            }
+            set
+            {
+                _color2 = value;
+            }
+        }
+
+        public MarineShot(Unit attacker, Target target, Color color1, Color color2)
         {
             Vector2 offset = new Vector2(30, 30);
 
@@ -31,6 +59,8 @@ namespace TTG
             _target = target;
             _attacker = attacker;
             _elapsed = 0;
+            _color1 = color1;
+            _color2 = color2;
         }
 
         public void Update(GameTime gameTime)
@@ -90,9 +120,9 @@ namespace TTG
             _effect.View = viewMatrix;
         }
 
-        public void AddShot(Unit attacker, Target target)
+        public void AddShot(Unit attacker, Target target, Color color1, Color color2)
         {
-            _shots.Add(new MarineShot(attacker, target));
+            _shots.Add(new MarineShot(attacker, target, color1, color2));
         }
 
         public void Update(GameTime gameTime)
@@ -118,7 +148,7 @@ namespace TTG
 
                 for (int i = 0; i < _shots.Count; ++i)
                 {
-                    Color c = Color.Lerp(Color.Yellow, Color.Red, _shots[i].PercentAlive());
+                    Color c = Color.Lerp(_shots[i].Color1, _shots[i].Color2, _shots[i].PercentAlive());
                     vertices[i * 2].Color = c;
                     vertices[i * 2].Position = new Vector3(_shots[i].GetLineStart(), 0.0f);
 

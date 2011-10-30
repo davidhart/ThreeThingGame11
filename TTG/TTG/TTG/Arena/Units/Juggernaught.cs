@@ -10,26 +10,36 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace TTG.Units
+namespace TTG
 {
     public class Juggernaught : Unit
     {
-       SoundEffect _spawnSE; 
+        SoundEffect _spawnSE;
+       Arena _arena;
        public Juggernaught(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
             base(position, team, arena, animationMove, animationAttack)
         {
-            MaxHP = 150;
+            MaxHP = 800;
             _moveSpeed = 20;
-            _attackSpeed = 0.3f;
+            _attackSpeed = 0.1f;
             _attackDamage = 50;
-            _attackRange = 50;
+            _attackRange = 100;
             _followRange = 500;
-            _spawnSE = arena.JugRiderSpawnSE;
+            _arena = arena;
+          
         }
+
+       protected override void OnAttack(Target target)
+       {
+           _arena.AddMarineShot(this, target, Color.Red, Color.Yellow);
+           base.OnAttack(target);
+       }
        public override void OnDeath(PEmitter de)
        {
+           _spawnSE = _arena.JugRiderSpawnSE;
            _spawnSE.Play();
-           _arena.AddUnit(UnitEnum.JugRider, UnitTeam.Player1);
+           Unit u = _arena.AddUnit(UnitEnum.JugRider, UnitTeam.Player1);
+           u.Position = _position;
            base.OnDeath(de);
        }
     }

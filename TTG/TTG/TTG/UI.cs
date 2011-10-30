@@ -117,16 +117,16 @@ namespace TTG
                 content.Load<SoundEffect>("HydroTalk1"),
                 100, 150,
                 arena,
-                UnitEnum.Marine, 30,
+                UnitEnum.Hydro, 30,
                 content.Load<SoundEffect>("NoSpawn"));
 
             _launcherBtn = new UIBtn(
             content.Load<Texture2D>("LauncherSpawnBtn"),
             content.Load<Texture2D>("LauncherSpawnBtnClick"),
-            content.Load<SoundEffect>("LauncherTalk1"),
+            content.Load<SoundEffect>("JuggTalk1"),
             100, 250,
             arena, //Change this
-            UnitEnum.Marine,
+            UnitEnum.Juggernaught,
             40,
             content.Load<SoundEffect>("NoSpawn")
             );

@@ -26,7 +26,7 @@ namespace TTG
 
         protected override void OnAttack(Target target)
         {
-            _arena.AddMarineShot(this, target);
+            _arena.AddMarineShot(this, target, Color.Red, Color.Yellow);
             base.OnAttack(target);
         }
 

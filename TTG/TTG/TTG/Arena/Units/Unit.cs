@@ -73,7 +73,7 @@ namespace TTG
 
             if (_target != null)
             {
-                Vector2 direction = _target.GetMidPoint() - _position;
+                Vector2 direction = _target.GetMidPoint() - GetMidPoint();
                 float distance = direction.Length();
 
                 if (distance > _followRange)
