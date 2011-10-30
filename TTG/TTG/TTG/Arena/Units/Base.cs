@@ -31,5 +31,10 @@ namespace TTG
         {
             return _position + new Vector2(_texture.Width / 2, _texture.Height / 2);
         }
+
+        public override void OnDeath()
+        {
+            
+        }
     }
 }

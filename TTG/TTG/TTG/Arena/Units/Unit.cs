@@ -121,6 +121,8 @@ namespace TTG
 
         public override void Draw(SpriteBatch spritebatch)
         {
+            ps.SB = spritebatch;
+
             SpriteEffects flip = SpriteEffects.None;
 
             if (_team == UnitTeam.Player2)
@@ -174,7 +176,7 @@ namespace TTG
             return _position + new Vector2(r.Width, r.Height);
         }
 
-        protected virtual void OnDeath()
+        public override void OnDeath()
         {
             ps.Enabled = true;
         }

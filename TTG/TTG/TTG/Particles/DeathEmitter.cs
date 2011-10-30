@@ -9,11 +9,16 @@ namespace TTG
 {
     public class DeathEmitter : PEmitter
     {
-        public DeathEmitter(Game1 game, Random rand, string textureFilename, SpriteBatch sb)
+        public DeathEmitter(Game1 game, Random rand, string textureFilename)
             : base(game, rand)
         {
             this.textureFilename = textureFilename;
             this.sb = sb;
+        }
+
+        public SpriteBatch SB
+        {
+            set { sb = value; }
         }
 
         protected override void InitializeConstants()

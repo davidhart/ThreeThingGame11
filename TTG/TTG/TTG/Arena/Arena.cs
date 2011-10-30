@@ -109,8 +109,10 @@ namespace TTG
 
         Texture2D _base1Texture;
         Texture2D _base2Texture;
+        Game1 game;
+        Random rand;
 
-        public Arena(int displayWidth, int displayHeight)
+        public Arena(int displayWidth, int displayHeight, Game1 game, Random rand)
         {
             P1Energy = 200;
             P2Energy = 200;
@@ -121,6 +123,9 @@ namespace TTG
 
             _animationsAttack = new Animation[2];
             _animationsMove = new Animation[2];
+
+            this.game = game;
+            this.rand = rand;
         }
 
         Music _bgm;
@@ -203,6 +208,7 @@ namespace TTG
             {
                 if (_units[i].IsDead())
                 {
+                    _units[i].OnDeath();
                     _units.RemoveAt(i);
                 }
                 else
@@ -263,7 +269,7 @@ namespace TTG
             }
         }
 
-        public void AddUnit(UnitEnum unit, UnitTeam team, Game1 game, Random rand)
+        public void AddUnit(UnitEnum unit, UnitTeam team)
         {
             if (unit == UnitEnum.Marine)
             {
@@ -271,7 +277,7 @@ namespace TTG
             }
             else if (unit == UnitEnum.Ember)
             {
-                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile));
+                _units.Add(new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile, game, rand));
             }
         }
 

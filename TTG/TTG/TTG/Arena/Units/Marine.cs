@@ -30,7 +30,7 @@ namespace TTG
             base.OnAttack(target);
         }
 
-        protected override void OnDeath()
+        public override void OnDeath()
         {
             base.OnDeath();
         }

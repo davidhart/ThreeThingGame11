@@ -14,6 +14,7 @@ namespace TTG
         PuzzleGrid _puzzleGrid;
         SpriteBatch spriteBatch;
         GraphicsDevice _graphics;
+        Random rand;
 
         Arena arena;
         UI arenaUI;
@@ -31,8 +32,11 @@ namespace TTG
             _graphics = graphics;
             spriteBatch = new SpriteBatch(graphics);
 
-            arena = new Arena(1280, 200);
+            Random rand = new Random();
+
+            arena = new Arena(1280, 200, base._parent, rand);
             arena.LoadContent(content, graphics);
+            
             for (int i = 0; i < 7; ++i)
             {
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
