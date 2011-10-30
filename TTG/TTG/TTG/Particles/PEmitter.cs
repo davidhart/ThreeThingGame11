@@ -80,6 +80,14 @@ namespace TTG
             return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
 
+        public void RecycleParticles()
+        {
+            foreach (Particle p in aliveParticles)
+            {
+                RecycleParticle(p);
+            }
+        }
+
         private void RecycleParticle(Particle p)
         {
             Vector2 direction = PickRandomDirection();
@@ -93,6 +101,7 @@ namespace TTG
 
             accel.X = Particle.RandomBetween(minAccel.X, maxAccel.X, rand);
             accel.Y = Particle.RandomBetween(minAccel.Y, maxAccel.Y, rand);
+            p.TimeSinceStart = 0.0f;
 
             p.Initialize(this.Pos,
                 vel * direction,
@@ -105,6 +114,8 @@ namespace TTG
 
         public void Initialize(ContentManager cm, string texture)
         {
+            Active = false;
+
             aliveParticles = new List<Particle>();
             deadParticles = new Queue<Particle>();
 
@@ -145,31 +156,27 @@ namespace TTG
             curTime += dt;
 
             // Update Current Particles
+            int aliveCount = 0;
+
             for (int i = 0; i < aliveParticles.Count - 1; ++i )
             {
                 if (aliveParticles[i].Active)
                 {
                     aliveParticles[i].Update(dt);
-                }
-                else
-                {
-                    deadParticles.Enqueue(aliveParticles[i]);
-                    aliveParticles.RemoveAt(i);
-                    --i;
+                    ++aliveCount;
                 }
             }
 
-            // Release new one if needed
-            if ((curTime >= timeBetweenRelease) && (!cycleOnce))
+            if (aliveCount == 0)
             {
-                if (deadParticles.Count != 0)
+                this.active = false;
+
+                foreach (Particle p in deadParticles)
                 {
-                    aliveParticles.Add(deadParticles.Dequeue());
-                    RecycleParticle(aliveParticles[aliveParticles.Count - 1]);
+                    RecycleParticle(p);
                 }
-                // Reset timer
-                curTime = 0.0f;
             }
+
         }
 
         public virtual void Draw(SpriteBatch sb)

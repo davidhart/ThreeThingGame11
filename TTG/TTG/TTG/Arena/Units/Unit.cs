@@ -175,6 +175,7 @@ namespace TTG
         {
             Rectangle r = _animationMove.GetFrameRect(0);
             de.Active = true;
+            de.RecycleParticles();
             de.pos = _position + new Vector2(r.Width, r.Height);
         }
     }
