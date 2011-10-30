@@ -75,6 +75,10 @@ namespace TTG
             set
             {
                 _p1Energy = value;
+                if (_p1Energy >= 1000)
+                {
+                    _p1Energy = 1000;
+                }
             }
         }
         public int P2Energy

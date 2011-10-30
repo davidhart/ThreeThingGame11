@@ -17,14 +17,14 @@ namespace TTG
         {
             _id = id;
             _remove = false;
-            _energy = 5;
+            _energy = 2;
         }
 
         public Block(int id, bool remove)
         {
             _id = id;
             _remove = remove;
-            _energy = 5;
+            _energy = 2;
         }
 
         public int GetID()

@@ -157,13 +157,16 @@ namespace TTG
                 CheckGrid();
             }
 
-            if (currentMouseState.LeftButton == ButtonState.Pressed
-                && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+            if (_arena.P1Energy < 1000)
             {
-                _idleTime = 0;
-                _energy = 0;
-                _combo = 0;
-                SetCursor();
+                if (currentMouseState.LeftButton == ButtonState.Pressed
+                    && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                {
+                    _idleTime = 0;
+                    _energy = 0;
+                    _combo = 0;
+                    SetCursor();
+                }
             }
         }
 
@@ -207,12 +210,22 @@ namespace TTG
             if (_cursorX != -1 && _cursorY != -1)
                 spriteBatch.Draw(_blockSelection, new Rectangle(_x + _cursorX * 64, _y + _cursorY * 64, 64, 64), Color.White);
 
-            spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns), 10), Color.Black);
-            spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 50, 50), Color.Black);
-
-            if (_combo > 1)
+            if (_arena.P1Energy < 1000)
             {
-                spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 50, 100), Color.Black);
+                if (_matches)
+                {
+                    spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns) + 20, 20), Color.Black);
+                    spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 70, 60), Color.Black);
+
+                    if (_combo > 1)
+                    {
+                        spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 70, 110), Color.Black);
+                    }
+                }
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_x + (64 * _columns) + 20, 20), Color.Black);
             }
 
             spriteBatch.End();
