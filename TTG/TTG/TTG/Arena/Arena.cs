@@ -250,7 +250,7 @@ namespace TTG
 
         public void Update(GameTime gameTime)
         {
-            //_bgm.Play();
+            _bgm.Play();
             foreach (Target target in _units)
             {
                 target.Update(gameTime);

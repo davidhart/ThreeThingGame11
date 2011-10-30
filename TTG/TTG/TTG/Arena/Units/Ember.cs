@@ -15,7 +15,7 @@ namespace TTG
         public Ember(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Texture2D projectile) :
             base(position, team, arena, animationMove, animationAttack)
         {
-            MaxHP = 50;
+            MaxHP = 35;
             _moveSpeed = 100;
             _attackSpeed = 5.0f;
             _attackDamage = 40;

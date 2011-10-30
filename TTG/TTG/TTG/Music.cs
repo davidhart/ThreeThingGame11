@@ -23,7 +23,7 @@ namespace TTG
             _tune = track;
             _music = _tune.CreateInstance();
             _music.IsLooped = looped;
-            
+            _music.Volume = 0.33f;
         }
         public void Play()
         {
