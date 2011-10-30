@@ -28,11 +28,14 @@ namespace TTG
         GraphicsDevice _graphics;
 
         Texture2D[] _blockTexture;
+        Texture2D[] _blockTextureL;
 
         Texture2D _blockSelection;
 
         // To replenish energy
         Arena _arena;
+
+        float _idleTime;
 
         // Font to draw score and combo multiplier
         SpriteFont _font;
@@ -104,6 +107,7 @@ namespace TTG
                     }
                 }
             }
+            _idleTime = 0;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
@@ -121,6 +125,13 @@ namespace TTG
             _blockTexture[3] = content.Load<Texture2D>("Block4");
             _blockTexture[4] = content.Load<Texture2D>("Block5");
 
+            _blockTextureL = new Texture2D[5];
+            _blockTextureL[0] = content.Load<Texture2D>("Block1l");
+            _blockTextureL[1] = content.Load<Texture2D>("Block2l");
+            _blockTextureL[2] = content.Load<Texture2D>("Block3l");
+            _blockTextureL[3] = content.Load<Texture2D>("Block4l");
+            _blockTextureL[4] = content.Load<Texture2D>("Block5l");
+
             _blockSelection = content.Load<Texture2D>("TileSelection");
         }
 
@@ -129,9 +140,12 @@ namespace TTG
             // Player controls here
             ms = currentMouseState;
 
+            _idleTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             if (currentMouseState.LeftButton == ButtonState.Pressed
                 && oldMouseState.LeftButton != ButtonState.Pressed)
             {
+                _idleTime = 0;
                 _energy = 0;
                 _combo = 0;
                 SetCursor();
@@ -150,7 +164,9 @@ namespace TTG
                 for (int col = 0; col < _columns; col++)
                 {
                     if (!_grid[row, col].Removed())
+                    {
                         spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
+                    }
                 }
             }
 
@@ -167,6 +183,34 @@ namespace TTG
             }
 
             spriteBatch.End();
+
+            float shimmer = -1;
+            if (_idleTime > 10)
+                _idleTime = 0;
+
+            if (_idleTime > 5)
+            {
+                shimmer = (_idleTime - 7.5f) * 1.5f * (_columns + _rows);
+
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+
+                // Draw blocks in the grid here
+                for (int row = 0; row < _rows; row++)
+                {
+                    for (int col = 0; col < _columns; col++)
+                    {
+                        if (!_grid[row, col].Removed())
+                        {
+                            float alpha = Math.Max(Math.Min((1 / (Math.Abs((col+row) - shimmer) * 1)) - 0.35f, 1), 0) * 0.6f;
+
+                            if (alpha > 0.0f)
+                                spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), new Color(1*alpha, 1*alpha, 1*alpha, 1));
+                        }
+                    }
+                }
+
+                spriteBatch.End();
+            }
         }
 
         public void SetCursor()
