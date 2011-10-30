@@ -114,7 +114,7 @@ namespace TTG
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
                 content.Load<SoundEffect>("Talk1"), 
-                100, 50,
+                12, 50,
                 arena,
                 UnitEnum.Marine, 10,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -123,7 +123,7 @@ namespace TTG
                 content.Load<Texture2D>("HydroSpawnBtn"),
                 content.Load<Texture2D>("HydroSpawnBtnClick"),
                 content.Load<SoundEffect>("HydroTalk1"),
-                100, 150,
+                12, 150,
                 arena,
                 UnitEnum.Hydro, 30,
                 content.Load<SoundEffect>("NoSpawn"));
@@ -132,7 +132,7 @@ namespace TTG
             content.Load<Texture2D>("LauncherSpawnBtn"),
             content.Load<Texture2D>("LauncherSpawnBtnClick"),
             content.Load<SoundEffect>("JuggTalk1"),
-            100, 250,
+            12, 250,
             arena, //Change this
             UnitEnum.Juggernaught,
             40,
@@ -160,8 +160,11 @@ namespace TTG
             spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(550, 537), Color.White);
             _marineBtn.Draw(spritebatch);
+            spritebatch.DrawString(_font, "MARINE: 50", new Vector2(76, 50), Color.White);
             _hydroBtn.Draw(spritebatch);
+            spritebatch.DrawString(_font, "HYDRO: 100", new Vector2(76, 150), Color.White);
             _launcherBtn.Draw(spritebatch);
+            spritebatch.DrawString(_font, "JUGGERNAUGHT: 800", new Vector2(76, 250), Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
             spritebatch.Draw(_hCommandertex, _hCommanderRect, _arena.GetBase1().GetHitColor());
