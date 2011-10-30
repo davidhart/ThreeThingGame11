@@ -89,7 +89,10 @@ namespace TTG
 
                     if (Util.RandDouble() < probabliltyOfSpawn)
                     {
-                        arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
+                        if (Util.Rand(5) == 0)
+                            arena.AddUnit(UnitEnum.UberEmber, UnitTeam.Player2);
+                        else
+                            arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
                     }
 
                     elapsed -= 1 / chancePerSec;

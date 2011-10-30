@@ -16,7 +16,8 @@ namespace TTG
         Juggernaught = 2,
         JugRider = 3,
         Hydro = 4,
-        Launcher = 5
+        Launcher = 5,
+        UberEmber = 6,
     };
 
     public enum UnitTeam
@@ -44,6 +45,7 @@ namespace TTG
         private Animation[] _animationsAttack;
         private Animation[] _animationsMove;
         private Texture2D _emberProjectile;
+        private Texture2D _emberProjectile2;
         private Base _p1Base;
         private Base _p2Base;
 
@@ -170,6 +172,9 @@ namespace TTG
             _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 3, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 0, 3, 0.15f, true);
 
+            _animationsAttack[(int)UnitEnum.UberEmber] = new Animation(content.Load<Texture2D>("Ember2"), 6, 1, 3, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.UberEmber] = new Animation(content.Load<Texture2D>("Ember2"), 6, 1, 0, 3, 0.15f, true);
+
             _animationsAttack[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerAnim"), 3, 1, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerShoot1"), 1, 1, 0, 1, 0.1f, false);
 
@@ -180,6 +185,7 @@ namespace TTG
             _animationsMove[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("hydrowalk"), 4, 1, 0, 4, 0.15f, true);
 
             _emberProjectile = content.Load<Texture2D>("ember_proj");
+            _emberProjectile2 = content.Load <Texture2D>("ember_proj2");
 
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
             _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
@@ -390,7 +396,11 @@ namespace TTG
             }
             else if (unit == UnitEnum.Ember)
             {
-                u =new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile);
+                u = new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile);
+            }
+            else if (unit == UnitEnum.UberEmber)
+            {
+                u = new UberEmber(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
             }
 
             _units.Add(u);
