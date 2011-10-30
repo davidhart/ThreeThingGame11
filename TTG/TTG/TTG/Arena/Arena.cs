@@ -13,6 +13,8 @@ namespace TTG
     {
         Marine = 0,
         Ember = 1,
+        Juggernaught = 2,
+        JugRider = 3
     };
 
     public enum UnitTeam
@@ -112,6 +114,20 @@ namespace TTG
         Game1 game;
         Random rand;
 
+        SoundEffect _jugRiderSpawn;
+
+        public SoundEffect JugRiderSpawnSE
+        {
+            get
+            {
+                return _jugRiderSpawn;
+            }
+            set
+            {
+                _jugRiderSpawn = value;
+            }
+        }
+
         public Arena(int displayWidth, int displayHeight, Game1 game, Random rand)
         {
             P1Energy = 200;
@@ -133,6 +149,7 @@ namespace TTG
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
+            _jugRiderSpawn = content.Load<SoundEffect>("JuggerWalker");
             _graphics = device;
             _renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
                 device.PresentationParameters.DepthStencilFormat);
