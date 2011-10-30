@@ -120,11 +120,12 @@
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
     <Compile Include="BloomPostProcess.cs" />
+    <Compile Include="Particles\EnemyDeathEmitter.cs" />
     <Compile Include="States\GameOverState.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Music.cs" />
-    <Compile Include="Particles\DeathEmitter.cs" />
+    <Compile Include="Particles\MarineDeathEmitter.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\PEmitter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

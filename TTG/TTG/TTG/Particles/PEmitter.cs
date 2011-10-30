@@ -52,8 +52,8 @@ namespace TTG
         protected float minInitSpeed;
         protected float maxInitSpeed;
 
-        protected float minAccel;
-        protected float maxAccel;
+        protected Vector2 minAccel;
+        protected Vector2 maxAccel;
 
         protected float minRotSpeed;
         protected float maxRotSpeed;
@@ -85,17 +85,18 @@ namespace TTG
             Vector2 direction = PickRandomDirection();
 
             float vel = Particle.RandomBetween(minInitSpeed, maxInitSpeed, rand);
-            float accelY = Particle.RandomBetween(minAccel, maxAccel, rand);
             float life = Particle.RandomBetween(minLife, maxLife, rand);
             float scale = Particle.RandomBetween(minSize, maxSize, rand);
             float rotSpeed = Particle.RandomBetween(minRotSpeed, maxRotSpeed, rand);
 
-            Vector2 Gravity = Vector2.Zero;
-            Gravity.Y = accelY;
+            Vector2 accel = Vector2.Zero;
+
+            accel.X = Particle.RandomBetween(minAccel.X, maxAccel.X, rand);
+            accel.Y = Particle.RandomBetween(minAccel.Y, maxAccel.Y, rand);
 
             p.Initialize(this.Pos,
                 vel * direction,
-                Gravity,
+                accel,
                 life,
                 scale,
                 rotSpeed,

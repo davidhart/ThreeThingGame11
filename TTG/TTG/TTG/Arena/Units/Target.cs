@@ -101,6 +101,6 @@ namespace TTG
 
         public abstract Vector2 GetMidPoint();
 
-        public abstract void OnDeath(DeathEmitter de);
+        public abstract void OnDeath(PEmitter de);
     }
 }

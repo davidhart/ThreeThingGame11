@@ -42,7 +42,7 @@ namespace TTG
         private float _nextAttack;
 
         // Particle System Stuff!
-        protected DeathEmitter ps;
+        protected MarineDeathEmitter ps;
         protected Vector2 psPosition;
 
         public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
@@ -87,7 +87,7 @@ namespace TTG
                     while (_nextAttack <= 0)
                     {
                         _nextAttack += _attackSpeed;
-                        //_target.TakeDamage(_attackDamage);
+                       //_target.TakeDamage(_attackDamage);
                         OnAttack(_target);
                     }
                 }
@@ -171,7 +171,7 @@ namespace TTG
             return _position + new Vector2(r.Width, r.Height);
         }
 
-        public override void OnDeath(DeathEmitter de)
+        public override void OnDeath(PEmitter de)
         {
             Rectangle r = _animationMove.GetFrameRect(0);
             de.Active = true;

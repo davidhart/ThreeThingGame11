@@ -26,7 +26,7 @@ namespace TTG.Units
             _followRange = 500;
             _spawnSE = arena.JugRiderSpawnSE;
         }
-       public override void OnDeath(DeathEmitter de)
+       public override void OnDeath(PEmitter de)
        {
            _spawnSE.Play();
            _arena.AddUnit(UnitEnum.JugRider, UnitTeam.Player1);

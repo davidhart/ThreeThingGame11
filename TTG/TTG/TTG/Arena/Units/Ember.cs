@@ -30,9 +30,9 @@ namespace TTG
             base.OnAttack(target);
         }
 
-        public override void  OnDeath(DeathEmitter de)
+        public override void  OnDeath(PEmitter de)
         {
- 	        
+            base.OnDeath(de);
         }
     }
 }

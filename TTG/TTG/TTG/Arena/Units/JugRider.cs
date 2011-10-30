@@ -23,7 +23,7 @@ namespace TTG
             _followRange = 500;
         }
 
-         public override void OnDeath(DeathEmitter de)
+         public override void OnDeath(PEmitter de)
          {
              base.OnDeath(de);
          }
