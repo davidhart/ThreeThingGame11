@@ -18,6 +18,7 @@ namespace TTG
         Arena arena;
         UI arenaUI;
         float elapsed;
+        SpriteFont _font;
 
         public StatePlaying(Game1 parent)
             : base(parent)
@@ -46,6 +47,8 @@ namespace TTG
             _puzzleGrid = new PuzzleGrid(8, 8, graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16, arena);
             _puzzleGrid.LoadContent(content, graphics);
             _puzzleGrid.PopulateGrid();
+
+            _font = content.Load<SpriteFont>("UIFont");
         }
 
         public override void Reset()
@@ -58,44 +61,75 @@ namespace TTG
 
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
-            elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            const float chancePerSec = 2;
-            const float probabliltyOfSpawn = 0.4f;
-            while (elapsed > 1 / chancePerSec)
+            if (arena.GetBase1().IsDead())
             {
-                if (Util.RandDouble() < probabliltyOfSpawn)
+                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton != ButtonState.Pressed)
                 {
-                    //arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+                    ChangeScreen(_parent.TitleScreenState);
+                }
+            }
+            else if (arena.GetBase2().IsDead())
+            {
+                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton != ButtonState.Pressed)
+                {
+                    ChangeScreen(_parent.TitleScreenState);
+                }
+            }
+            else
+            {
+                elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                const float chancePerSec = 2;
+                const float probabliltyOfSpawn = 0.4f;
+                while (elapsed > 1 / chancePerSec)
+                {
+                    if (Util.RandDouble() < probabliltyOfSpawn)
+                    {
+                        //arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
+                    }
+
+                    if (Util.RandDouble() < probabliltyOfSpawn)
+                    {
+                        arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
+                    }
+
+                    elapsed -= 1 / chancePerSec;
                 }
 
-                if (Util.RandDouble() < probabliltyOfSpawn)
-                {
-                    arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
-                }
-
-                elapsed -= 1 / chancePerSec;
+                // Puzzle
+                _puzzleGrid.Update(gameTime, newMouse, oldMouse);
+                arenaUI.Update(newMouse, oldMouse);
             }
 
             arena.Update(gameTime);
-            arenaUI.Update(newMouse, oldMouse);
-
-            // Puzzle
-            _puzzleGrid.Update(gameTime, newMouse, oldMouse);
-
-            if (arena.GetBase1().IsDead())
-                ChangeScreen(_parent.GameOverState);
         }
 
         public override void Draw()
         {
             arena.Draw(spriteBatch);
             arena.DrawOntoScreen(new Vector2(0, _graphics.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            arenaUI.Draw(spriteBatch);
-            spriteBatch.End();
 
-            // Draw puzzle element
-            _puzzleGrid.Draw(spriteBatch);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            arenaUI.Draw(spriteBatch);
+
+            if (arena.GetBase1().IsDead())
+            {
+                Vector2 text = _font.MeasureString("GAME OVER");
+                spriteBatch.DrawString(_font, "GAME OVER", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y / 2), Color.White);
+                spriteBatch.End();
+            }
+            else if (arena.GetBase2().IsDead())
+            {
+                Vector2 text = _font.MeasureString("WINNER IS YOU");
+                spriteBatch.DrawString(_font, "WINNER IS YOU", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y / 2), Color.White);
+                spriteBatch.End();
+            }
+            else
+            {
+                // Draw puzzle element
+                spriteBatch.End();
+                _puzzleGrid.Draw(spriteBatch);
+            }
         }
 
     }
