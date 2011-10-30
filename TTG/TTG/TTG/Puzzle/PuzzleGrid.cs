@@ -214,18 +214,18 @@ namespace TTG
             {
                 if (_matches)
                 {
-                    spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns) + 20, 20), Color.Black);
-                    spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 70, 60), Color.Black);
+                    spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns) + 20, 20), Color.White);
+                    spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 70, 60), Color.White);
 
                     if (_combo > 1)
                     {
-                        spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 70, 110), Color.Black);
+                        spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 70, 110), Color.White);
                     }
                 }
             }
             else
             {
-                spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_x + (64 * _columns) + 20, 20), Color.Black);
+                spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_x + (64 * _columns) + 20, 20), Color.White);
             }
 
             spriteBatch.End();

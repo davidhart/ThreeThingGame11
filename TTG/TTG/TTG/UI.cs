@@ -91,8 +91,8 @@ namespace TTG
 
     public class UI
     {
-        Rectangle _bgRect, _hCommanderRect, _aCommanderRect, _puzzleBGRect;
-        Texture2D _bgTex, _hCommandertex, _aCommandertex, _puzzleBGTex;
+        Rectangle _hCommanderRect, _aCommanderRect, _puzzleBGRect;
+        Texture2D _hCommandertex, _aCommandertex, _puzzleBGTex;
         UIBtn _marineBtn, _hydroBtn, _launcherBtn, _juggernaughtBtn, _gunshipBtn;
         Arena _arena;
         SpriteFont _font;
@@ -102,7 +102,6 @@ namespace TTG
         public void Load(ContentManager content, Arena arena)
         {
             _font = content.Load<SpriteFont>("UIFont");
-            _bgTex = content.Load<Texture2D>("UIBG");
             _marineBtn = new UIBtn(
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
@@ -133,24 +132,22 @@ namespace TTG
             );
 
             _hCommandertex = content.Load<Texture2D>("HumanCommander");
-            _hCommanderRect = new Rectangle(0, 522, _hCommandertex.Width, _hCommandertex.Height);
+            _hCommanderRect = new Rectangle(6, 524, _hCommandertex.Width, _hCommandertex.Height);
             _aCommandertex = content.Load<Texture2D>("AlienCommander");
-            _aCommanderRect = new Rectangle(1280 - (_aCommandertex.Width + 5), 522, _hCommandertex.Width, _hCommandertex.Height);
+            _aCommanderRect = new Rectangle(1280 - (_aCommandertex.Width + 10), 524, _hCommandertex.Width, _hCommandertex.Height);
             _arena = arena;
             _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
             _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
 
-            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48,537), 400, true);
+            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48,537), 330, true);
             _p1HealthBar.LoadContent(content);
 
-            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(1280 - 400 - 48, 537), 400, false);
+            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(1280 - 338 - 48, 537), 338, false);
             _p2HealthBar.LoadContent(content);
-            _bgRect = new Rectangle(545, 539, 175, 25);
         }
         public void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
-            spritebatch.Draw(_bgTex, _bgRect, Color.White);
             spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(550, 537), Color.White);
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
