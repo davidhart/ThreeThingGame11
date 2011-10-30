@@ -21,7 +21,7 @@ namespace TTG
     {
         Texture2D _uiButtonTex, _uiButtonTexClick;
         SoundEffect _uiButtonSound;
-        Rectangle _buttonRect, _mouseRect;
+        Rectangle _buttonRect, _mouseRect, rectang;
 
         public delegate void PressedEventHandler(object sender, EventArgs e);
         public event PressedEventHandler OnPress;
@@ -29,6 +29,7 @@ namespace TTG
         public TitleButton(Texture2D buttontex, Texture2D buttonSelecttex,
             SoundEffect buttonSE, Rectangle buttonRect)
         {
+
             _uiButtonTex = buttontex;
             _uiButtonTexClick = buttonSelecttex;
             _uiButtonSound = buttonSE;
@@ -70,6 +71,7 @@ namespace TTG
         Rectangle _titleRect;
         TitleButton _startBtn, _helpBtn, _quitBtn;
         SpriteBatch _spriteBatch;
+        Texture2D _introTex;
 
         public TitleScreen(Game1 parent)
             : base(parent)
@@ -81,7 +83,7 @@ namespace TTG
         {
             _titleRect = new Rectangle(0, 0, 1280, 768);
             _titleTex = content.Load<Texture2D>("TitleBest");
-
+            _introTex = content.Load<Texture2D>("intro");
             SoundEffect select = content.Load<SoundEffect>("Select");
 
             _startBtn = new TitleButton(
@@ -127,6 +129,7 @@ namespace TTG
                     }
                 case TitleState.Help:
                     {
+
                         break;
                     }
                 case TitleState.PlayGame:
