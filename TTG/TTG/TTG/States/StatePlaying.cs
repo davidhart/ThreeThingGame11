@@ -81,8 +81,8 @@ namespace TTG
             else
             {
                 elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                const float chancePerSec = 2;
-                const float probabliltyOfSpawn = 0.4f;
+                const float chancePerSec = 1.0f;
+                const float probabliltyOfSpawn = 0.3f;
                 while (elapsed > 1 / chancePerSec)
                 {
                     if (Util.RandDouble() < probabliltyOfSpawn)

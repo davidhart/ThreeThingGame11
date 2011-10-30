@@ -116,7 +116,7 @@ namespace TTG
                 content.Load<SoundEffect>("Talk1"), 
                 12, 50,
                 arena,
-                UnitEnum.Marine, 10,
+                UnitEnum.Marine, 50,
                 content.Load<SoundEffect>("NoSpawn"));
 
             _hydroBtn = new UIBtn(
@@ -125,7 +125,7 @@ namespace TTG
                 content.Load<SoundEffect>("HydroTalk1"),
                 12, 150,
                 arena,
-                UnitEnum.Hydro, 30,
+                UnitEnum.Hydro, 100,
                 content.Load<SoundEffect>("NoSpawn"));
 
             _launcherBtn = new UIBtn(
@@ -135,7 +135,7 @@ namespace TTG
             12, 250,
             arena, //Change this
             UnitEnum.Juggernaught,
-            40,
+            800,
             content.Load<SoundEffect>("NoSpawn")
             );
 

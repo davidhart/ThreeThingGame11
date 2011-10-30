@@ -14,10 +14,10 @@ namespace TTG
         public UberEmber(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Texture2D projectile) :
             base(position, team, arena, animationMove, animationAttack)
         {
-            MaxHP = 150;
-            _moveSpeed = 150;
-            _attackSpeed = 2.0f;
-            _attackDamage = 150;
+            MaxHP = 100;
+            _moveSpeed = 100;
+            _attackSpeed = 5.0f;
+            _attackDamage = 60;
             _attackRange = 300;
             _followRange = 500;
             _projectile = projectile;

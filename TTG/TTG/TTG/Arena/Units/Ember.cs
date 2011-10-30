@@ -16,9 +16,9 @@ namespace TTG
             base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 50;
-            _moveSpeed = 200;
+            _moveSpeed = 100;
             _attackSpeed = 5.0f;
-            _attackDamage = 7;
+            _attackDamage = 40;
             _attackRange = 300;
             _followRange = 500;
             _projectile = projectile;

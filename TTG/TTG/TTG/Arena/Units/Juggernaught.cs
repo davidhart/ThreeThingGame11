@@ -19,10 +19,10 @@ namespace TTG
        public Juggernaught(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
             base(position, team, arena, animationMove, animationAttack)
         {
-            MaxHP = 800;
+            MaxHP = 1600;
             _moveSpeed = 20;
             _attackSpeed = 0.1f;
-            _attackDamage = 50;
+            _attackDamage = 4;
             _attackRange = 100;
             _followRange = 500;
             _arena = arena;
