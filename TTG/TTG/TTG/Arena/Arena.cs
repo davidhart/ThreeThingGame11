@@ -157,8 +157,8 @@ namespace TTG
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 3, 1, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marineWalk"), 4, 1, 0, 4, 0.15f, true);
 
-            _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 1, 1, 0, 1, 0.1f, false);
-            _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 1, 1, 0, 1, 0.15f, true);
+            _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 3, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("Ember"), 6, 1, 0, 3, 0.15f, true);
 
             _emberProjectile = content.Load<Texture2D>("ember_proj");
 
