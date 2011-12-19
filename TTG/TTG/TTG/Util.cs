@@ -28,6 +28,15 @@ namespace TTG
             return new Vector2((float)(rand.NextDouble() * xMax), (float)(rand.NextDouble() * yMax));
         }
 
+        public static float Clamp(float i, float min, float max)
+        {
+            return Math.Min(Math.Max(i, max), min);
+        }
+
+        public static float Clamp(int i, int min, int max)
+        {
+            return Math.Max(Math.Min(i, max), min);
+        }
 
         private static Random rand = new Random();
     }

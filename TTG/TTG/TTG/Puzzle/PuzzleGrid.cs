@@ -44,7 +44,12 @@ namespace TTG
         int _combo;
 
         bool _matches;
+
         float _countDown;
+
+        float _fallMaxDist;
+        float _fallTime;
+        float _fallAnimationLength = 1.3f;
 
         public PuzzleGrid(int gr, int gc, int xPos, int yPos, Arena arena)
         {
@@ -69,6 +74,9 @@ namespace TTG
             _countDown = 0;
             _matches = false;
 
+            _idleTime = 0;
+            _fallMaxDist = 0;
+            _fallTime = 0;
             //PopulateGrid();
         }
 
@@ -109,12 +117,14 @@ namespace TTG
                         }
 
                         _grid[row, col] = new Block(blockType);
+                        _grid[row, col].FallDistance = col;
 
                         isBlockOK = true;
                     }
                 }
             }
-            _idleTime = 0;
+            _fallTime = 0;
+            _fallMaxDist = _rows;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
@@ -144,30 +154,66 @@ namespace TTG
 
         public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
         {
-            // Player controls here
-            ms = currentMouseState;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _idleTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _countDown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_countDown < 0)
+            if (_fallMaxDist > 0)
             {
-                SolveGrid();
-                CheckGrid();
-            }
+                _fallTime += dt;
 
-            if (_arena.P1Energy < 1000)
-            {
-                if (currentMouseState.LeftButton == ButtonState.Pressed
-                    && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                if (_fallTime > _fallAnimationLength)
                 {
-                    _idleTime = 0;
-                    _energy = 0;
-                    _combo = 0;
-                    SetCursor();
+                    Debug.Write("Test");
+                    _fallMaxDist = 0;
+                    _fallTime = 0;
+
+                    ResetBlockFallStates();
                 }
             }
+            
+            if (_fallMaxDist == 0)
+            {
+                // Player controls here
+                ms = currentMouseState;
+
+                _idleTime += dt;
+                _countDown -= dt;
+
+                if (_countDown < 0)
+                {
+                    SolveGrid();
+                    CheckGrid();
+                }
+
+                if (_arena.P1Energy < 1000)
+                {
+                    if (currentMouseState.LeftButton == ButtonState.Pressed
+                        && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                    {
+                        _idleTime = 0;
+                        _energy = 0;
+                        _combo = 0;
+                        SetCursor();
+                    }
+                }
+            }
+        }
+
+        private void ResetBlockFallStates()
+        {
+            for (int row = 0; row < _rows; row++)
+            {
+                for (int col = 0; col < _columns; col++)
+                {
+                    _grid[row, col].FallDistance = 0;
+                }
+            }
+        }
+
+        private float CalculateBounce(float d)
+        {
+            float d2 = d-0.75f;
+            return Math.Max(-d * d * 4 + 1,
+                            -d2 * d2 * 16 * 0.3f + 0.3f);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -179,7 +225,20 @@ namespace TTG
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), Color.White);
+                    float fallOffset = 0;
+
+                    if (_fallMaxDist > 0 && _grid[row, col].FallDistance != 0)
+                    {
+                        float d = _fallMaxDist * (_fallTime / _fallAnimationLength);
+
+                        d = Math.Min(Math.Max(_grid[row, col].FallDistance - d, 0.0f) / _grid[row, col].FallDistance, 1.0f);
+
+                        d = CalculateBounce(1 - d);
+
+                        fallOffset = (-_grid[row, col].FallDistance + (1 - d) * _grid[row, col].FallDistance) * 64.0f;
+                    }
+
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64 + (int)fallOffset, 64, 64), Color.White);
                 }
             }
 
@@ -360,7 +419,7 @@ namespace TTG
                     {
                         if (_grid[row, col].Removed())
                         {
-                            _grid[row, col] = new Block(_grid[row - 1, col].GetID(), _grid[row - 1, col].Removed());//_grid[row, col];
+                            _grid[row, col] = new Block(_grid[row - 1, col]);
                             _grid[row - 1, col].Remove();
                             changed = true;
                         }
@@ -450,7 +509,6 @@ namespace TTG
                 _energy += blockEnergy * xMatches.Count;
                 Debug.WriteLine("Combo: " + _combo);
                 Debug.WriteLine("Energy: " + _energy);
-                //_arena.P1Energy += _energy;
 
                 matches = true;
             }
@@ -468,7 +526,6 @@ namespace TTG
                 _energy += blockEnergy * yMatches.Count;
                 Debug.WriteLine("Combo: " + _combo);
                 Debug.WriteLine("Energy: " + _energy);
-                //_arena.P1Energy += _energy;
 
                 matches = true;
             }

@@ -52,7 +52,7 @@ namespace TTG
                 _clicked = true;
                 _arena.AddUnit(_unitEnum, UnitTeam.Player1);
                 _arena.P1Energy -= _energyUse;
-                _uiButtonSound.Play();
+                //_uiButtonSound.Play();
             }
         }
 
@@ -86,7 +86,7 @@ namespace TTG
             _arena.P1Energy < _energyUse)
             {
                 _clicked = true;
-                _uiNoSpawnSound.Play();
+                //_uiNoSpawnSound.Play();
 
             }
             else

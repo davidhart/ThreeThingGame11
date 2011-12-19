@@ -47,7 +47,7 @@ namespace TTG
                 newMousestate.LeftButton == ButtonState.Pressed &&
                 oldMouseState.LeftButton == ButtonState.Released)
             {
-                _uiButtonSound.Play();
+                //_uiButtonSound.Play();
                 OnPress.Invoke(this, null);
 
             }

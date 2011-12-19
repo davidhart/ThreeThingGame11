@@ -29,7 +29,7 @@ namespace TTG
         {
             if (_music.State == SoundState.Stopped)
             {
-                _music.Play();
+                //_music.Play();
             }
         }
         public void Stop()
