@@ -79,9 +79,9 @@ namespace TTG
             set
             {
                 _p1Energy = value;
-                if (_p1Energy >= 1000)
+                if (_p1Energy >= _maxEnergy)
                 {
-                    _p1Energy = 1000;
+                    _p1Energy = _maxEnergy;
                 }
             }
         }
@@ -141,6 +141,7 @@ namespace TTG
 
         public Arena(int displayWidth, int displayHeight)
         {
+            _maxEnergy = 2000;
             P1Energy = 200;
             P2Energy = 200;
             _units = new List<Target>();

@@ -11,8 +11,8 @@ namespace TTG
     {
         int _id;
         bool _remove;
-        int _energy;
         int _fallDistance;
+        const int _energy = 10;
 
         public int FallDistance
         {
@@ -25,7 +25,6 @@ namespace TTG
             _id = id;
             _fallDistance = 0;
             _remove = false;
-            _energy = 2;
         }
 
         public Block(Block block)
@@ -33,7 +32,6 @@ namespace TTG
             _id = block._id;
             _remove = block._remove;
             _fallDistance = block._fallDistance;
-            _energy = 2;
         }
 
         public int GetID()

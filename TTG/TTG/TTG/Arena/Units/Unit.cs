@@ -76,27 +76,31 @@ namespace TTG
                 Vector2 direction = _target.GetMidPoint() - GetMidPoint();
                 float distance = direction.Length();
 
-                if (distance > _followRange)
-                {
-                    // lost target
-                    _target = null;
-                }
-                else if (distance < _attackRange)
+                if (distance < _attackRange)
                 {
                     // attack
                     while (_nextAttack <= 0)
                     {
                         _nextAttack += _attackSpeed;
-                       //_target.TakeDamage(_attackDamage);
+                        //_target.TakeDamage(_attackDamage);
                         OnAttack(_target);
                     }
                 }
                 else
                 {
-                    // follow
-                    direction.Normalize();
-                    _position += direction * _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    _animationPlayer.PlayAnimation(_animationMove);
+                    _nextAttack = 0;
+                    if (distance > _followRange)
+                    {
+                        // lost target
+                        _target = null;
+                    }
+                    else
+                    {
+                        // follow
+                        direction.Normalize();
+                        _position += direction * _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        _animationPlayer.PlayAnimation(_animationMove);
+                    }
                 }
             }
             

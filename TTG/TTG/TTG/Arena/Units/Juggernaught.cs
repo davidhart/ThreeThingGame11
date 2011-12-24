@@ -15,7 +15,6 @@ namespace TTG
     public class Juggernaught : Unit
     {
         SoundEffect _spawnSE;
-       Arena _arena;
        public Juggernaught(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) : 
             base(position, team, arena, animationMove, animationAttack)
         {
@@ -25,7 +24,6 @@ namespace TTG
             _attackDamage = 4;
             _attackRange = 100;
             _followRange = 500;
-            _arena = arena;
           
         }
 

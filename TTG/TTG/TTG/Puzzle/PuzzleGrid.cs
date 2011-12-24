@@ -16,14 +16,10 @@ namespace TTG
         int _rows;
         int _columns;
 
-        // Position where to start drawing the grid
-        int _x;
-        int _y;
+        Vector2 _drawPosition;
 
         int _cursorX;
         int _cursorY;
-
-        MouseState ms;
 
         GraphicsDevice _graphics;
 
@@ -31,7 +27,6 @@ namespace TTG
         Texture2D[] _blockTextureL;
 
         Texture2D _blockSelection;
-        const float _fadeOutTime = 0.3f;
 
         // To replenish energy
         Arena _arena;
@@ -49,13 +44,17 @@ namespace TTG
 
         float _fallMaxDist;
         float _fallTime;
-        const float _fallAnimationLength = 0.75f;
 
-        public PuzzleGrid(int gr, int gc, int xPos, int yPos, Arena arena)
+        const float _fallAnimationLength = 0.75f;
+        const float _fadeOutTime = 0.3f;
+        const float _shimmerEffectWidth = 1.75f;
+        const float _shimmerAnimationLength = 1.8f;
+        const float _shimmerAnimationStart = 4.5f;
+
+        public PuzzleGrid(int gr, int gc, Vector2 drawPosition, Arena arena)
         {
             // Location to start drawing on screen
-            _x = xPos;
-            _y = yPos;
+            _drawPosition = drawPosition;
 
             // Set up the grid
             _rows = gr;
@@ -63,10 +62,30 @@ namespace TTG
 
             _grid = new Block[_rows, _columns];
 
+            _arena = arena;
+
+            Reset();
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+
+            for (int row = 0; row < _rows; row++)
+            {
+                for (int col = 0; col < _columns; col++)
+                {
+                    output += _grid[row, col].GetID() + ",";
+                }
+                output += "\n";
+            }
+            return output;
+        }
+
+        public void Reset()
+        {
             _cursorX = -1;
             _cursorY = -1;
-
-            _arena = arena;
 
             _energy = 0;
             _combo = 0;
@@ -77,14 +96,132 @@ namespace TTG
             _idleTime = 0;
             _fallMaxDist = 0;
             _fallTime = 0;
-            //PopulateGrid();
+
+            PopulateGrid();
+        }
+
+        public void LoadContent(ContentManager content, GraphicsDevice device)
+        {
+            _graphics = device;
+
+            _font = content.Load<SpriteFont>("UIFont");
+
+            // Load block images here
+            _blockTexture = new Texture2D[5];
+
+            _blockTexture[0] = content.Load<Texture2D>("Block1");
+            _blockTexture[1] = content.Load<Texture2D>("Block2");
+            _blockTexture[2] = content.Load<Texture2D>("Block3");
+            _blockTexture[3] = content.Load<Texture2D>("Block4");
+            _blockTexture[4] = content.Load<Texture2D>("Block5");
+
+            _blockTextureL = new Texture2D[5];
+            _blockTextureL[0] = content.Load<Texture2D>("Block1l");
+            _blockTextureL[1] = content.Load<Texture2D>("Block2l");
+            _blockTextureL[2] = content.Load<Texture2D>("Block3l");
+            _blockTextureL[3] = content.Load<Texture2D>("Block4l");
+            _blockTextureL[4] = content.Load<Texture2D>("Block5l");
+
+            _blockSelection = content.Load<Texture2D>("TileSelection");
+        }
+
+        public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
+        {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_fallMaxDist > 0)
+            {
+                _fallTime += dt;
+
+                if (_fallTime > _fallAnimationLength)
+                {
+                    _fallMaxDist = 0;
+                    _fallTime = 0;
+
+                    ResetBlockFallStates();
+                }
+            }
+            
+            if (_fallMaxDist == 0)
+            {
+                _idleTime += dt;
+                _countDown -= dt;
+
+                if (_countDown < 0)
+                {
+                    SolveGrid();
+                    CheckGrid();
+                }
+
+                if (currentMouseState.LeftButton == ButtonState.Pressed
+                    && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                {
+                    _idleTime = 0;
+                    _energy = 0;
+                    _combo = 0;
+
+                    SetCursor(currentMouseState);
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            if (_fallMaxDist > 0)
+            {
+                DrawBlocksWithOffsets(spriteBatch);
+            }
+            else
+            {
+                DrawBlocksIdle(spriteBatch);
+
+                if (_matches && _fallMaxDist == 0)
+                {
+                    DrawRemovedBlockHighlight(spriteBatch);
+                }
+                else
+                {
+                    float t = CalculateShimmerTime();
+                    if (t > 1.0f)
+                    {
+                        _idleTime = 0.0f;
+                    }
+                    else if (t > 0.0f)
+                    {
+                        DrawBlockShimmerHighlight(spriteBatch, t);
+                    }
+                }
+            }
+
+            // Draw selector if we have picked a tile to swap
+            if (_cursorX != -1 && _cursorY != -1)
+                spriteBatch.Draw(_blockSelection, new Rectangle((int)_drawPosition.X + _cursorX * 64, (int)_drawPosition.Y + _cursorY * 64, 64, 64), Color.White);
+
+            if (_matches)
+            {
+                spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
+                spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_drawPosition.X + (64 * _columns) + 70, 60), Color.White);
+
+                if (_combo > 1)
+                {
+                    spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_drawPosition.X + (64 * _columns) + 70, 110), Color.White);
+                }
+            }
+            else if (_arena.P1Energy > _arena.MaxEnergy)
+            {
+                spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
+            }
+
+            spriteBatch.End();
         }
 
         /// <summary>
         /// Randomly place blocks on the grid, so that the same block type
         /// is not placed next to each other.
         /// </summary>
-        public void PopulateGrid()
+        private void PopulateGrid()
         {
             Random rand = new Random();
 
@@ -127,77 +264,6 @@ namespace TTG
             _fallMaxDist = _rows;
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice device)
-        {
-            _graphics = device;
-
-            _font = content.Load<SpriteFont>("UIFont");
-
-            // Load block images here
-            _blockTexture = new Texture2D[5];
-
-            _blockTexture[0] = content.Load<Texture2D>("Block1");
-            _blockTexture[1] = content.Load<Texture2D>("Block2");
-            _blockTexture[2] = content.Load<Texture2D>("Block3");
-            _blockTexture[3] = content.Load<Texture2D>("Block4");
-            _blockTexture[4] = content.Load<Texture2D>("Block5");
-
-            _blockTextureL = new Texture2D[5];
-            _blockTextureL[0] = content.Load<Texture2D>("Block1l");
-            _blockTextureL[1] = content.Load<Texture2D>("Block2l");
-            _blockTextureL[2] = content.Load<Texture2D>("Block3l");
-            _blockTextureL[3] = content.Load<Texture2D>("Block4l");
-            _blockTextureL[4] = content.Load<Texture2D>("Block5l");
-
-            _blockSelection = content.Load<Texture2D>("TileSelection");
-        }
-
-        public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
-        {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_fallMaxDist > 0)
-            {
-                _fallTime += dt;
-
-                if (_fallTime > _fallAnimationLength)
-                {
-                    Debug.Write("Test");
-                    _fallMaxDist = 0;
-                    _fallTime = 0;
-
-                    ResetBlockFallStates();
-                }
-            }
-            
-            if (_fallMaxDist == 0)
-            {
-                // Player controls here
-                ms = currentMouseState;
-
-                _idleTime += dt;
-                _countDown -= dt;
-
-                if (_countDown < 0)
-                {
-                    SolveGrid();
-                    CheckGrid();
-                }
-
-                if (_arena.P1Energy < 1000)
-                {
-                    if (currentMouseState.LeftButton == ButtonState.Pressed
-                        && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
-                    {
-                        _idleTime = 0;
-                        _energy = 0;
-                        _combo = 0;
-                        SetCursor();
-                    }
-                }
-            }
-        }
-
         private void ResetBlockFallStates()
         {
             for (int row = 0; row < _rows; row++)
@@ -209,126 +275,109 @@ namespace TTG
             }
         }
 
-        private float CalculateBounce(float d)
+        /// <summary>
+        /// Calculates bounce height at the specified time. The returned offset at x=0 is 1 and the offset at
+        /// x=1 is 0, for values between lie on a set of arcs.
+        /// </summary>
+        /// <param name="x">Value between 0 and 1</param>
+        /// <returns>Offset between 1 and 0</returns>
+        private float CalculateBounceHeight(float x)
         {
-            float d2 = d-0.75f;
-            return Math.Max(-d * d * 4 + 1,
-                            -d2 * d2 * 16 * 0.3f + 0.3f);
+            float x2 = x-0.75f;
+            return Math.Max(-x * x * 4 + 1,
+                            -x2 * x2 * 16 * 0.3f + 0.3f);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        private void DrawBlocksWithOffsets(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-
-            // Draw blocks in the grid here
             for (int row = 0; row < _rows; row++)
             {
                 for (int col = 0; col < _columns; col++)
                 {
                     float fallOffset = 0;
 
-                    if (_fallMaxDist > 0 && _grid[row, col].FallDistance != 0)
+                    if (_grid[row, col].FallDistance != 0)
                     {
+                        // Calculate clamped time offset
                         float d = _fallMaxDist * (_fallTime / _fallAnimationLength);
-
                         d = Math.Min(Math.Max(_grid[row, col].FallDistance - d, 0.0f) / _grid[row, col].FallDistance, 1.0f);
 
-                        d = CalculateBounce(1 - d);
+                        d = CalculateBounceHeight(1 - d);
 
-                        fallOffset = (-_grid[row, col].FallDistance + (1 - d) * _grid[row, col].FallDistance) * 64.0f;
+                        // Calculate tile offset from normalized bounce height
+                        fallOffset = (-_grid[row, col].FallDistance + (1 - d) * _grid[row, col].FallDistance);
                     }
 
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64 + (int)fallOffset, 64, 64), Color.White);
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)(_drawPosition.Y + (row + fallOffset) * 64), 64, 64), Color.White);
                 }
-            }
-
-            spriteBatch.End();
-
-            // If animating blend out matches
-            if (_matches && _fallMaxDist == 0)
-            {
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                float alpha = 1 - _countDown / _fadeOutTime;
-
-                for (int row = 0; row < _rows; row++)
-                {
-                    for (int col = 0; col < _columns; col++)
-                    {
-                        if (_grid[row, col].Removed())
-                        {
-                            spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), new Color(1, 1, 1, alpha));
-                        }
-                    }
-                }
-                spriteBatch.End();
-            }
-
-            spriteBatch.Begin();
-
-            // Draw selector if we have picked a tile to swap
-            if (_cursorX != -1 && _cursorY != -1)
-                spriteBatch.Draw(_blockSelection, new Rectangle(_x + _cursorX * 64, _y + _cursorY * 64, 64, 64), Color.White);
-
-            if (_arena.P1Energy < 1000)
-            {
-                if (_matches)
-                {
-                    spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_x + (64 * _columns) + 20, 20), Color.White);
-                    spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_x + (64 * _columns) + 70, 60), Color.White);
-
-                    if (_combo > 1)
-                    {
-                        spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_x + (64 * _columns) + 70, 110), Color.White);
-                    }
-                }
-            }
-            else
-            {
-                spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_x + (64 * _columns) + 20, 20), Color.White);
-            }
-
-            spriteBatch.End();
-
-            float shimmer = -1;
-            if (_idleTime > 10)
-                _idleTime = 0;
-
-            if (_idleTime > 5)
-            {
-                shimmer = (_idleTime - 7.5f) * 1.5f * (_columns + _rows);
-
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-
-                // Draw blocks in the grid here
-                for (int row = 0; row < _rows; row++)
-                {
-                    for (int col = 0; col < _columns; col++)
-                    {
-                        if (!_grid[row, col].Removed())
-                        {
-                            float alpha = Math.Max(Math.Min((1 / (Math.Abs((col+row) - shimmer) * 1)) - 0.35f, 1), 0) * 0.6f;
-
-                            if (alpha > 0.0f)
-                                spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle(_x + col * 64, _y + row * 64, 64, 64), new Color(1*alpha, 1*alpha, 1*alpha, 1));
-                        }
-                    }
-                }
-
-                spriteBatch.End();
             }
         }
 
-        public void SetCursor()
+        private void DrawBlocksIdle(SpriteBatch spriteBatch)
         {
-            int mx = ms.X - _x;
-            int my = ms.Y - _y;
+            for (int row = 0; row < _rows; row++)
+            {
+                for (int col = 0; col < _columns; col++)
+                {
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), Color.White);
+                }
+            }
+        }
+
+        private void DrawRemovedBlockHighlight(SpriteBatch spriteBatch)
+        {
+            float alpha = (float)Math.Sin((1.0f - _countDown / _fadeOutTime) * Math.PI);
+            alpha = alpha * alpha;
+           
+            Color color = new Color(alpha, alpha, alpha, alpha);
+            for (int row = 0; row < _rows; row++)
+            {
+                for (int col = 0; col < _columns; col++)
+                {
+                    if (_grid[row, col].Removed())
+                    {
+                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), color);
+                    }
+                }
+            }
+        }
+
+        private void DrawBlockShimmerHighlight(SpriteBatch spriteBatch, float normalizedTime)
+        {
+            float shimmer = (normalizedTime * (1 + _shimmerEffectWidth * 2) - _shimmerEffectWidth) * (_columns + _rows);
+
+            for (int row = 0; row < _rows; row++)
+            {
+                for (int col = 0; col < _columns; col++)
+                {
+                    if (!_grid[row, col].Removed())
+                    {
+                        float alpha = Math.Max(Math.Min(1 / Math.Abs(col + row - shimmer) * _shimmerEffectWidth - 0.35f, 1), 0);
+
+                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), new Color(alpha, alpha, alpha, alpha));
+                    }
+                }
+            }
+        }
+
+        private float CalculateShimmerTime()
+        {
+            return (_idleTime - _shimmerAnimationStart) / _shimmerAnimationLength;
+        }
+
+        private void SetCursor(MouseState mouseState)
+        {
+            int mx = mouseState.X - (int)_drawPosition.X;
+            int my = mouseState.Y - (int)_drawPosition.Y;
 
             int cellX = mx / 64;
             int cellY = my / 64;
 
+            // If cell is out of bounds abort
             if (cellX < 0 || cellX >= _rows || cellY < 0 || cellY >= _columns)
-                return; // If cell is out of bounds
+                return; 
 
+            // If we have no previous selection, update the selection
             if (_cursorX == -1 && _cursorY == -1)
             {
                 _cursorX = cellX;
@@ -336,42 +385,21 @@ namespace TTG
                 return;
             }
 
-            // Up
-            if (cellX == _cursorX && cellY == _cursorY - 1)
+            // Otherwise if we have a second selection check if it is adjacent
+            int [] xOffsets = { 0, 0, 1, -1};
+            int [] yOffsets = { -1, 1, 0, 0 };
+
+            for (int i = 0; i < 4; i++)
             {
-                Block blockTemp = _grid[_cursorY, _cursorX];
-                _grid[_cursorY, _cursorX] = _grid[_cursorY - 1, _cursorX];
-                _grid[_cursorY - 1, _cursorX] = blockTemp;
+                if (cellX == _cursorX + xOffsets[i] && cellY == _cursorY + yOffsets[i])
+                {
+                    Block blockTemp = _grid[_cursorY, _cursorX];
+                    _grid[_cursorY, _cursorX] = _grid[_cursorY + yOffsets[i], _cursorX + xOffsets[i]];
+                    _grid[_cursorY + yOffsets[i], _cursorX + xOffsets[i]] = blockTemp;
 
-                CheckGrid();
-            }
-            // Down
-            else if (cellX == _cursorX && cellY == _cursorY + 1)
-            {
-                Block blockTemp = _grid[_cursorY, _cursorX];
-                _grid[_cursorY, _cursorX] = _grid[_cursorY + 1, _cursorX];
-                _grid[_cursorY + 1, _cursorX] = blockTemp;
-
-                CheckGrid();
-            }
-            // Left
-            else if (cellX == _cursorX - 1 && cellY == _cursorY)
-            {
-                Block blockTemp = _grid[_cursorY, _cursorX];
-
-                _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX - 1];
-                _grid[_cursorY, _cursorX - 1] = blockTemp;
-
-                CheckGrid();
-            }
-            // Right
-            else if (cellX == _cursorX + 1 && cellY == _cursorY)
-            {
-                Block blockTemp = _grid[_cursorY, _cursorX];
-                _grid[_cursorY, _cursorX] = _grid[_cursorY, _cursorX + 1];
-                _grid[_cursorY, _cursorX + 1] = blockTemp;
-
-                CheckGrid();
+                    CheckGrid();
+                    break;
+                }
             }
 
             // Reset cursor
@@ -379,7 +407,7 @@ namespace TTG
             _cursorY = -1;
         }
 
-        public void CheckGrid()
+        private void CheckGrid()
         {
             // Solve grid until no more matches
             _matches = false;
@@ -391,7 +419,7 @@ namespace TTG
                 {
                     if (!_grid[r, c].Removed())
                     {
-                        _matches |= CheckMatch(r, c);
+                        CheckMatch(r, c);
                     }
                 }
             }
@@ -406,7 +434,7 @@ namespace TTG
             }
         }
 
-        public void SolveGrid()
+        private void SolveGrid()
         {
             bool changed = false;
             do
@@ -451,7 +479,7 @@ namespace TTG
             } while (changed);
         }
 
-        public bool CheckMatch(int r, int c)
+        private void CheckMatch(int r, int c)
         {
             int id = _grid[r, c].GetID();
 
@@ -504,58 +532,33 @@ namespace TTG
                     break;
             }
 
-            bool matches = false;
-
-            if (xMatches.Count >= 3)
+            // Increase the combo multiplier if this is the first match this solve step
+            if ((xMatches.Count >= 3 || yMatches.Count >= 3) && !_matches)
             {
-                int blockEnergy = 0;
-                foreach (Block b in xMatches)
-                {
-                    blockEnergy = b.GetEnergy();
-                    b.Remove();
-                    
-                }
                 _combo++;
-                _energy += blockEnergy * xMatches.Count;
-                Debug.WriteLine("Combo: " + _combo);
-                Debug.WriteLine("Energy: " + _energy);
-
-                matches = true;
+                _matches = true;
             }
 
-            if (yMatches.Count >= 3)
-            {
-                int blockEnergy = 0;
-                foreach (Block b in yMatches)
-                {
-                    blockEnergy = b.GetEnergy();
-                    b.Remove();
-                    
-                }
-                _combo++;
-                _energy += blockEnergy * yMatches.Count;
-                Debug.WriteLine("Combo: " + _combo);
-                Debug.WriteLine("Energy: " + _energy);
-
-                matches = true;
-            }
-
-            return matches;
+            ProcessMatchesLine(xMatches);
+            ProcessMatchesLine(yMatches);
         }
 
-        public override string ToString()
+        private void ProcessMatchesLine(List<Block> line)
         {
-            string output = "";
-
-            for (int row = 0; row < _rows; row++)
+            if (line.Count >= 3)
             {
-                for (int col = 0; col < _columns; col++)
+                int blockEnergy = 0;
+                foreach (Block b in line)
                 {
-                    output += _grid[row, col].GetID() + ",";
+                    if (!b.Removed())
+                    {
+                        _energy += b.GetEnergy();
+                        b.Remove();
+                    }
                 }
-                output += "\n";
+
+                _energy += blockEnergy * line.Count;
             }
-            return output;
         }
     }
 }

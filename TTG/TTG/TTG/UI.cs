@@ -116,7 +116,7 @@ namespace TTG
                 content.Load<SoundEffect>("Talk1"), 
                 12, 50,
                 arena,
-                UnitEnum.Marine, 50,
+                UnitEnum.Marine, 100,
                 content.Load<SoundEffect>("NoSpawn"));
 
             _hydroBtn = new UIBtn(
@@ -125,19 +125,19 @@ namespace TTG
                 content.Load<SoundEffect>("HydroTalk1"),
                 12, 150,
                 arena,
-                UnitEnum.Hydro, 100,
+                UnitEnum.Hydro, 150,
                 content.Load<SoundEffect>("NoSpawn"));
 
             _launcherBtn = new UIBtn(
-            content.Load<Texture2D>("LauncherSpawnBtn"),
-            content.Load<Texture2D>("LauncherSpawnBtnClick"),
-            content.Load<SoundEffect>("JuggTalk1"),
-            12, 250,
-            arena, //Change this
-            UnitEnum.Juggernaught,
-            800,
-            content.Load<SoundEffect>("NoSpawn")
-            );
+                content.Load<Texture2D>("LauncherSpawnBtn"),
+                content.Load<Texture2D>("LauncherSpawnBtnClick"),
+                content.Load<SoundEffect>("JuggTalk1"),
+                12, 250,
+                arena, //Change this
+                UnitEnum.Juggernaught,
+                1200,
+                content.Load<SoundEffect>("NoSpawn")
+                );
 
             _hCommandertex = content.Load<Texture2D>("HumanCommander");
             _hCommanderRect = new Rectangle(6, 524, _hCommandertex.Width, _hCommandertex.Height);
@@ -160,11 +160,11 @@ namespace TTG
             spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(550, 537), Color.White);
             _marineBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "MARINE: 50", new Vector2(76, 50), Color.White);
+            spritebatch.DrawString(_font, "MARINE: 100", new Vector2(76, 50), Color.White);
             _hydroBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "HYDRO: 100", new Vector2(76, 150), Color.White);
+            spritebatch.DrawString(_font, "HYDRO: 150", new Vector2(76, 150), Color.White);
             _launcherBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "JUGGERNAUGHT: 800", new Vector2(76, 250), Color.White);
+            spritebatch.DrawString(_font, "JUGGERNAUGHT: 1200", new Vector2(76, 250), Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
             spritebatch.Draw(_hCommandertex, _hCommanderRect, _arena.GetBase1().GetHitColor());

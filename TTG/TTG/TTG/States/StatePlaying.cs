@@ -45,9 +45,8 @@ namespace TTG
             arenaUI.Load(content, arena);
 
             // Puzzle grid set up
-            _puzzleGrid = new PuzzleGrid(8, 8, graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16, arena);
+            _puzzleGrid = new PuzzleGrid(8, 8, new Vector2(graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16), arena);
             _puzzleGrid.LoadContent(content, graphics);
-            _puzzleGrid.PopulateGrid();
 
             _font = content.Load<SpriteFont>("UIFont");
 
@@ -58,7 +57,7 @@ namespace TTG
         {
             elapsed = 0;
             arena.Reset();
-            _puzzleGrid.PopulateGrid();
+            _puzzleGrid.Reset();
             arenaUI.SetBases(arena.GetBase1(), arena.GetBase2());
         }
 
