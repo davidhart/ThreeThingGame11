@@ -16,6 +16,10 @@ namespace TTG
         int _rows;
         int _columns;
 
+        BitmapFont _bmFontUpper;
+        BitmapFont _bmFontLower;
+        BitmapFont _bmFontBg;
+
         Vector2 _drawPosition;
 
         int _cursorX;
@@ -53,6 +57,18 @@ namespace TTG
 
         public PuzzleGrid(int gr, int gc, Vector2 drawPosition, Arena arena)
         {
+            _bmFontBg = new BitmapFont("font", 37, 1);
+            _bmFontBg.SetSpacing(-6);
+            _bmFontBg.SetScale(4);
+
+            _bmFontLower = new BitmapFont("font_lower", 37, 1);
+            _bmFontLower.SetSpacing(-6);
+            _bmFontLower.SetScale(4);
+
+            _bmFontUpper = new BitmapFont("font_upper", 37, 1);
+            _bmFontUpper.SetSpacing(-6);
+            _bmFontUpper.SetScale(4);
+
             // Location to start drawing on screen
             _drawPosition = drawPosition;
 
@@ -103,6 +119,10 @@ namespace TTG
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             _graphics = device;
+
+            _bmFontBg.LoadContent(content);
+            _bmFontLower.LoadContent(content);
+            _bmFontUpper.LoadContent(content);
 
             _font = content.Load<SpriteFont>("UIFont");
 
@@ -167,7 +187,7 @@ namespace TTG
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
             if (_fallMaxDist > 0)
             {
@@ -214,6 +234,13 @@ namespace TTG
                 spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
             }
 
+            _bmFontBg.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.Black);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            _bmFontUpper.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600) % 360), 255, 255));
+            _bmFontLower.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600 + 60) % 360), 255, 255));
             spriteBatch.End();
         }
 
