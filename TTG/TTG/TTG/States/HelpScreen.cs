@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 
 namespace TTG
@@ -44,11 +45,21 @@ namespace TTG
             _spriteBatch.End();
         }
 
-        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
+        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse, TouchCollection tc)
         {
             if (newMouse.LeftButton == ButtonState.Pressed &&
                 oldMouse.LeftButton == ButtonState.Released)
                 ChangeScreen(_parent.TitleScreenState);
+#if WP7
+            foreach (TouchLocation tl in tc)
+            {
+                if ((tl.State == TouchLocationState.Pressed))
+                {
+                    ChangeScreen(_parent.TitleScreenState);
+                }
+            }
+
+#endif
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace TTG
 {
@@ -52,6 +53,25 @@ namespace TTG
 
             }
         }
+
+        public void Update(TouchCollection touchCollection)
+        {
+            foreach (TouchLocation tl in touchCollection)
+            {
+
+                if ((tl.State == TouchLocationState.Pressed) || (tl.State == TouchLocationState.Moved))
+                {
+                    _mouseRect.X = (int)tl.Position.X;
+                    _mouseRect.Y = (int)tl.Position.Y;
+
+                    if (_mouseRect.Intersects(_buttonRect))
+                    {
+                        OnPress.Invoke(this, null);
+                    }
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spritebatch)
         {
             if (_mouseRect.Intersects(_buttonRect))
@@ -122,7 +142,7 @@ namespace TTG
             ChangeScreen(_parent.PlayState);
         }
 
-        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
+        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse, TouchCollection tc)
         {
             switch (titleState)
             {
@@ -131,6 +151,11 @@ namespace TTG
                         _startBtn.Update(newMouse, oldMouse);
                         _helpBtn.Update(newMouse, oldMouse);
                         _quitBtn.Update(newMouse, oldMouse);
+#if WP7
+                        _startBtn.Update(tc);
+                        _helpBtn.Update(tc);
+                        _quitBtn.Update(tc);
+#endif 
                         break;
                     }
                 case TitleState.Help:
