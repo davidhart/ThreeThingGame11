@@ -48,7 +48,7 @@ namespace TTG
 
         public MarineShot(Unit attacker, Target target, Color color1, Color color2)
         {
-            Vector2 offset = new Vector2(30, 30);
+            Vector2 offset = new Vector2(0, 8);
 
             _start = attacker.Position + offset;
             Rectangle r = target.GetRect();
