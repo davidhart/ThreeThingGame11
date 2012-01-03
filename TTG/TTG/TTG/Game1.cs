@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 
 namespace TTG
@@ -95,9 +94,8 @@ namespace TTG
         protected override void Update(GameTime gameTime)
         {
             newMouseState = Mouse.GetState();
-            TouchCollection touchCollection = new TouchCollection();
 
-            _currentState.Update(gameTime, newMouseState, oldMouseState, touchCollection);
+            _currentState.Update(gameTime, newMouseState, oldMouseState);
 
             oldMouseState = newMouseState;
             base.Update(gameTime);

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 
 namespace TTG
 {
@@ -30,7 +29,7 @@ namespace TTG
             _elapsed = 0;
         }
 
-        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse, TouchCollection tc)
+        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
             _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 

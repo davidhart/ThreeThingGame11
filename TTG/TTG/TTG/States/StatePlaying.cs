@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 
 namespace TTG
 {
@@ -62,7 +61,7 @@ namespace TTG
             arenaUI.SetBases(arena.GetBase1(), arena.GetBase2());
         }
 
-        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse, TouchCollection tc)
+        public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
             if (arena.GetBase1().IsDead())
             {
