@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UnitEd.Properties
+namespace UnitEdWPF.Properties
 {
 
 

@@ -1,0 +1,41 @@
+﻿<Window x:Class="UnitEdWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Volcanis Unit Editor" Height="411" Width="275" ShowActivated="False">
+    <Grid Height="360">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22*" />
+            <RowDefinition Height="289*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25*" />
+            <ColumnDefinition Width="31*" />
+            <ColumnDefinition Width="69*" />
+            <ColumnDefinition Width="128*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Name:" Height="28" HorizontalAlignment="Left" Margin="12,14,0,0" Name="label1" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Move Speed:" Height="28" HorizontalAlignment="Left" Margin="12,77,0,0" Name="label2" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Attack Speed:" Height="28" HorizontalAlignment="Left" Margin="14,111,0,0" Name="label3" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Attack Damage:" Height="28" HorizontalAlignment="Left" Margin="12,145,0,0" Name="label4" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Attack Range:" Height="28" HorizontalAlignment="Left" Margin="14,179,0,0" Name="label5" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Follow Range:" Height="28" HorizontalAlignment="Left" Margin="14,213,0,0" Name="label6" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <Label Content="Image Asset:" Height="28" HorizontalAlignment="Left" Margin="19,279,0,0" Name="label7" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="1" />
+        <TextBox Height="23" Margin="16,14,56,0" Name="textBox1" VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="51,82,0,0" Name="moveSpdTxtBox" VerticalAlignment="Top" Width="135" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="6" />
+        <TextBox HorizontalAlignment="Left" Margin="52,113,0,0" Name="atkSpdTxtBox" Width="135" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="7" Height="23" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="52,145,0,0" Name="atkDmgTxtBox" VerticalAlignment="Top" Width="134" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="8" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="51,179,0,0" Name="atkRngTxtBox" VerticalAlignment="Top" Width="135" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="9" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="51,218,0,0" Name="flwRngeTxtbox" VerticalAlignment="Top" Width="135" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="10" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="49,281,0,0" Name="imgAssetTxtBox" VerticalAlignment="Top" Width="135" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="12" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="8,14,0,0" Name="nameTxtBox" VerticalAlignment="Top" Width="178" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" TabIndex="4" />
+        <Menu Grid.ColumnSpan="4" Height="23" HorizontalAlignment="Left" Margin="-1,-9,0,0" Name="menu1" VerticalAlignment="Top" Width="269">
+            <MenuItem Header="New" Name="NewBtn" Click="NewBtn_Click" TabIndex="1" />
+            <MenuItem Header="Open" Name="OpenBtn" Click="OpenBtn_Click" TabIndex="2" />
+            <MenuItem Header="Save" Name="SaveBtn" Click="SaveBtn_Click" TabIndex="3" />
+        </Menu>
+        <Label Content="HP:" Grid.ColumnSpan="2" Height="28" HorizontalAlignment="Left" Margin="12,48,0,0" Name="label8" VerticalAlignment="Top" Grid.Row="1" />
+        <TextBox Grid.Column="1" Grid.ColumnSpan="3" Height="23" HorizontalAlignment="Left" Margin="21,53,0,0" Name="hpTxtBox" VerticalAlignment="Top" Width="194" Grid.Row="1" TabIndex="5" />
+        <Label Content="Energy Cost:" Grid.ColumnSpan="3" Height="28" HorizontalAlignment="Left" Margin="12,246,0,0" Name="label9" VerticalAlignment="Top" Grid.Row="1" />
+        <TextBox Grid.Column="2" Grid.ColumnSpan="2" Height="23" HorizontalAlignment="Left" Margin="51,251,0,0" Name="ecTxtBox" VerticalAlignment="Top" Width="135" Grid.Row="1" TabIndex="11" />
+    </Grid>
+</Window>
