@@ -12,6 +12,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Xml;
+using System.Collections;
+using System.Xml.Serialization;
+using System.Collections.ObjectModel;
+using System.Data;
 
 namespace UnitEdWPF
 {
@@ -21,17 +26,27 @@ namespace UnitEdWPF
 
     public struct Unit
     {
+        [XmlElement("Name")]
         public string Name;
+        [XmlElement("HP")]
         public int HP;
+        [XmlElement("MoveSpeed")]
         public int MovSpd;
+        [XmlElement("AtkSpeed")]
         public int AtkSpd;
+        [XmlElement("AtkDamage")]
         public int AtkDmg;
+        [XmlElement("AtkRange")]
         public int AtkRange;
+        [XmlElement("FollowRange")]
         public int FlwRange;
+        [XmlElement("EnergyCost")]
         public int EnCost;
+        [XmlElement("ImageAsset")]
         public string imgAsset;
     }
 
+   
     public partial class MainWindow : Window
     {
         Unit unit = new Unit();
@@ -42,25 +57,44 @@ namespace UnitEdWPF
 
         private void NewBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            nameTxtBox.Text = "";
+            hpTxtBox.Text = "";
+            moveSpdTxtBox.Text = "";
+            atkSpdTxtBox.Text = "";
+            atkDmgTxtBox.Text = "";
+            atkRngTxtBox.Text = "";
+            flwRngeTxtbox.Text = "";
+            ecTxtBox.Text = "";
+            imgAssetTxtBox.Text = "";
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Configure open file dialog box
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = ""; // Default file name
-            dlg.DefaultExt = ".vuf"; // Default file extension
-            dlg.Filter = "Unit File (.vuf)|*.vuf"; // Filter files by extension
-
-            // Show open file dialog box
+            dlg.FileName = "";
+            dlg.DefaultExt = ".vuf";
+            dlg.Filter = "Unit File (.vuf)|*.vuf";
             Nullable<bool> result = dlg.ShowDialog();
-
-            // Process open file dialog box results
             if (result == true)
             {
                 // Open document
                 string filename = dlg.FileName;
+                XmlDocument xml = new XmlDocument();
+                xml.Load(filename); // suppose that myXmlString contains "<Names>...</Names>"
+
+                XmlNodeList xnList = xml.SelectNodes("/Unit");
+                foreach (XmlNode xn in xnList)
+                {
+                    nameTxtBox.Text = xn["Name"].InnerText;
+                    hpTxtBox.Text = xn["HP"].InnerText;
+                    moveSpdTxtBox.Text = xn["MoveSpeed"].InnerText;
+                    atkSpdTxtBox.Text = xn["AtkSpeed"].InnerText;
+                    atkDmgTxtBox.Text = xn["AtkDamage"].InnerText;
+                    atkRngTxtBox.Text = xn["AtkRange"].InnerText;
+                    flwRngeTxtbox.Text = xn["FollowRange"].InnerText;
+                    ecTxtBox.Text = xn["EnergyCost"].InnerText;
+                    imgAssetTxtBox.Text = xn["ImageAsset"].InnerText;
+                }
             }
         }
 
@@ -79,9 +113,9 @@ namespace UnitEdWPF
                 unit.imgAsset = imgAssetTxtBox.Text;
 
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-                dlg.FileName = nameTxtBox.Text; // Default file name
-                dlg.DefaultExt = ".vuf"; // Default file extension
-                dlg.Filter = "Unit File (.vuf)|*.vuf"; // Filter files by extension
+                dlg.FileName = nameTxtBox.Text;
+                dlg.DefaultExt = ".vuf";
+                dlg.Filter = "Unit File (.vuf)|*.vuf";
 
                 // Show save file dialog box
                 Nullable<bool> result = dlg.ShowDialog();
@@ -91,6 +125,10 @@ namespace UnitEdWPF
                 {
                     // Save document
                     string filename = dlg.FileName;
+                    XmlSerializer serializer = new XmlSerializer(typeof(Unit));
+                    TextWriter textWriter = new StreamWriter(filename);
+                    serializer.Serialize(textWriter, unit);
+                    textWriter.Close();
                 }
             }
             catch (FormatException)
