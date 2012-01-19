@@ -49,10 +49,12 @@ namespace TTG
         public MarineShot(Unit attacker, Target target, Color color1, Color color2)
         {
             Vector2 offset = new Vector2(0, 8);
+            if (attacker.Team == UnitTeam.Player2) // TODO: Give units a bullet attachment point
+                offset = new Vector2(16, 8);
 
             _start = attacker.Position + offset;
             Rectangle r = target.GetRect();
-            _end = target.Position + Util.RandVector(r.Width, r.Height); // TODO: random target point
+            _end = target.Position + Util.RandVector(r.Width, r.Height);
 
             _direction = _end -  _start;
 

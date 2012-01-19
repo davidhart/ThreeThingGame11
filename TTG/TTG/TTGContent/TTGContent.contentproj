@@ -144,13 +144,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Marinewalk.png">
-      <Name>Marinewalk</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="hpBar.png">
       <Name>hpBar</Name>
       <Importer>TextureImporter</Importer>
@@ -228,13 +221,6 @@
       <Name>effectExtract</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Ember.png">
-      <Name>Ember</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -459,6 +445,13 @@
     </Compile>
     <Compile Include="fonts\font_upper.png">
       <Name>font_upper</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="alien.png">
+      <Name>alien</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

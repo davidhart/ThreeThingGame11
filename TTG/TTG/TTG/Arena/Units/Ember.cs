@@ -16,9 +16,9 @@ namespace TTG
             base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 35;
-            _moveSpeed = 100;
-            _attackSpeed = 5.0f;
-            _attackDamage = 40;
+            _moveSpeed = 50;
+            _attackSpeed = 0.4f;
+            _attackDamage = 6;
             _attackRange = 300;
             _followRange = 500;
             _projectile = projectile;
@@ -26,7 +26,8 @@ namespace TTG
 
         protected override void OnAttack(Target target)
         {
-            _arena.AddProjectile(new Projectile(this, target, _projectile));
+            _arena.AddMarineShot(this, target, Color.White, Color.CornflowerBlue);
+            //_arena.AddProjectile(new Projectile(this, target, _projectile));
             base.OnAttack(target);
         }
 
