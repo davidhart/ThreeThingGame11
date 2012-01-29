@@ -141,6 +141,7 @@
     <Compile Include="States\TitleScreen.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util\BitmapFont.cs" />
+    <Compile Include="Util\FancyText.cs" />
     <Compile Include="Util\Util.cs" />
   </ItemGroup>
   <ItemGroup>

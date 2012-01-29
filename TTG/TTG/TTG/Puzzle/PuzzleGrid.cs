@@ -16,9 +16,8 @@ namespace TTG
         int _rows;
         int _columns;
 
-        BitmapFont _bmFontUpper;
-        BitmapFont _bmFontLower;
-        BitmapFont _bmFontBg;
+        BitmapFont _bmFont;
+        FancyText _fancyText;
 
         Vector2 _drawPosition;
 
@@ -57,17 +56,11 @@ namespace TTG
 
         public PuzzleGrid(int gr, int gc, Vector2 drawPosition, Arena arena)
         {
-            _bmFontBg = new BitmapFont("font", 37, 1);
-            _bmFontBg.SetSpacing(-6);
-            _bmFontBg.SetScale(4);
+            _bmFont = new BitmapFont("font", 37, 4);
+            _bmFont.SetSpacing(-1);
 
-            _bmFontLower = new BitmapFont("font_lower", 37, 1);
-            _bmFontLower.SetSpacing(-6);
-            _bmFontLower.SetScale(4);
-
-            _bmFontUpper = new BitmapFont("font_upper", 37, 1);
-            _bmFontUpper.SetSpacing(-6);
-            _bmFontUpper.SetScale(4);
+            _fancyText = new FancyText(_bmFont);
+            _fancyText.SetMessage("TESTx", new HighlightTextColorer(Color.Red));
 
             // Location to start drawing on screen
             _drawPosition = drawPosition;
@@ -120,9 +113,7 @@ namespace TTG
         {
             _graphics = device;
 
-            _bmFontBg.LoadContent(content);
-            _bmFontLower.LoadContent(content);
-            _bmFontUpper.LoadContent(content);
+            _bmFont.LoadContent(content);
 
             _font = content.Load<SpriteFont>("UIFont");
 
@@ -148,6 +139,8 @@ namespace TTG
         public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
+            _fancyText.Update(dt);
 
             if (_fallMaxDist > 0)
             {
@@ -169,8 +162,24 @@ namespace TTG
 
                 if (_countDown < 0)
                 {
+                    Color c;
+
+                    if (_combo > 1)
+                    {
+                        c = Util.ColorFromHSV(360 - (int)(_combo / 10.0f * 360.0f), 255, 255);
+                        Console.WriteLine(c);
+                    }
+                    else
+                    {
+                        c = Color.White;
+                    }
+
+                    if (_energy != 0)
+                        _fancyText.SetMessage(_energy.ToString(), new HighlightTextColorer(c));
+
                     SolveGrid();
                     CheckGrid();
+
                 }
 
                 if (currentMouseState.LeftButton == ButtonState.Pressed
@@ -234,14 +243,19 @@ namespace TTG
                 spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
             }
 
-            _bmFontBg.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.Black);
+            _bmFont.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.Red, 1);
 
             spriteBatch.End();
 
+
+            _fancyText.Draw(spriteBatch, new Vector2(_drawPosition.X, _drawPosition.Y) + new Vector2(64 * _columns) / 2.0f - _fancyText.GetSize() / 2.0f);
+
+            /*
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             _bmFontUpper.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600) % 360), 255, 255));
             _bmFontLower.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600 + 60) % 360), 255, 255));
             spriteBatch.End();
+            */
         }
 
         /// <summary>
@@ -580,6 +594,7 @@ namespace TTG
                     if (!b.Removed())
                     {
                         _energy += b.GetEnergy();
+
                         b.Remove();
                     }
                 }
