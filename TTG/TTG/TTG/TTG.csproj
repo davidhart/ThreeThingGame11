@@ -142,11 +142,13 @@
     <Compile Include="UI.cs" />
     <Compile Include="Util\BitmapFont.cs" />
     <Compile Include="Util\FancyText.cs" />
+    <Compile Include="Util\UnitLoader.cs" />
     <Compile Include="Util\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Stuff.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

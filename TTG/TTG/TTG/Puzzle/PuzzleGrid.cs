@@ -16,6 +16,10 @@ namespace TTG
         int _rows;
         int _columns;
 
+        const int blockSize = 51;
+        const int padding = 8;
+        const int blockStride = blockSize + padding;
+
         BitmapFont _bmFont;
         FancyText _fancyText;
 
@@ -343,7 +347,8 @@ namespace TTG
                         fallOffset = (-_grid[row, col].FallDistance + (1 - d) * _grid[row, col].FallDistance);
                     }
 
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)(_drawPosition.Y + (row + fallOffset) * 64), 64, 64), Color.White);
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
+                        (int)(_drawPosition.Y + (row + fallOffset) * blockStride), blockSize, blockSize), Color.White);
                 }
             }
         }
@@ -354,7 +359,8 @@ namespace TTG
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), Color.White);
+                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
+                        (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), Color.White);
                 }
             }
         }
@@ -371,7 +377,8 @@ namespace TTG
                 {
                     if (_grid[row, col].Removed())
                     {
-                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), color);
+                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
+                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), color);
                     }
                 }
             }
@@ -389,7 +396,8 @@ namespace TTG
                     {
                         float alpha = Math.Max(Math.Min(1 / Math.Abs(col + row - shimmer) * _shimmerEffectWidth - 0.35f, 1), 0);
 
-                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * 64, (int)_drawPosition.Y + row * 64, 64, 64), new Color(alpha, alpha, alpha, alpha));
+                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
+                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), new Color(alpha, alpha, alpha, alpha));
                     }
                 }
             }
@@ -405,8 +413,8 @@ namespace TTG
             int mx = mouseState.X - (int)_drawPosition.X;
             int my = mouseState.Y - (int)_drawPosition.Y;
 
-            int cellX = mx / 64;
-            int cellY = my / 64;
+            int cellX = mx / blockStride;
+            int cellY = my / blockStride;
 
             // If cell is out of bounds abort
             if (cellX < 0 || cellX >= _rows || cellY < 0 || cellY >= _columns)
