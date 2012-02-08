@@ -162,34 +162,37 @@ namespace TTG
 
                 if (_countDown < 0)
                 {
-                    Color c;
+                    FancyTextColorer colorer;
 
-                    if (_combo > 1)
+                    if (_combo < 5)
                     {
-                        c = Util.ColorFromHSV(360 - (int)(_combo / 10.0f * 360.0f), 255, 255);
-                        Console.WriteLine(c);
+                        Color c = Util.ColorFromHSV(360 - ((int)((_combo) / 3.0f * 360.0f + 16)), 255, 255);
+                        colorer = new HighlightTextColorer(c);
                     }
                     else
                     {
-                        c = Color.White;
+                        colorer = new RainbowTextColorer();
                     }
 
                     if (_energy != 0)
-                        _fancyText.SetMessage(_energy.ToString(), new HighlightTextColorer(c));
+                        _fancyText.SetMessage((_energy * _combo).ToString(), colorer);
 
                     SolveGrid();
                     CheckGrid();
 
                 }
 
-                if (currentMouseState.LeftButton == ButtonState.Pressed
-                    && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                if (_arena.P1Energy < _arena.MaxEnergy)
                 {
-                    _idleTime = 0;
-                    _energy = 0;
-                    _combo = 0;
+                    if (currentMouseState.LeftButton == ButtonState.Pressed
+                        && oldMouseState.LeftButton != ButtonState.Pressed && !_matches)
+                    {
+                        _idleTime = 0;
+                        _energy = 0;
+                        _combo = 0;
 
-                    SetCursor(currentMouseState);
+                        SetCursor(currentMouseState);
+                    }
                 }
             }
         }
@@ -238,24 +241,15 @@ namespace TTG
                     spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_drawPosition.X + (64 * _columns) + 70, 110), Color.White);
                 }
             }
-            else if (_arena.P1Energy > _arena.MaxEnergy)
+            else if (_arena.P1Energy >= _arena.MaxEnergy)
             {
                 spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
             }
-
-            _bmFont.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.Red, 1);
 
             spriteBatch.End();
 
 
             _fancyText.Draw(spriteBatch, new Vector2(_drawPosition.X, _drawPosition.Y) + new Vector2(64 * _columns) / 2.0f - _fancyText.GetSize() / 2.0f);
-
-            /*
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
-            _bmFontUpper.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600) % 360), 255, 255));
-            _bmFontLower.DrawText(spriteBatch, "TEST", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Util.ColorFromHSV((int)((_idleTime * 600 + 60) % 360), 255, 255));
-            spriteBatch.End();
-            */
         }
 
         /// <summary>

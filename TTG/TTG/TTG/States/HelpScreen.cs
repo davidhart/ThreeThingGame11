@@ -38,7 +38,7 @@ namespace TTG
 
         public override void Draw()
         {
-            _spriteBatch.Begin();
+        _spriteBatch.Begin();
             _spriteBatch.Draw(_screen, _rect, Color.White);
             base.Draw();
             _spriteBatch.End();

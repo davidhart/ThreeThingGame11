@@ -35,7 +35,7 @@ namespace TTG
             return elapsed < 1.0f;
         }
 
-        private float Alpha(float elapsed)
+        protected float Alpha(float elapsed)
         {
             return Util.Clamp((float)(1.0f - Math.Pow((float)Math.Max(0.0f, -1.6f + elapsed * 3.5f), 2.0f)), 0.0f, 1.0f);
         }
@@ -50,7 +50,6 @@ namespace TTG
         {
             float a = Alpha(elapsed);
             return new Color(color.X, color.Y, color.Z, a);
-
         }
 
         public Color LowerColor(float elapsed)
@@ -59,6 +58,45 @@ namespace TTG
             return new Color(color.X, color.Y, color.Z, a);
         }
     }
+
+    class RainbowTextColorer : FancyTextColorer
+    {
+        public float Scale(float elapsed)
+        {
+            return 6 + (float)Math.Pow(elapsed * 2.0f, 3);
+        }
+
+        public bool Draw(float elapsed)
+        {
+            return elapsed < 1.0f;
+        }
+
+        protected float Alpha(float elapsed)
+        {
+            return Util.Clamp((float)(1.0f - Math.Pow((float)Math.Max(0.0f, -1.6f + elapsed * 3.5f), 2.0f)), 0.0f, 1.0f);
+        }
+
+        public Color BackgroundColor(float elapsed)
+        {
+            float a = Alpha(elapsed);
+            return new Color(1.0f, 1.0f, 1.0f, a);
+        }
+
+        public Color UpperColor(float elapsed)
+        {
+            Color c = Util.ColorFromHSV((int)(elapsed * 800) % 360, 255, 255);
+            c.A = (byte)(Alpha(elapsed) * 255.0f);
+            return c;
+        }
+
+        public Color LowerColor(float elapsed)
+        {
+            Color c = Util.ColorFromHSV((int)(elapsed * 800 + 60) % 360, 255, 255);
+            c.A = (byte)(Alpha(elapsed) * 255.0f);
+            return c;
+        }
+    }
+
 
     class FancyText
     {
