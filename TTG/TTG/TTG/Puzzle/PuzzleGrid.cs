@@ -21,7 +21,8 @@ namespace TTG
         const int blockStride = blockSize + padding;
 
         BitmapFont _bmFont;
-        FancyText _fancyText;
+        FancyText _scoreFancyText;
+        FancyText _comboFancyText;
 
         Vector2 _drawPosition;
 
@@ -63,8 +64,8 @@ namespace TTG
             _bmFont = new BitmapFont("font", 37, 4);
             _bmFont.SetSpacing(-1);
 
-            _fancyText = new FancyText(_bmFont);
-            _fancyText.SetMessage("TESTx", new HighlightTextColorer(Color.Red));
+            _scoreFancyText = new FancyText(_bmFont);
+            _comboFancyText = new FancyText(_bmFont);
 
             // Location to start drawing on screen
             _drawPosition = drawPosition;
@@ -144,7 +145,8 @@ namespace TTG
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             
-            _fancyText.Update(dt);
+            _scoreFancyText.Update(dt);
+            _comboFancyText.Update(dt);
 
             if (_fallMaxDist > 0)
             {
@@ -179,7 +181,10 @@ namespace TTG
                     }
 
                     if (_energy != 0)
-                        _fancyText.SetMessage((_energy * _combo).ToString(), colorer);
+                        _scoreFancyText.SetMessage((_energy * _combo).ToString(), colorer);
+
+                    if (_combo > 1)
+                        _comboFancyText.SetMessage("COMBO x" + _combo.ToString(), colorer);
 
                     SolveGrid();
                     CheckGrid();
@@ -233,27 +238,29 @@ namespace TTG
 
             // Draw selector if we have picked a tile to swap
             if (_cursorX != -1 && _cursorY != -1)
-                spriteBatch.Draw(_blockSelection, new Rectangle((int)_drawPosition.X + _cursorX * 64, (int)_drawPosition.Y + _cursorY * 64, 64, 64), Color.White);
+                spriteBatch.Draw(_blockSelection, new Rectangle((int)_drawPosition.X + _cursorX * blockStride, (int)_drawPosition.Y + _cursorY *blockStride, blockSize, blockSize), Color.White);
 
-            if (_matches)
-            {
-                spriteBatch.DrawString(_font, "Energy gained: ", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
-                spriteBatch.DrawString(_font, (_energy * _combo).ToString(), new Vector2(_drawPosition.X + (64 * _columns) + 70, 60), Color.White);
-
-                if (_combo > 1)
-                {
-                    spriteBatch.DrawString(_font, "(combo x" + _combo.ToString() + ")", new Vector2(_drawPosition.X + (64 * _columns) + 70, 110), Color.White);
-                }
-            }
-            else if (_arena.P1Energy >= _arena.MaxEnergy)
+            if (_arena.P1Energy >= _arena.MaxEnergy)
             {
                 spriteBatch.DrawString(_font, "Energy Maxed Out", new Vector2(_drawPosition.X + (64 * _columns) + 20, 20), Color.White);
             }
 
             spriteBatch.End();
 
+            Vector2 scorePosition;
+            if (_comboFancyText.IsVisible())
+            {
+                scorePosition = new Vector2((blockStride * _columns) / 2, (blockStride * _rows) / 3) - _scoreFancyText.GetSize() / 2.0f;
 
-            _fancyText.Draw(spriteBatch, new Vector2(_drawPosition.X, _drawPosition.Y) + new Vector2(64 * _columns) / 2.0f - _fancyText.GetSize() / 2.0f);
+                Vector2 comboPosition = new Vector2((blockStride * _columns) / 2, (blockStride * _rows * 2) / 3) - _comboFancyText.GetSize() / 2.0f;
+                _comboFancyText.Draw(spriteBatch, new Vector2(_drawPosition.X, _drawPosition.Y) + comboPosition);
+            }
+            else
+            {
+                scorePosition = new Vector2(blockStride * _columns, blockStride * _rows) / 2.0f - _scoreFancyText.GetSize() / 2.0f;
+            }
+
+            _scoreFancyText.Draw(spriteBatch, new Vector2(_drawPosition.X, _drawPosition.Y) + scorePosition);
         }
 
         /// <summary>

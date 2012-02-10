@@ -22,12 +22,12 @@ namespace TTG
 
         public HighlightTextColorer(Color color)
         {
-            this.color = color.ToVector3() /** 255.0f*/;
+            this.color = color.ToVector3();
         }
 
         public float Scale(float elapsed)
         {
-            return 6 + (float)Math.Pow(elapsed *2.0f, 3);
+            return 5 + (float)Math.Pow(elapsed *2.0f, 3);
         }
 
         public bool Draw(float elapsed)
@@ -48,14 +48,18 @@ namespace TTG
 
         public Color UpperColor(float elapsed)
         {
+            float t = (float)Math.Pow(Math.Max(0, Math.Abs(1.5f - elapsed * 8)), 3);
+            Vector3 c = Util.Lerp(new Vector3(1), color, t);
             float a = Alpha(elapsed);
-            return new Color(color.X, color.Y, color.Z, a);
+            return new Color(c.X, c.Y, c.Z, a);
         }
 
         public Color LowerColor(float elapsed)
         {
+            float t = (float)Math.Pow(Math.Max(0, Math.Abs(1 - elapsed * 8)), 3);
+            Vector3 c = Util.Lerp(new Vector3(1), color, t);
             float a = Alpha(elapsed);
-            return new Color(color.X, color.Y, color.Z, a);
+            return new Color(c.X, c.Y, c.Z, a);
         }
     }
 
@@ -63,7 +67,7 @@ namespace TTG
     {
         public float Scale(float elapsed)
         {
-            return 6 + (float)Math.Pow(elapsed * 2.0f, 3);
+            return 5 + (float)Math.Pow(elapsed * 2.0f, 3);
         }
 
         public bool Draw(float elapsed)
@@ -125,23 +129,37 @@ namespace TTG
 
         public Vector2 GetSize()
         {
+            if (colorer == null)
+                return Vector2.Zero;
+
             float scale = colorer.Scale(time);
-            return new Vector2(text.Length * font.GetCharSize().X *scale, font.GetCharSize().Y * scale); // TODO: more
+            return new Vector2(text.Length * font.GetCharSize().X *scale, font.GetCharSize().Y * scale);
+        }
+
+        public bool IsVisible()
+        {
+            if (colorer == null)
+                return false;
+
+            return colorer.Draw(time);
         }
 
         public void Draw(SpriteBatch batch, Vector2 position)
         {
-            if (text.Length != 0)
+            if (text == null)
+                return;
+
+            if (text.Length == 0)
+                return;
+
+            if (colorer.Draw(time))
             {
-                if (colorer.Draw(time))
-                {
-                    float scale = colorer.Scale(time);
-                    batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
-                    font.DrawText(batch, text, position, colorer.BackgroundColor(time), scale, 0);                    
-                    font.DrawText(batch, text, position, colorer.UpperColor(time), scale, 37);
-                    font.DrawText(batch, text, position, colorer.LowerColor(time), scale, 37 * 2);
-                    batch.End();
-                }
+                float scale = colorer.Scale(time);
+                batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+                font.DrawText(batch, text, position, colorer.BackgroundColor(time), scale, 0);
+                font.DrawText(batch, text, position, colorer.UpperColor(time), scale, 37 * 2);
+                font.DrawText(batch, text, position, colorer.LowerColor(time), scale, 37);
+                batch.End();
             }
         }
     }
