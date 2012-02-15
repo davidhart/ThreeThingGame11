@@ -32,9 +32,6 @@ namespace TTG
         GraphicsDevice _graphics;
 
         Texture2D _blockSpriteSheet;
-        Texture2D[] _blockTexture;
-        Texture2D[] _blockTextureL;
-
         Texture2D _blockSelection;
 
         // To replenish energy
@@ -126,20 +123,6 @@ namespace TTG
             // Load block images here
             _blockSpriteSheet = content.Load<Texture2D>("blockSprites");
             loader = new BlockLoader(_blockSpriteSheet);
-            _blockTexture = new Texture2D[5];
-
-            _blockTexture[0] = content.Load<Texture2D>("Block1");
-            _blockTexture[1] = content.Load<Texture2D>("Block2");
-            _blockTexture[2] = content.Load<Texture2D>("Block3");
-            _blockTexture[3] = content.Load<Texture2D>("Block4");
-            _blockTexture[4] = content.Load<Texture2D>("Block5");
-
-            _blockTextureL = new Texture2D[5];
-            _blockTextureL[0] = content.Load<Texture2D>("Block1l");
-            _blockTextureL[1] = content.Load<Texture2D>("Block2l");
-            _blockTextureL[2] = content.Load<Texture2D>("Block3l");
-            _blockTextureL[3] = content.Load<Texture2D>("Block4l");
-            _blockTextureL[4] = content.Load<Texture2D>("Block5l");
 
             _blockSelection = content.Load<Texture2D>("TileSelection");
         }
@@ -388,7 +371,7 @@ namespace TTG
                     if (_grid[row, col].Removed())
                     {
                         spriteBatch.Draw(_blockSpriteSheet, new Rectangle((int)_drawPosition.X + col * blockStride,
-                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), loader.GetBlockRect(_grid[row, col].GetID()), color);
+                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), loader.GetBlockRect(5), color);
                     }
                 }
             }
