@@ -19,11 +19,11 @@ namespace TTG
         const int blockSize = 51;
         const int padding = 8;
         const int blockStride = blockSize + padding;
+        BlockLoader loader;
 
         BitmapFont _bmFont;
         FancyText _scoreFancyText;
         FancyText _comboFancyText;
-
         Vector2 _drawPosition;
 
         int _cursorX;
@@ -31,6 +31,7 @@ namespace TTG
 
         GraphicsDevice _graphics;
 
+        Texture2D _blockSpriteSheet;
         Texture2D[] _blockTexture;
         Texture2D[] _blockTextureL;
 
@@ -123,6 +124,8 @@ namespace TTG
             _font = content.Load<SpriteFont>("UIFont");
 
             // Load block images here
+            _blockSpriteSheet = content.Load<Texture2D>("blockSprites");
+            loader = new BlockLoader(_blockSpriteSheet);
             _blockTexture = new Texture2D[5];
 
             _blockTexture[0] = content.Load<Texture2D>("Block1");
@@ -354,8 +357,8 @@ namespace TTG
                         fallOffset = (-_grid[row, col].FallDistance + (1 - d) * _grid[row, col].FallDistance);
                     }
 
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
-                        (int)(_drawPosition.Y + (row + fallOffset) * blockStride), blockSize, blockSize), Color.White);
+                    spriteBatch.Draw(_blockSpriteSheet, new Rectangle((int)_drawPosition.X + col * blockStride, 
+                        (int)(_drawPosition.Y + (row + fallOffset) * blockStride), blockSize, blockSize), loader.GetBlockRect(_grid[row, col].GetID()), Color.White);
                 }
             }
         }
@@ -366,8 +369,8 @@ namespace TTG
             {
                 for (int col = 0; col < _columns; col++)
                 {
-                    spriteBatch.Draw(_blockTexture[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
-                        (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), Color.White);
+                    spriteBatch.Draw(_blockSpriteSheet, new Rectangle((int)_drawPosition.X + col * blockStride, 
+                        (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), loader.GetBlockRect(_grid[row, col].GetID()), Color.White);
                 }
             }
         }
@@ -384,8 +387,8 @@ namespace TTG
                 {
                     if (_grid[row, col].Removed())
                     {
-                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
-                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), color);
+                        spriteBatch.Draw(_blockSpriteSheet, new Rectangle((int)_drawPosition.X + col * blockStride,
+                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), loader.GetBlockRect(_grid[row, col].GetID()), color);
                     }
                 }
             }
@@ -403,8 +406,8 @@ namespace TTG
                     {
                         float alpha = Math.Max(Math.Min(1 / Math.Abs(col + row - shimmer) * _shimmerEffectWidth - 0.35f, 1), 0);
 
-                        spriteBatch.Draw(_blockTextureL[_grid[row, col].GetID()], new Rectangle((int)_drawPosition.X + col * blockStride, 
-                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), new Color(alpha, alpha, alpha, alpha));
+                        spriteBatch.Draw(_blockSpriteSheet, new Rectangle((int)_drawPosition.X + col * blockStride, 
+                            (int)_drawPosition.Y + row * blockStride, blockSize, blockSize), loader.GetBlockRect(5), new Color(alpha, alpha, alpha, alpha));
                     }
                 }
             }
