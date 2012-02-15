@@ -3,7 +3,7 @@
 2) Units
 3) Redo sound
 4) Balancing, Simplifying Unit Class and Editor
-6)Phone input
+6) Phone input
 7) Help Screen
 8) Multiple levels?
 
