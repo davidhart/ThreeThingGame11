@@ -81,27 +81,27 @@ namespace TTG
 
         public override void Load(ContentManager content, GraphicsDevice graphics)
         {
-            _titleRect = new Rectangle(0, 0, 1280, 768);
-            _titleTex = content.Load<Texture2D>("TitleBest");
+            //_titleRect = new Rectangle(0, 0, 1, 768);
+            _titleTex = content.Load<Texture2D>("Titlephone");
             _introTex = content.Load<Texture2D>("intro");
             SoundEffect select = content.Load<SoundEffect>("Select");
 
             _startBtn = new TitleButton(
                 content.Load<Texture2D>("StartBtn"),
                 content.Load<Texture2D>("StartBtnSelected"),
-                select, new Rectangle (640 - 128, 250, 256, 128));
+                select, new Rectangle (100, 250, 256, 128));
             _startBtn.OnPress += new TitleButton.PressedEventHandler(_startBtn_OnPress);
 
             _helpBtn = new TitleButton(
                 content.Load<Texture2D>("Helpbtn"),
                 content.Load<Texture2D>("HelpbtnSelected"),
-                select, new Rectangle(640 - 128, 380, 256, 128));
+                select, new Rectangle(100, 380, 256, 128));
             _helpBtn.OnPress += new TitleButton.PressedEventHandler(_helpBtn_OnPress);
 
             _quitBtn = new TitleButton(
                 content.Load<Texture2D>("QuitBtn"),
                 content.Load<Texture2D>("QuitBtnSelected"),
-                select, new Rectangle(640 - 128, 510, 256, 128));
+                select, new Rectangle(100, 510, 256, 128));
             _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
 
             _spriteBatch = new SpriteBatch(graphics);
@@ -148,7 +148,7 @@ namespace TTG
         public override void Draw()
         {
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_titleTex, _titleRect, Color.White);
+            _spriteBatch.Draw(_titleTex, new Vector2(0,0), Color.White);
             switch (titleState)
             {
                 case TitleState.Main:
