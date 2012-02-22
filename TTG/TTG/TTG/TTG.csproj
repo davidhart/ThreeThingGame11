@@ -116,7 +116,6 @@
     <Compile Include="Arena\Units\Gunship.cs" />
     <Compile Include="Arena\Units\Hydro.cs" />
     <Compile Include="Arena\Units\Juggernaught.cs" />
-    <Compile Include="Arena\Units\JugRider.cs" />
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
     <Compile Include="Arena\Units\UberEmber.cs" />

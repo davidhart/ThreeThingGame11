@@ -42,13 +42,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="marine.png">
-      <Name>marine</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="HydroSpawnBtn.png">
       <Name>HydroSpawnBtn</Name>
       <Importer>TextureImporter</Importer>
@@ -319,18 +312,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="juggerAnim.png">
-      <Name>juggerAnim</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="juggershoot1.png">
-      <Name>juggershoot1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Block1l.png">
       <Name>Block1l</Name>
       <Importer>TextureImporter</Importer>
@@ -379,22 +360,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="hydroshoot.png">
-      <Name>hydroshoot</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="RockChunk.png">
       <Name>RockChunk</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="hydrowalk.png">
-      <Name>hydrowalk</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -449,6 +416,13 @@
   <ItemGroup>
     <Compile Include="blockSprites.png">
       <Name>blockSprites</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UnitsSpriteSheet.png">
+      <Name>UnitsSpriteSheet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

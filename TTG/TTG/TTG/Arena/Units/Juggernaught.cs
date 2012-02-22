@@ -36,7 +36,7 @@ namespace TTG
        {
            _spawnSE = _arena.JugRiderSpawnSE;
            _spawnSE.Play();
-           Unit u = _arena.AddUnit(UnitEnum.JugRider, UnitTeam.Player1);
+           Unit u = _arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
            u.Position = _position;
            base.OnDeath(de);
        }

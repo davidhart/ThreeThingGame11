@@ -14,7 +14,6 @@ namespace TTG
         Marine = 0,
         Ember = 1,
         Juggernaught = 2,
-        JugRider = 3,
         Hydro = 4,
         Launcher = 5,
         UberEmber = 6,
@@ -167,23 +166,20 @@ namespace TTG
             _renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
                 device.PresentationParameters.DepthStencilFormat);
 
-            _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 8, 1, 0, 3, 0.1f, false);
-            _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("marine"), 8, 1, 3, 4, 0.15f, true);
+            _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 3, 4, 0.15f, true);
+
+            _animationsAttack[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 32+0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 32+3, 4, 0.15f, true);
+
+            _animationsAttack[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 16, 16, 16, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 16, 16, 16, 1, 0.1f, true);
 
             _animationsAttack[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("alien"), 8, 1, 0, 4, 0.1f, false);
             _animationsMove[(int)UnitEnum.Ember] = new Animation(content.Load<Texture2D>("alien"), 8, 1, 4, 4, 0.15f, true);
 
             _animationsAttack[(int)UnitEnum.UberEmber] = new Animation(content.Load<Texture2D>("Ember2"), 6, 1, 3, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.UberEmber] = new Animation(content.Load<Texture2D>("Ember2"), 6, 1, 0, 3, 0.15f, true);
-
-            _animationsAttack[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerAnim"), 3, 1, 0, 3, 0.1f, false);
-            _animationsMove[(int)UnitEnum.Juggernaught] = new Animation(content.Load<Texture2D>("juggerShoot1"), 1, 1, 0, 1, 0.1f, false);
-
-            _animationsAttack[(int)UnitEnum.JugRider] = new Animation(content.Load<Texture2D>("ridershoot"), 3, 1, 0, 3, 0.1f, false);
-            _animationsMove[(int)UnitEnum.JugRider] = new Animation(content.Load<Texture2D>("Riderwalk"), 4, 1, 0 , 4, 0.15f, true);
-
-            _animationsAttack[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("hydroshoot"), 3, 1, 0, 3, 0.1f, false);
-            _animationsMove[(int)UnitEnum.Hydro] = new Animation(content.Load<Texture2D>("hydrowalk"), 4, 1, 0, 4, 0.15f, true);
 
             _emberProjectile = content.Load<Texture2D>("ember_proj");
             _emberProjectile2 = content.Load <Texture2D>("ember_proj2");
@@ -383,10 +379,6 @@ namespace TTG
             else if (unit == UnitEnum.Juggernaught)
             {
                 u = new Juggernaught(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
-            }
-            else if (unit == UnitEnum.JugRider)
-            {
-                u = new JugRider(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.JugRider], _animationsAttack[(int)UnitEnum.JugRider], team, this);
             }
             else if (unit == UnitEnum.Hydro)
             {
