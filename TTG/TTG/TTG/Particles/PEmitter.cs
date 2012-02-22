@@ -181,8 +181,6 @@ namespace TTG
 
         public virtual void Draw(SpriteBatch sb)
         {
-            sb.Begin(SpriteSortMode.Immediate, blend);
-
             for (int i = 0; i < aliveParticles.Count; ++i)
             {
                 float normalizedLifeTime = aliveParticles[i].TimeSinceStart / aliveParticles[i].LifeTime;
@@ -194,8 +192,6 @@ namespace TTG
                 sb.Draw(texture, aliveParticles[i].Position, null, colour,
                     aliveParticles[i].Rotation, origin, scale, SpriteEffects.None, 0.0f);
             }
-
-            sb.End();
         }
     }
 }

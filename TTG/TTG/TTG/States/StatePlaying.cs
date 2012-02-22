@@ -33,7 +33,7 @@ namespace TTG
             _graphics = graphics;
             spriteBatch = new SpriteBatch(graphics);
 
-            arena = new Arena(1280, 200);
+            arena = new Arena(480, 170, new Vector2(0, 800-200));
             arena.LoadContent(content, graphics);
             
             for (int i = 0; i < 7; ++i)
@@ -45,7 +45,7 @@ namespace TTG
             arenaUI.Load(content, arena);
 
             // Puzzle grid set up
-            _puzzleGrid = new PuzzleGrid(8, 8, new Vector2(graphics.PresentationParameters.BackBufferWidth / 2 - 64 * 4, 16), arena);
+            _puzzleGrid = new PuzzleGrid(8, 8, new Vector2(8, 8), arena);
             _puzzleGrid.LoadContent(content, graphics);
 
             _font = content.Load<SpriteFont>("UIFont");
@@ -111,7 +111,6 @@ namespace TTG
         public override void Draw()
         {
             arena.Draw(spriteBatch);
-            arena.DrawOntoScreen(new Vector2(0, _graphics.PresentationParameters.BackBufferHeight - arena.DisplayHeight));
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 

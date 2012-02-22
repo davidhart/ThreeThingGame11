@@ -140,17 +140,17 @@ namespace TTG
                 );
 
             _hCommandertex = content.Load<Texture2D>("HumanCommander");
-            _hCommanderRect = new Rectangle(6, 524, _hCommandertex.Width, _hCommandertex.Height);
+            _hCommanderRect = new Rectangle(6, 600, _hCommandertex.Width, _hCommandertex.Height);
             _aCommandertex = content.Load<Texture2D>("AlienCommander");
-            _aCommanderRect = new Rectangle(1280 - (_aCommandertex.Width + 10), 524, _hCommandertex.Width, _hCommandertex.Height);
+            _aCommanderRect = new Rectangle(480 - (_aCommandertex.Width + 10), 600, _hCommandertex.Width, _hCommandertex.Height);
             _arena = arena;
             _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
             _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
 
-            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48,537), 330, true);
+            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48, 600), 150, true);
             _p1HealthBar.LoadContent(content);
 
-            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(1280 - 338 - 48, 537), 338, false);
+            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(480 - 48 - 150, 600), 150, false);
             _p2HealthBar.LoadContent(content);
 
             _prevKeyState = Keyboard.GetState();

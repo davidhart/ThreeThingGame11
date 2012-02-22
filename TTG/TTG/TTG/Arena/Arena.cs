@@ -66,7 +66,9 @@ namespace TTG
             }
         }
 
-        private RenderTarget2D _renderTarget;
+        private Vector2 _drawPosition;
+
+        //private RenderTarget2D _renderTarget;
 
         int _p1Energy, _p2Energy, _maxEnergy;
         public int P1Energy
@@ -138,8 +140,10 @@ namespace TTG
             }
         }
 
-        public Arena(int displayWidth, int displayHeight)
+        public Arena(int displayWidth, int displayHeight, Vector2 drawPosition)
         {
+            _drawPosition = drawPosition;
+
             _maxEnergy = 2000;
             P1Energy = 200;
             P2Energy = 200;
@@ -157,14 +161,14 @@ namespace TTG
         }
 
         Music _bgm;
-        BloomPostProcess _bloomEffect;
+        //BloomPostProcess _bloomEffect;
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             _jugRiderSpawn = content.Load<SoundEffect>("JuggerWalker");
             _graphics = device;
-            _renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
-                device.PresentationParameters.DepthStencilFormat);
+            //_renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
+                //device.PresentationParameters.DepthStencilFormat);
 
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(content.Load<Texture2D>("UnitsSpriteSheet"), 32, 32, 3, 4, 0.15f, true);
@@ -184,25 +188,19 @@ namespace TTG
             _emberProjectile = content.Load<Texture2D>("ember_proj");
             _emberProjectile2 = content.Load <Texture2D>("ember_proj2");
 
+            _battleBG = content.Load<Texture2D>("BattleBG");
+
+            _bgRect = new Rectangle(0, 30, _battleBG.Width, _battleBG.Height);
+
             _bgm = new Music(content.Load<SoundEffect>("Ropocalypse 2"),true);
-            _marineShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
-            _hydroShotBatch = new MarineShotBatch(device, _renderTarget.Width, _renderTarget.Height);
+            _marineShotBatch = new MarineShotBatch(device, _displayWidth, _displayHeight, _drawPosition); 
+            _hydroShotBatch = new MarineShotBatch(device, _displayWidth, _displayHeight, _drawPosition);
             _projectileBatch = new ProjectileBatch();
 
             _base1Texture = content.Load<Texture2D>("base");
             _base2Texture = content.Load<Texture2D>("VolcanoBase");
 
             Reset();
-
-            _battleBG = content.Load<Texture2D>("BattleBG");
-
-            _bgRect = new Rectangle(0, 0, _battleBG.Width, _battleBG.Height);
-
-            //_p1HealthBar = new HealthBar(_p1Base, Vector2.Zero, 400, true);
-            //_p1HealthBar.LoadContent(content);
-
-            //_p2HealthBar = new HealthBar(_p2Base, new Vector2(_displayWidth - 400, 0), 400, false);
-            //_p2HealthBar.LoadContent(content);
 
             //Particles
             List<string> textures = new List<string>();
@@ -222,13 +220,6 @@ namespace TTG
                 temp.Initialize(content, textures[1]);
                 _deadEnemyEmitters.Add(temp);
             }
-
-            _bloomEffect = new BloomPostProcess();
-            _bloomEffect.LoadContent(device, content, _displayWidth, _displayHeight);
-            _bloomEffect.BlurAmount = 5;
-            _bloomEffect.BloomIntensity = 0.8f;
-            _bloomEffect.BaseIntensity = 1.0f;
-            _bloomEffect.Threshold = 0.4f;
         }
 
         public void Reset()
@@ -298,16 +289,16 @@ namespace TTG
                 }
             }
 
-            foreach (MarineDeathEmitter de in _deadHumanEmitters)
+            for (int i = 0; i < _deadHumanEmitters.Count; ++i)
             {
-                if (de.Active)
-                    de.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                if(_deadHumanEmitters[i].Active)
+                    _deadHumanEmitters[i].Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
-            foreach (EnemyDeathEmitter ee in _deadEnemyEmitters)
+            for (int i = 0; i < _deadEnemyEmitters.Count; ++i)
             {
-                if (ee.Active)
-                    ee.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                if (_deadEnemyEmitters[i].Active)
+                    _deadEnemyEmitters[i].Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
             _marineShotBatch.Update(gameTime);
@@ -316,17 +307,17 @@ namespace TTG
 
         public void Draw(SpriteBatch spritebatch)
         {
-            _graphics.SetRenderTarget(_renderTarget);
-            _graphics.Clear(Color.Black);
+            Matrix offset = Matrix.CreateTranslation(new Vector3(_drawPosition, 0.0f));
 
-            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, null, null, offset);
             spritebatch.Draw(_battleBG, _bgRect, Color.White);
             spritebatch.End();
 
-            spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-            foreach (Target target in _units)
+            spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, RasterizerState.CullNone, null, offset);
+
+            for (int i = 0; i < _units.Count; ++i)
             {
-                target.Draw(spritebatch);
+                _units[i].Draw(spritebatch);
             }
 
             _projectileBatch.Draw(spritebatch);
@@ -334,30 +325,26 @@ namespace TTG
             spritebatch.End();
 
             _marineShotBatch.Draw();
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, RasterizerState.CullNone, null, offset);
 
-            foreach (MarineDeathEmitter de in _deadHumanEmitters)
+            for (int i = 0; i < _deadHumanEmitters.Count; ++i)
             {
-                if (de.Active)
-                    de.Draw(spritebatch);
+                if (_deadHumanEmitters[i].Active)
+                    _deadHumanEmitters[i].Draw(spritebatch);
             }
 
-            foreach (EnemyDeathEmitter ee in _deadEnemyEmitters)
+            for (int i = 0; i < _deadEnemyEmitters.Count; ++i)
             {
-                if (ee.Active)
-                    ee.Draw(spritebatch);
+                if (_deadEnemyEmitters[i].Active)
+                    _deadEnemyEmitters[i].Draw(spritebatch);
             }
-
+            spritebatch.End();
             _graphics.SetRenderTarget(null);
-        }
-
-        public void DrawOntoScreen(Vector2 position)
-        {
-            _bloomEffect.Draw(_renderTarget, _renderTarget, position);
         }
 
         public Vector2 GetSpawnPosition(UnitTeam team)
         {
-            float y = 40 + Util.Rand(_displayHeight - 80);
+            float y = 100 + Util.Rand(50);
 
             if (team == UnitTeam.Player1)
             {

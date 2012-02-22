@@ -101,7 +101,7 @@ namespace TTG
         GraphicsDevice _graphics;
         BasicEffect _effect;
 
-        public MarineShotBatch(GraphicsDevice graphics, int displayWidth, int displayHeight)
+        public MarineShotBatch(GraphicsDevice graphics, int displayWidth, int displayHeight, Vector2 drawPosition)
         {
             _graphics = graphics;
             _shots = new List<MarineShot>();
@@ -109,10 +109,10 @@ namespace TTG
             Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(0.0f, 0.0f, 1.0f), Vector3.Zero, Vector3.Up);
 
             Matrix projectionMatrix = Matrix.CreateOrthographicOffCenter(
-                0,
-                (float)displayWidth,
-                (float)displayHeight,
-                0,
+                -drawPosition.X,
+                -drawPosition.X + graphics.Viewport.Width,
+                -drawPosition.Y + graphics.Viewport.Height,
+                -drawPosition.Y,
                 1.0f, 1000.0f);
 
             _effect = new BasicEffect(_graphics);

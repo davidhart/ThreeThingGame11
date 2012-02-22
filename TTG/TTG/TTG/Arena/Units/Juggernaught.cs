@@ -22,8 +22,8 @@ namespace TTG
             _moveSpeed = 20;
             _attackSpeed = 0.1f;
             _attackDamage = 4;
-            _attackRange = 100;
-            _followRange = 500;
+            _attackRange = 50;
+            _followRange = 100;
           
         }
 

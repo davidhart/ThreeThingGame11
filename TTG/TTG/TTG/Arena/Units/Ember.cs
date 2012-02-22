@@ -19,8 +19,8 @@ namespace TTG
             _moveSpeed = 50;
             _attackSpeed = 0.4f;
             _attackDamage = 6;
-            _attackRange = 300;
-            _followRange = 500;
+            _attackRange = 50;
+            _followRange = 80;
             _projectile = projectile;
         }
 

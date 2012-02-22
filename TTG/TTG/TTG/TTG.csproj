@@ -119,7 +119,6 @@
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
     <Compile Include="Arena\Units\UberEmber.cs" />
-    <Compile Include="BloomPostProcess.cs" />
     <Compile Include="Particles\EnemyDeathEmitter.cs" />
     <Compile Include="Puzzle\BlockLoader.cs" />
     <Compile Include="States\GameOverState.cs" />

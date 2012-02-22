@@ -20,8 +20,8 @@ namespace TTG
             _moveSpeed = 50;
             _attackSpeed = 0.3f;
             _attackDamage = 3;
-            _attackRange = 200;
-            _followRange = 500;
+            _attackRange = 40;
+            _followRange = 70;
         }
 
         protected override void OnAttack(Target target)
