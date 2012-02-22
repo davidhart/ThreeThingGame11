@@ -177,10 +177,9 @@ namespace TTG
 
         public override void OnDeath(PEmitter de)
         {
-            Rectangle r = _animationMove.GetFrameRect(0);
             de.Active = true;
             de.RecycleParticles();
-            de.pos = _position + new Vector2(r.Width, r.Height);
+            de.pos = GetMidPoint();
         }
     }
 }

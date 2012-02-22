@@ -21,10 +21,10 @@ namespace TTG
             base.LoadContent(cm, texture);
 
             // Data
-            maxNumParticles = 20;
+            maxNumParticles = 5;
 
-            minInitSpeed = 100.0f;
-            maxInitSpeed = 300.0f;
+            minInitSpeed = 10.0f;
+            maxInitSpeed = 30.0f;
 
             minAccel = new Vector2(-100.0f, -100.0f);
             maxAccel = new Vector2(100.0f, 100.0f);
@@ -35,8 +35,8 @@ namespace TTG
             minLife = 0.5f;
             maxLife = 1.0f;
 
-            minSize = 0.3f;
-            maxSize = 0.3f;
+            minSize = 0.03f;
+            maxSize = 0.07f;
 
             blend = BlendState.AlphaBlend;
 

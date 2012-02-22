@@ -16,9 +16,9 @@ namespace TTG
             set
             {
                 Pos = value;
-                foreach (Particle p in aliveParticles)
+                for(int i = 0; i < aliveParticles.Count; ++i)
                 {
-                    p.Position = value;
+                    aliveParticles[i].Position = value;
                 }
             }
         }
@@ -183,16 +183,16 @@ namespace TTG
         {
             sb.Begin(SpriteSortMode.Immediate, blend);
 
-            foreach (Particle p in aliveParticles)
+            for (int i = 0; i < aliveParticles.Count; ++i)
             {
-                float normalizedLifeTime = p.TimeSinceStart / p.LifeTime;
+                float normalizedLifeTime = aliveParticles[i].TimeSinceStart / aliveParticles[i].LifeTime;
                 float alpha = 4 * normalizedLifeTime * (1 - normalizedLifeTime);
                 Color colour = Color.White * alpha;
 
-                float scale = p.Scale * (0.75f + 0.25f * normalizedLifeTime);
+                float scale = aliveParticles[i].Scale * (0.75f + 0.25f * normalizedLifeTime);
 
-                sb.Draw(texture, p.Position, null, colour,
-                    p.Rotation, origin, scale, SpriteEffects.None, 0.0f);
+                sb.Draw(texture, aliveParticles[i].Position, null, colour,
+                    aliveParticles[i].Rotation, origin, scale, SpriteEffects.None, 0.0f);
             }
 
             sb.End();
