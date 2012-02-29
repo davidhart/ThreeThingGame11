@@ -158,13 +158,6 @@ namespace TTG
         public void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
-            spritebatch.DrawString(_font, "ENERGY:" + _arena.P1Energy, new Vector2(550, 537), Color.White);
-            _marineBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "MARINE: 100", new Vector2(76, 50), Color.White);
-            _hydroBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "HYDRO: 150", new Vector2(76, 150), Color.White);
-            _launcherBtn.Draw(spritebatch);
-            spritebatch.DrawString(_font, "JUGGERNAUGHT: 1200", new Vector2(76, 250), Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
             spritebatch.Draw(_hCommandertex, _hCommanderRect, _arena.GetBase1().GetHitColor());
