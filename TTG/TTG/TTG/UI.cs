@@ -26,8 +26,7 @@ namespace TTG
             Texture2D inBtntex,
             Texture2D inBtnTexClick,
             SoundEffect inBtnSE,
-            int xPos,
-            int yPos,
+            Rectangle rectangle,
             Arena arena,
             UnitEnum unitEnum,
             int energyUse,
@@ -36,7 +35,7 @@ namespace TTG
             _uiButtonTex = inBtntex;
             _uiButtonTexClick = inBtnTexClick;
             _uiButtonSound = inBtnSE;
-            _uiRect = new Rectangle(xPos, yPos, 64, 64);
+            _uiRect = rectangle;
             _mouseRect = new Rectangle(0, 0, 5, 5);
             _arena = arena;
             _unitEnum = unitEnum;
@@ -98,76 +97,124 @@ namespace TTG
 
     public class UI
     {
-        Rectangle _hCommanderRect, _aCommanderRect, _puzzleBGRect;
-        Texture2D _hCommandertex, _aCommandertex, _puzzleBGTex;
-        UIBtn _marineBtn, _hydroBtn, _launcherBtn, _juggernaughtBtn, _gunshipBtn;
+        Rectangle _leftAvatarRectangle, _rightAvatarRectangle, _puzzleBGRect;
+        Texture2D _leftAvatarTexture, _rightAvatarTexture, _puzzleBGTex;
+        UIBtn _marineBtn, _hydroBtn, _juggernaughtBtn;
         Arena _arena;
         SpriteFont _font;
         HealthBar _p1HealthBar;
         HealthBar _p2HealthBar;
         KeyboardState _prevKeyState;
 
+        Rectangle _drawPosition;
+
+        public UI(Rectangle drawPosition)
+        {
+            _drawPosition = drawPosition;
+        }
+
         public void Load(ContentManager content, Arena arena)
         {
+            _arena = arena;
+
+            const int avatarVerticalOffset = 115;
+            const int healthVarVerticalOffset = avatarVerticalOffset + 7;
+            const int healthBarHorizontalOffset = 48;
+            const int avatarEdgePadding = 6;
+            const int healthBarWidth = 150;
+            const int buttonPadding = 8;
+            const int buttonVerticalOffset = 10;
+            const int buttonSize = 51;
+
+            _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
+            _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
+
             _font = content.Load<SpriteFont>("UIFont");
+
+            Rectangle buttonRectangle = new Rectangle(_drawPosition.X + buttonPadding, _drawPosition.Y + buttonVerticalOffset, buttonSize, buttonSize);
+
             _marineBtn = new UIBtn(
                 content.Load<Texture2D>("MarineSpawnBtn"),
                 content.Load<Texture2D>("MarineSpawnBtnClick"),
-                content.Load<SoundEffect>("Talk1"), 
-                12, 50,
+                content.Load<SoundEffect>("Talk1"),
+                buttonRectangle,
                 arena,
                 UnitEnum.Marine, 100,
                 content.Load<SoundEffect>("NoSpawn"));
 
+            buttonRectangle.X += buttonPadding + buttonRectangle.Width;
             _hydroBtn = new UIBtn(
                 content.Load<Texture2D>("HydroSpawnBtn"),
                 content.Load<Texture2D>("HydroSpawnBtnClick"),
                 content.Load<SoundEffect>("HydroTalk1"),
-                12, 150,
+                buttonRectangle,
                 arena,
                 UnitEnum.Hydro, 150,
                 content.Load<SoundEffect>("NoSpawn"));
 
-            _launcherBtn = new UIBtn(
+            buttonRectangle.X += buttonPadding + buttonRectangle.Width;
+            _juggernaughtBtn = new UIBtn(
                 content.Load<Texture2D>("LauncherSpawnBtn"),
                 content.Load<Texture2D>("LauncherSpawnBtnClick"),
                 content.Load<SoundEffect>("JuggTalk1"),
-                12, 250,
-                arena, //Change this
+                buttonRectangle,
+                arena,
                 UnitEnum.Juggernaught,
                 1200,
                 content.Load<SoundEffect>("NoSpawn")
                 );
 
-            _hCommandertex = content.Load<Texture2D>("HumanCommander");
-            _hCommanderRect = new Rectangle(6, 600, _hCommandertex.Width, _hCommandertex.Height);
-            _aCommandertex = content.Load<Texture2D>("AlienCommander");
-            _aCommanderRect = new Rectangle(480 - (_aCommandertex.Width + 10), 600, _hCommandertex.Width, _hCommandertex.Height);
-            _arena = arena;
-            _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
-            _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
+            _leftAvatarTexture = content.Load<Texture2D>("HumanCommander");
+            _leftAvatarRectangle = new Rectangle(
+                                        _drawPosition.X + avatarEdgePadding, 
+                                        _drawPosition.Y + avatarVerticalOffset, 
+                                        _leftAvatarTexture.Width, 
+                                        _leftAvatarTexture.Height
+                                        );
 
-            _p1HealthBar = new HealthBar(_arena.GetBase1(), new Vector2(48, 600), 150, true);
+            _p1HealthBar = new HealthBar(_arena.GetBase1(), 
+                                         new Vector2(_drawPosition.X + healthBarHorizontalOffset, _drawPosition.Y + healthVarVerticalOffset), 
+                                         healthBarWidth, 
+                                         true);
+
             _p1HealthBar.LoadContent(content);
 
-            _p2HealthBar = new HealthBar(_arena.GetBase2(), new Vector2(480 - 48 - 150, 600), 150, false);
+            _rightAvatarTexture = content.Load<Texture2D>("AlienCommander");
+            _rightAvatarRectangle = new Rectangle(
+                                         _drawPosition.Right - _rightAvatarTexture.Width - avatarEdgePadding, 
+                                         _drawPosition.Y + avatarVerticalOffset, 
+                                         _leftAvatarTexture.Width, 
+                                         _leftAvatarTexture.Height
+                                         );
+
+            _p2HealthBar = new HealthBar(_arena.GetBase2(), 
+                                         new Vector2(_drawPosition.Right - healthBarHorizontalOffset - healthBarWidth, _drawPosition.Y + healthVarVerticalOffset), 
+                                         healthBarWidth, 
+                                         false);
+
             _p2HealthBar.LoadContent(content);
 
             _prevKeyState = Keyboard.GetState();
         }
+
         public void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
-            spritebatch.Draw(_hCommandertex, _hCommanderRect, _arena.GetBase1().GetHitColor());
-            spritebatch.Draw(_aCommandertex, _aCommanderRect, _arena.GetBase2().GetHitColor());
+            spritebatch.Draw(_leftAvatarTexture, _leftAvatarRectangle, _arena.GetBase1().GetHitColor());
+            spritebatch.Draw(_rightAvatarTexture, _rightAvatarRectangle, _arena.GetBase2().GetHitColor());
+
+            _marineBtn.Draw(spritebatch);
+            _hydroBtn.Draw(spritebatch);
+            _juggernaughtBtn.Draw(spritebatch);
         }
+
         public void Update(MouseState newMouse, MouseState oldMouse)
         {
             _marineBtn.Update(newMouse, oldMouse);
             _hydroBtn.Update(newMouse, oldMouse);
-            _launcherBtn.Update(newMouse, oldMouse);
+            _juggernaughtBtn.Update(newMouse, oldMouse);
 
             KeyboardState state = Keyboard.GetState();
 
@@ -183,7 +230,7 @@ namespace TTG
 
             if (state.IsKeyDown(Keys.D3) && _prevKeyState.IsKeyUp(Keys.D3))
             {
-                _launcherBtn.Press();
+                _juggernaughtBtn.Press();
             }
 
 

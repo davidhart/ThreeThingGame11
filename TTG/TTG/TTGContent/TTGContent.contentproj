@@ -200,23 +200,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="effectBlur.fx">
-      <Name>effectBlur</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-    <Compile Include="effectCombine.fx">
-      <Name>effectCombine</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-    <Compile Include="effectExtract.fx">
-      <Name>effectExtract</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="ember_proj.png">
       <Name>ember_proj</Name>
       <Importer>TextureImporter</Importer>

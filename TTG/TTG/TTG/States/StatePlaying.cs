@@ -29,6 +29,8 @@ namespace TTG
 
         public override void Load(ContentManager content, GraphicsDevice graphics)
         {
+            Rectangle UIRectangle = new Rectangle(0, 480, 480, 800-480);
+
             elapsed = 0;
             _graphics = graphics;
             spriteBatch = new SpriteBatch(graphics);
@@ -41,7 +43,7 @@ namespace TTG
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
                 arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
             }
-            arenaUI = new UI();
+            arenaUI = new UI(UIRectangle);
             arenaUI.Load(content, arena);
 
             // Puzzle grid set up
