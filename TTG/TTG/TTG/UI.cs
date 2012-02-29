@@ -101,16 +101,26 @@ namespace TTG
         Texture2D _leftAvatarTexture, _rightAvatarTexture, _puzzleBGTex;
         UIBtn _marineBtn, _hydroBtn, _juggernaughtBtn;
         Arena _arena;
-        SpriteFont _font;
         HealthBar _p1HealthBar;
         HealthBar _p2HealthBar;
         KeyboardState _prevKeyState;
 
+        BitmapFont _bmFont;
+        FancyText _scoreFancyText;
+        ScoreTextColorer _scoreColorer;
+
         Rectangle _drawPosition;
+        Vector2 _scoreDrawPosition;
 
         public UI(Rectangle drawPosition)
         {
             _drawPosition = drawPosition;
+
+            _bmFont = new BitmapFont("font", 37, 4);
+            _bmFont.SetSpacing(-1);
+            _scoreFancyText = new FancyText(_bmFont);
+            _scoreColorer = new ScoreTextColorer();
+            _scoreFancyText.SetMessage("0", _scoreColorer);
         }
 
         public void Load(ContentManager content, Arena arena)
@@ -121,15 +131,18 @@ namespace TTG
             const int healthVarVerticalOffset = avatarVerticalOffset + 7;
             const int healthBarHorizontalOffset = 48;
             const int avatarEdgePadding = 6;
-            const int healthBarWidth = 150;
+            const int healthBarWidth = 180;
             const int buttonPadding = 8;
             const int buttonVerticalOffset = 10;
             const int buttonSize = 51;
+            const int scoreVerticalOffset = 74;
+
+            _scoreDrawPosition = new Vector2((_drawPosition.Left + _drawPosition.Right) / 2, _drawPosition.Top + scoreVerticalOffset);
 
             _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
             _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
 
-            _font = content.Load<SpriteFont>("UIFont");
+            _bmFont.LoadContent(content);
 
             Rectangle buttonRectangle = new Rectangle(_drawPosition.X + buttonPadding, _drawPosition.Y + buttonVerticalOffset, buttonSize, buttonSize);
 
@@ -199,7 +212,8 @@ namespace TTG
 
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            //spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
             spritebatch.Draw(_leftAvatarTexture, _leftAvatarRectangle, _arena.GetBase1().GetHitColor());
@@ -208,9 +222,13 @@ namespace TTG
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _juggernaughtBtn.Draw(spritebatch);
+
+            spritebatch.End();
+
+            _scoreFancyText.Draw(spritebatch, _scoreDrawPosition - new Vector2(_scoreFancyText.GetSize().X / 2, 0));
         }
 
-        public void Update(MouseState newMouse, MouseState oldMouse)
+        public void Update(float dt, MouseState newMouse, MouseState oldMouse)
         {
             _marineBtn.Update(newMouse, oldMouse);
             _hydroBtn.Update(newMouse, oldMouse);
@@ -233,7 +251,8 @@ namespace TTG
                 _juggernaughtBtn.Press();
             }
 
-
+            _scoreFancyText.ChangeMessage(_arena.P1Energy.ToString());
+            _scoreFancyText.Update(dt);
 
             _prevKeyState = state;
         }

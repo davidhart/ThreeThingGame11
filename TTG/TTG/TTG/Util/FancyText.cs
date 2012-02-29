@@ -101,6 +101,40 @@ namespace TTG
         }
     }
 
+    class ScoreTextColorer : FancyTextColorer
+    {
+        public float Scale(float elapsed)
+        {
+            return 3;
+        }
+
+        public bool Draw(float elapsed)
+        {
+            return true;
+        }
+
+        protected float Alpha(float elapsed)
+        {
+            return Util.Clamp((float)(1.0f - Math.Pow((float)Math.Max(0.0f, -1.6f + elapsed * 3.5f), 2.0f)), 0.0f, 1.0f);
+        }
+
+        public Color BackgroundColor(float elapsed)
+        {
+            return new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+
+        public Color UpperColor(float elapsed)
+        {
+            Color c = new Color(255, 255, 255, 255);
+            return c;
+        }
+
+        public Color LowerColor(float elapsed)
+        {
+            Color c = new Color(255, 255, 255, 255);
+            return c;
+        }
+    }
 
     class FancyText
     {
@@ -120,6 +154,11 @@ namespace TTG
             this.text = text;
             this.colorer = colorer;
             time = 0;
+        }
+
+        public void ChangeMessage(string text)
+        {
+            this.text = text;
         }
 
         public void Update(float dt)

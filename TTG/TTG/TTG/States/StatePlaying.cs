@@ -104,7 +104,7 @@ namespace TTG
 
                 // Puzzle
                 _puzzleGrid.Update(gameTime, newMouse, oldMouse);
-                arenaUI.Update(newMouse, oldMouse);
+                arenaUI.Update((float)gameTime.ElapsedGameTime.TotalSeconds, newMouse, oldMouse);
             }
 
             arena.Update(gameTime);
@@ -114,9 +114,9 @@ namespace TTG
         {
             arena.Draw(spriteBatch);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
             arenaUI.Draw(spriteBatch);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             if (arena.GetBase1().IsDead())
             {
