@@ -128,6 +128,10 @@ namespace TTG
             {
                 case TitleState.Main:
                     {
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                        {
+                            _parent.Exit();
+                        }
                         _startBtn.Update(newMouse, oldMouse);
                         _helpBtn.Update(newMouse, oldMouse);
                         _quitBtn.Update(newMouse, oldMouse);

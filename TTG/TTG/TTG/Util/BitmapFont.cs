@@ -46,9 +46,9 @@ namespace TTG
             _characterHeight = _texture.Height / _charactersY;
         }
 
-        public void DrawText(SpriteBatch batch, string text, Vector2 position, float scale = 1)
+        public void DrawText(SpriteBatch batch, string text, Vector2 position, float scale)
         {
-            DrawText(batch, text, position, Color.White, scale);
+            DrawText(batch, text, position, Color.White, scale, 0);
         }
 
         private void GetSourceRectFromIndex(int index, ref Rectangle r)
@@ -78,7 +78,7 @@ namespace TTG
             return true;
         }
 
-        public void DrawText(SpriteBatch batch, string text, Vector2 position, Color color, float scale = 1, int characterOffset = 0)
+        public void DrawText(SpriteBatch batch, string text, Vector2 position, Color color, float scale, int characterOffset)
         {
             Rectangle sourceRect = new Rectangle();
             Rectangle destRect = new Rectangle(0, 0, (int)(_characterWidth * scale), (int)(_characterHeight * scale));

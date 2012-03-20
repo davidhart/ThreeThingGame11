@@ -26,7 +26,7 @@ namespace TTG
 
         public override void Load(ContentManager content, GraphicsDevice graphics)
         {
-            _rect = new Rectangle(0, 0, 1280, 768);
+            _rect = new Rectangle(0, 0, 480, 800);
             _screen = content.Load<Texture2D>("HelpScreen");
             _spriteBatch = new SpriteBatch(graphics);
         }
@@ -46,6 +46,10 @@ namespace TTG
 
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            {
+                ChangeScreen(_parent.TitleScreenState);
+            }
             if (newMouse.LeftButton == ButtonState.Pressed &&
                 oldMouse.LeftButton == ButtonState.Released)
                 ChangeScreen(_parent.TitleScreenState);

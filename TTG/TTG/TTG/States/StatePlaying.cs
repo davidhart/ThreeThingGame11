@@ -65,6 +65,10 @@ namespace TTG
 
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            {
+                ChangeScreen(_parent.TitleScreenState);
+            }
             if (arena.GetBase1().IsDead())
             {
                 if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton != ButtonState.Pressed)
@@ -122,16 +126,16 @@ namespace TTG
             {
                 Vector2 text = _font.MeasureString("GAME OVER");
                 spriteBatch.DrawString(_font, "GAME OVER", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y * 2), Color.White);
-                text = _font.MeasureString("Mouse1 to Continue");
-                spriteBatch.DrawString(_font, "Mouse1 to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
+                text = _font.MeasureString("Touch to Continue");
+                spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
                 spriteBatch.End();
             }
             else if (arena.GetBase2().IsDead())
             {
-                Vector2 text = _font.MeasureString("WINNER IS YOU");
-                spriteBatch.DrawString(_font, "WINNER IS YOU", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y * 2), Color.White);
-                text = _font.MeasureString("Mouse1 to Continue");
-                spriteBatch.DrawString(_font, "Mouse1 to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
+                Vector2 text = _font.MeasureString("YOU WIN");
+                spriteBatch.DrawString(_font, "YOU WIN", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y * 2), Color.White);
+                text = _font.MeasureString("Touch to Continue");
+                spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
                 spriteBatch.End();
             }
             else
