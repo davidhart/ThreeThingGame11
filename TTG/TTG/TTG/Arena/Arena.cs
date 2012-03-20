@@ -342,9 +342,15 @@ namespace TTG
             _graphics.SetRenderTarget(null);
         }
 
-        public Vector2 GetSpawnPosition(UnitTeam team)
+        public Vector2 GetSpawnPosition(UnitTeam team, UnitEnum unit)
         {
             float y = 100 + Util.Rand(50);
+
+            if (team == UnitTeam.Player1 && unit == UnitEnum.Hydro)
+            {
+                y = 40;
+                return new Vector2(40, y);
+            }
 
             if (team == UnitTeam.Player1)
             {
@@ -361,26 +367,26 @@ namespace TTG
             Unit u = null;
             if (unit == UnitEnum.Marine)
             {
-                u = new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
+                u = new Marine(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
             }
             else if (unit == UnitEnum.Juggernaught)
             {
-                u = new Juggernaught(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
+                u = new Juggernaught(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
             }
             else if (unit == UnitEnum.Hydro)
             {
-                u = new Hydro(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Hydro], _animationsAttack[(int)UnitEnum.Hydro], team, this);
+                u = new Hydro(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Hydro], _animationsAttack[(int)UnitEnum.Hydro], team, this);
             }
             else if (unit == UnitEnum.Launcher)
             {
             }
             else if (unit == UnitEnum.Ember)
             {
-                u = new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile);
+                u = new Ember(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this, _emberProjectile);
             }
             else if (unit == UnitEnum.UberEmber)
             {
-                u = new UberEmber(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
+                u = new UberEmber(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
             }
 
             _units.Add(u);
