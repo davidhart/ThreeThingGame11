@@ -162,7 +162,7 @@ namespace TTG
                 content.Load<SoundEffect>("HydroTalk1"),
                 buttonRectangle,
                 arena,
-                UnitEnum.Hydro, 150,
+                UnitEnum.Hydro, 200,
                 content.Load<SoundEffect>("NoSpawn"));
 
             buttonRectangle.X += buttonPadding + buttonRectangle.Width;
@@ -173,7 +173,7 @@ namespace TTG
                 buttonRectangle,
                 arena,
                 UnitEnum.Juggernaught,
-                1200,
+                800,
                 content.Load<SoundEffect>("NoSpawn")
                 );
 
