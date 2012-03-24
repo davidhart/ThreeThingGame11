@@ -78,7 +78,7 @@ namespace TTG
             if (_mouseRect.Intersects(_uiRect) &&
                 newMousestate.LeftButton == ButtonState.Pressed &&
                 oldMouseState.LeftButton == ButtonState.Released &&
-                _arena.P1Energy < _energyUse)
+                _arena.P1Energy >= _energyUse)
             {
                 Press();
             }
