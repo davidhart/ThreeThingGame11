@@ -10,9 +10,7 @@ namespace TTG
 {
     class Ember : Unit
     {
-        Texture2D _projectile;
-
-        public Ember(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena, Texture2D projectile) :
+        public Ember(Vector2 position, Animation animationMove, Animation animationAttack, UnitTeam team, Arena arena) :
             base(position, team, arena, animationMove, animationAttack)
         {
             MaxHP = 35;
@@ -21,7 +19,6 @@ namespace TTG
             _attackDamage = 6;
             _attackRange = 50;
             _followRange = 80;
-            _projectile = projectile;
         }
 
         protected override void OnAttack(Target target)

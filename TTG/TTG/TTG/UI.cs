@@ -13,92 +13,82 @@ namespace TTG
 {
     public class UIBtn
     {
-        Texture2D _uiButtonTex, _uiButtonTexClick;
-        SoundEffect _uiButtonSound, _uiNoSpawnSound;
         Rectangle _uiRect, _mouseRect;
-        bool _clicked = false;
         Arena _arena;
         UnitEnum _unitEnum;
         int _energyUse;
 
+        Rectangle _sourceRect;
+        Rectangle _sourceRectHighlight;
+        Texture2D _spriteSheet;
+
+
+        float _clickAlpha;
+
 
         public UIBtn(
-            Texture2D inBtntex,
-            Texture2D inBtnTexClick,
-            SoundEffect inBtnSE,
+            Texture2D spriteSheet,
+            Rectangle sourceRect,
+            Rectangle sourceRectHighlight,
             Rectangle rectangle,
             Arena arena,
             UnitEnum unitEnum,
-            int energyUse,
-            SoundEffect noSpawn)
+            int energyUse)
         {
-            _uiButtonTex = inBtntex;
-            _uiButtonTexClick = inBtnTexClick;
-            _uiButtonSound = inBtnSE;
+            _spriteSheet = spriteSheet;
+            _sourceRect = sourceRect;
+            _sourceRectHighlight = sourceRectHighlight;
+
             _uiRect = rectangle;
             _mouseRect = new Rectangle(0, 0, 5, 5);
             _arena = arena;
             _unitEnum = unitEnum;
             _energyUse = energyUse;
-            _uiNoSpawnSound = noSpawn;
 
+            _clickAlpha = 0;
         }
 
         public void Press()
         {
             if (_arena.P1Energy >= _energyUse)
             {
-                _clicked = true;
+                _clickAlpha = 1;
                 _arena.AddUnit(_unitEnum, UnitTeam.Player1);
                 _arena.P1Energy -= _energyUse;
-                //_uiButtonSound.Play();
             }
         }
 
         public void Draw(SpriteBatch spritebatch)
         {
-            if (_clicked)
+            if (_clickAlpha > 0)
             {
-                spritebatch.Draw(_uiButtonTexClick, _uiRect, Color.White);
+                spritebatch.Draw(_spriteSheet, _uiRect, _sourceRectHighlight, new Color(1.0f, 1.0f, 1.0f, (float)Math.Pow(_clickAlpha, 0.25)));
             }
-            else
-            {
-                spritebatch.Draw(_uiButtonTex, _uiRect, Color.White);
-            }
+
+            spritebatch.Draw(_spriteSheet, _uiRect, _sourceRect, Color.White);
         }
 
-        public void Update(MouseState newMousestate, MouseState oldMouseState)
+        public void Update(MouseState newMousestate, MouseState oldMouseState, float dt)
         {
             _mouseRect.X = newMousestate.X;
             _mouseRect.Y = newMousestate.Y;
 
+            _clickAlpha -= dt * 3;
+
             if (_mouseRect.Intersects(_uiRect) &&
                 newMousestate.LeftButton == ButtonState.Pressed &&
-                oldMouseState.LeftButton == ButtonState.Released)
+                oldMouseState.LeftButton == ButtonState.Released &&
+                _arena.P1Energy < _energyUse)
             {
                 Press();
-
-            }
-            else if (_mouseRect.Intersects(_uiRect) &&
-            newMousestate.LeftButton == ButtonState.Pressed &&
-            oldMouseState.LeftButton == ButtonState.Released &&
-            _arena.P1Energy < _energyUse)
-            {
-                _clicked = true;
-                //_uiNoSpawnSound.Play();
-
-            }
-            else
-            {
-                _clicked = false;
             }
         }
     }
 
     public class UI
     {
-        Rectangle _leftAvatarRectangle, _rightAvatarRectangle, _puzzleBGRect;
-        Texture2D _leftAvatarTexture, _rightAvatarTexture, _puzzleBGTex;
+        Rectangle _leftAvatarRectangle, _rightAvatarRectangle;
+        Texture2D _leftAvatarTexture, _rightAvatarTexture;
         UIBtn _marineBtn, _hydroBtn, _juggernaughtBtn;
         Arena _arena;
         HealthBar _p1HealthBar;
@@ -112,6 +102,8 @@ namespace TTG
         Rectangle _drawPosition;
         Vector2 _scoreDrawPosition;
 
+        Texture2D _UISheet;
+
         public UI(Rectangle drawPosition)
         {
             _drawPosition = drawPosition;
@@ -121,6 +113,7 @@ namespace TTG
             _scoreFancyText = new FancyText(_bmFont);
             _scoreColorer = new ScoreTextColorer();
             _scoreFancyText.SetMessage("0", _scoreColorer);
+
         }
 
         public void Load(ContentManager content, Arena arena)
@@ -138,43 +131,40 @@ namespace TTG
             const int scoreVerticalOffset = 74;
 
             _scoreDrawPosition = new Vector2((_drawPosition.Left + _drawPosition.Right) / 2, _drawPosition.Top + scoreVerticalOffset);
-
-            _puzzleBGTex = content.Load<Texture2D>("PuzzleBG");
-            _puzzleBGRect = new Rectangle(0, 0, _puzzleBGTex.Width, _puzzleBGTex.Height);
-
             _bmFont.LoadContent(content);
 
             Rectangle buttonRectangle = new Rectangle(_drawPosition.X + buttonPadding, _drawPosition.Y + buttonVerticalOffset, buttonSize, buttonSize);
 
+            _UISheet = content.Load<Texture2D>("UISheet");
+
             _marineBtn = new UIBtn(
-                content.Load<Texture2D>("MarineSpawnBtn"),
-                content.Load<Texture2D>("MarineSpawnBtnClick"),
-                content.Load<SoundEffect>("Talk1"),
+                _UISheet,
+                new Rectangle(0, 0, 51, 51),
+                new Rectangle(51 * 3, 0, 51, 51),
                 buttonRectangle,
                 arena,
-                UnitEnum.Marine, 100,
-                content.Load<SoundEffect>("NoSpawn"));
+                UnitEnum.Marine, 
+                100);
 
             buttonRectangle.X += buttonPadding + buttonRectangle.Width;
             _hydroBtn = new UIBtn(
-                content.Load<Texture2D>("HydroSpawnBtn"),
-                content.Load<Texture2D>("HydroSpawnBtnClick"),
-                content.Load<SoundEffect>("HydroTalk1"),
+                _UISheet,
+                new Rectangle(51, 0, 51, 51),
+                new Rectangle(51 * 3, 0, 51, 51),
                 buttonRectangle,
                 arena,
-                UnitEnum.Hydro, 200,
-                content.Load<SoundEffect>("NoSpawn"));
+                UnitEnum.Hydro, 
+                200);
 
             buttonRectangle.X += buttonPadding + buttonRectangle.Width;
             _juggernaughtBtn = new UIBtn(
-                content.Load<Texture2D>("LauncherSpawnBtn"),
-                content.Load<Texture2D>("LauncherSpawnBtnClick"),
-                content.Load<SoundEffect>("JuggTalk1"),
+                _UISheet,
+                new Rectangle(51 * 2, 0, 51, 51),
+                new Rectangle(51 * 3, 0, 51, 51),
                 buttonRectangle,
                 arena,
                 UnitEnum.Juggernaught,
-                800,
-                content.Load<SoundEffect>("NoSpawn")
+                800
                 );
 
             _leftAvatarTexture = content.Load<Texture2D>("HumanCommander");
@@ -212,7 +202,7 @@ namespace TTG
 
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             //spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             _p1HealthBar.Draw(spritebatch);
             _p2HealthBar.Draw(spritebatch);
@@ -230,9 +220,9 @@ namespace TTG
 
         public void Update(float dt, MouseState newMouse, MouseState oldMouse)
         {
-            _marineBtn.Update(newMouse, oldMouse);
-            _hydroBtn.Update(newMouse, oldMouse);
-            _juggernaughtBtn.Update(newMouse, oldMouse);
+            _marineBtn.Update(newMouse, oldMouse, dt);
+            _hydroBtn.Update(newMouse, oldMouse, dt);
+            _juggernaughtBtn.Update(newMouse, oldMouse, dt);
 
             KeyboardState state = Keyboard.GetState();
 

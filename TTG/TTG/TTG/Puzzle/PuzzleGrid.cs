@@ -32,7 +32,6 @@ namespace TTG
         GraphicsDevice _graphics;
 
         Texture2D _blockSpriteSheet;
-        Texture2D _blockSelection;
 
         // To replenish energy
         Arena _arena;
@@ -123,8 +122,6 @@ namespace TTG
             // Load block images here
             _blockSpriteSheet = content.Load<Texture2D>("blockSprites");
             loader = new BlockLoader(_blockSpriteSheet);
-
-            _blockSelection = content.Load<Texture2D>("TileSelection");
         }
 
         public void Update(GameTime gameTime, MouseState currentMouseState, MouseState oldMouseState)
@@ -224,7 +221,10 @@ namespace TTG
 
             // Draw selector if we have picked a tile to swap
             if (_cursorX != -1 && _cursorY != -1)
-                spriteBatch.Draw(_blockSelection, new Rectangle((int)_drawPosition.X + _cursorX * blockStride, (int)_drawPosition.Y + _cursorY *blockStride, blockSize, blockSize), Color.White);
+                spriteBatch.Draw(_blockSpriteSheet, 
+                    new Rectangle((int)_drawPosition.X + _cursorX * blockStride, (int)_drawPosition.Y + _cursorY *blockStride, blockSize, blockSize), 
+                    loader.GetBlockRect(6), 
+                    Color.White);
 
             if (_arena.P1Energy >= _arena.MaxEnergy)
             {

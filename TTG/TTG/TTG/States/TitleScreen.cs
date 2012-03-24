@@ -71,7 +71,6 @@ namespace TTG
         Rectangle _titleRect;
         TitleButton _startBtn, _helpBtn, _quitBtn;
         SpriteBatch _spriteBatch;
-        Texture2D _introTex;
 
         public TitleScreen(Game1 parent)
             : base(parent)
@@ -83,7 +82,6 @@ namespace TTG
         {
             //_titleRect = new Rectangle(0, 0, 1, 768);
             _titleTex = content.Load<Texture2D>("Titlephone");
-            _introTex = content.Load<Texture2D>("intro");
             SoundEffect select = content.Load<SoundEffect>("Select");
 
             _startBtn = new TitleButton(

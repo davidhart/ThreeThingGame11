@@ -14,10 +14,6 @@ namespace TTG
         Texture2D blockSpritesheet;
         Rectangle[] sheetRect = new Rectangle[6];
         const int blockSize = 51;
-        const int offsetX = 206;
-        const int offsetY = 13;
-        const int rows = 1;
-        const int columns = 6;
 
         public BlockLoader(Texture2D blocks)
         {
@@ -26,11 +22,7 @@ namespace TTG
 
         public Rectangle GetBlockRect(int blockID)
         {
-            int width =  (blockSpritesheet.Width  - offsetX) / columns;
-            int height = (blockSpritesheet.Height - offsetY) / rows;
-            int x = (blockID % columns) * width;
-            int y = (blockID / columns) * height;
-            return new Rectangle(x, y, width, height);
+            return new Rectangle(blockID * blockSize, 0, blockSize, blockSize);
         }
     }
 }
