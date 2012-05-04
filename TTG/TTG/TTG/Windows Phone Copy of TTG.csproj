@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{661690f1-2652-40fa-a25f-46c84fd2562f}</ProjectGuid>
+    <ProjectGuid>{661690F1-2652-40FA-A25F-46C84FD2562F}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
@@ -73,12 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Arena\Abilities\CommanderAbility.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\Projectiles\MarineShot.cs" />
     <Compile Include="Arena\Projectiles\Projectile.cs" />
     <Compile Include="Arena\Units\Base.cs" />
     <Compile Include="Arena\Units\Ember.cs" />
-    <Compile Include="Arena\Units\Gunship.cs" />
     <Compile Include="Arena\Units\Hydro.cs" />
     <Compile Include="Arena\Units\Juggernaught.cs" />
     <Compile Include="Arena\Units\Marine.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Util\FancyText.cs" />
     <Compile Include="Util\UnitLoader.cs" />
     <Compile Include="Util\Util.cs" />
+    <Compile Include="States\WorldMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -154,6 +155,10 @@
     <None Include="Properties\WMAppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_45.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_53.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_45_39.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_47_54.sap" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework" />

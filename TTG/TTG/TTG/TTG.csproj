@@ -108,12 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Arena\Abilities\CommanderAbility.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\Projectiles\MarineShot.cs" />
     <Compile Include="Arena\Projectiles\Projectile.cs" />
     <Compile Include="Arena\Units\Base.cs" />
     <Compile Include="Arena\Units\Ember.cs" />
-    <Compile Include="Arena\Units\Gunship.cs" />
     <Compile Include="Arena\Units\Hydro.cs" />
     <Compile Include="Arena\Units\Juggernaught.cs" />
     <Compile Include="Arena\Units\Marine.cs" />
@@ -138,6 +138,7 @@
     <Compile Include="States\HelpScreen.cs" />
     <Compile Include="States\StatePlaying.cs" />
     <Compile Include="States\TitleScreen.cs" />
+    <Compile Include="States\WorldMap.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util\BitmapFont.cs" />
     <Compile Include="Util\FancyText.cs" />
@@ -182,6 +183,12 @@
       <Name>TTGContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_45.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_53.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_45_39.sap" />
+    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_47_54.sap" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
