@@ -41,7 +41,6 @@ namespace TTG
 
         private float _nextAttack;
 
-        // Particle System Stuff!
         protected MarineDeathEmitter ps;
         protected Vector2 psPosition;
 

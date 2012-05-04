@@ -1,7 +1,4 @@
-﻿//Hydro Class
-//Lindsay Cox
-//Last Updated 26/10/11
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
