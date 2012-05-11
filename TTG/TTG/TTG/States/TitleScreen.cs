@@ -14,6 +14,7 @@ namespace TTG
     public enum TitleState
     {
         Main,
+        Campaign,
         Help,
         PlayGame
     }
@@ -69,7 +70,7 @@ namespace TTG
         TitleState titleState = TitleState.Main;
         Texture2D _titleTex;
         Rectangle _titleRect;
-        TitleButton _startBtn, _helpBtn, _quitBtn;
+        TitleButton _startBtn, _helpBtn, _quitBtn, _campaignBtn, _muteBtn;
         SpriteBatch _spriteBatch;
 
         public TitleScreen(Game1 parent)
@@ -84,23 +85,35 @@ namespace TTG
             _titleTex = content.Load<Texture2D>("Titlephone");
             SoundEffect select = content.Load<SoundEffect>("Select");
 
+            _campaignBtn = new TitleButton(
+                content.Load<Texture2D>("CampaignBtn"),
+                content.Load<Texture2D>("CampaignBtn"),
+                select, new Rectangle(100, 170, 256, 128));
+            //TODO add event handler here
+
             _startBtn = new TitleButton(
-                content.Load<Texture2D>("StartBtn"),
-                content.Load<Texture2D>("StartBtnSelected"),
-                select, new Rectangle (100, 250, 256, 128));
+                content.Load<Texture2D>("IAbtn"),
+                content.Load<Texture2D>("IAbtn"),
+                select, new Rectangle (100, 300, 256, 128));
             _startBtn.OnPress += new TitleButton.PressedEventHandler(_startBtn_OnPress);
 
             _helpBtn = new TitleButton(
-                content.Load<Texture2D>("Helpbtn"),
                 content.Load<Texture2D>("HelpbtnSelected"),
-                select, new Rectangle(100, 380, 256, 128));
+                content.Load<Texture2D>("HelpbtnSelected"),
+                select, new Rectangle(100, 430, 256, 128));
             _helpBtn.OnPress += new TitleButton.PressedEventHandler(_helpBtn_OnPress);
 
             _quitBtn = new TitleButton(
-                content.Load<Texture2D>("QuitBtn"),
                 content.Load<Texture2D>("QuitBtnSelected"),
-                select, new Rectangle(100, 510, 256, 128));
+                content.Load<Texture2D>("QuitBtnSelected"),
+                select, new Rectangle(100, 570, 256, 128));
             _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
+
+            _muteBtn = new TitleButton(
+                content.Load<Texture2D>("MuteBtn"),
+                content.Load<Texture2D>("MuteBtn"),
+                select, new Rectangle(480-64, 0, 64, 64));
+            //TODO add event handler here
 
             _spriteBatch = new SpriteBatch(graphics);
         }
@@ -135,6 +148,10 @@ namespace TTG
                         _quitBtn.Update(newMouse, oldMouse);
                         break;
                     }
+                case TitleState.Campaign:
+                    {
+                        break;
+                    }
                 case TitleState.Help:
                     {
 
@@ -155,9 +172,11 @@ namespace TTG
             {
                 case TitleState.Main:
                     {
+                        _campaignBtn.Draw(_spriteBatch);
                         _startBtn.Draw(_spriteBatch);
                         _helpBtn.Draw(_spriteBatch);
                         _quitBtn.Draw(_spriteBatch);
+                        _muteBtn.Draw(_spriteBatch);
                         break;
                     }
                 case TitleState.Help:
