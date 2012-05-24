@@ -53,6 +53,16 @@ namespace TTG
                 return _helpScreen;
             }
         }
+
+        SplashScreen _splashScreen;
+        public GameState SplashScreen
+        {
+            get
+            {
+                return _splashScreen;
+            }
+        }
+
         MouseState oldMouseState, newMouseState;
 
         public Game1()
@@ -84,7 +94,10 @@ namespace TTG
             _helpScreen = new HelpScreen(this);
             _helpScreen.Load(Content, GraphicsDevice);
 
-            _currentState = _titlescreen;
+            _splashScreen = new SplashScreen(this);
+            _splashScreen.Load(Content, GraphicsDevice);
+
+            _currentState = _splashScreen;
         }
 
         protected override void UnloadContent()

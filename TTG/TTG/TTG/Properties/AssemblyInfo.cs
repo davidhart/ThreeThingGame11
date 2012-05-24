@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Volcanis")]
 [assembly: AssemblyProduct("Volcanis")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("The Game Brewery")]
+[assembly: AssemblyCompany("Beehive Games")]
 [assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

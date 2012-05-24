@@ -101,6 +101,7 @@
     <Compile Include="Puzzle\PuzzleGrid.cs" />
     <Compile Include="SE.cs" />
     <Compile Include="States\HelpScreen.cs" />
+    <Compile Include="States\SplashScreen.cs" />
     <Compile Include="States\StatePlaying.cs" />
     <Compile Include="States\TitleScreen.cs" />
     <Compile Include="UI.cs" />
@@ -161,6 +162,7 @@
     <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_47_54.sap" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="Microsoft.Xna.Framework.Avatar" />
     <Reference Include="Microsoft.Xna.Framework.Game" />
