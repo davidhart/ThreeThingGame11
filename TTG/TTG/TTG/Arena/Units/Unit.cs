@@ -5,66 +5,157 @@ using System;
 
 namespace TTG
 {
+    public class AttackHandler
+    {
+        public virtual void OnAttack(Unit unit, Target target)
+        {
+        }
+    }
+
+    public class DeathHandler
+    {
+        public virtual void OnDeath(Unit unit)
+        {
+        }
+    }
+
+    public class BulletAttackHandler : AttackHandler
+    {
+        Arena _arena;
+        Color _color1;
+        Color _color2;
+
+        public BulletAttackHandler(Arena arena, Color color1, Color color2)
+        {
+            _arena = arena;
+            _color1 = color1;
+            _color2 = color2;
+        }
+
+        public override void OnAttack(Unit unit, Target target)
+        {
+            _arena.AddMarineShot(unit, target, _color1, _color2); 
+        }
+    }
+
+    public class ProjectileAttackHandler : AttackHandler
+    {
+        Arena _arena;
+        Texture2D _texture;
+
+        public ProjectileAttackHandler(Arena arena, Texture2D texture)
+        {
+            _arena = arena;
+            _texture = texture;
+        }
+
+        public override void OnAttack(Unit unit, Target target)
+        {
+            _arena.AddProjectile(new Projectile(unit, target, _texture));
+        }
+    }
+
+    public class JuggernaughtDeathHandler : DeathHandler
+    {
+        Arena _arena;
+
+        public JuggernaughtDeathHandler(Arena arena)
+        {
+            _arena = arena;
+        }
+        
+        public override void OnDeath(Unit unit)
+        {
+            Unit u = _arena.AddUnit(UnitEnum.Marine, unit.Team);
+            u.Position = unit.Position;
+        }
+    }
+
     public class UnitProperties
     {
+        // Unit animations
         public Animation _move;
         public Animation _attack;
 
+        // Amount of damage per attack
         public int _attackDamage;
-        public int _attackRange;
-        public int _followRange;
 
+        // Total hitpoints
+        public int _maxHp;
+
+        // Attack frequency (number of attacks per second)
+        public float _attackSpeed;
+
+        // Range to start attacking an enemy
+        public float _attackRange;
+
+        // Range to start following an enemy
+        public float _followRange;
+
+        // Speed to move towards target in pixels per second
+        public float _moveSpeed;
+
+        // What type of unit is this (flying / ground)
+        public UnitType _type;
+
+        // What type of unit can be targetted
+        public TargetUnitType _targetType;
+
+        // Handler for specific behaviours for this type of unit
+        public AttackHandler _attackHandler;
+        public DeathHandler _deathHandler;
+
+        public UnitProperties()
+        {
+            _attackHandler = new AttackHandler();
+            _deathHandler = new DeathHandler();
+        }
     }
 
-    public abstract class Unit : Target
+    public class Unit : Target
     {
-        protected int _attackDamage;
+        private UnitProperties _properties;
 
-        protected float _attackRange;
-        protected float _followRange;
+        private Arena _arena;
 
-        protected float _attackSpeed;
-        protected float _moveSpeed;
-        private Target _target;
-
-        protected TargetUnitType _targetType;
-
-        private AnimationPlayer _animationPlayer;
-        
-        protected Arena _arena;
-        protected Animation _animationMove;
-        protected Animation _animationAttack;
-
+        // Time remaining to next attack
         private float _nextAttack;
 
-        protected MarineDeathEmitter ps;
-        protected Vector2 psPosition;
+        // Current target
+        private Target _target;
 
+        // Elapsed time since unit creation (for bobbing animation of flying units)
         private float _elapsed;
 
-        public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
+        private AnimationPlayer _animationPlayer;
+
+        public Unit(UnitProperties properties, Vector2 position, UnitTeam team, Arena arena)
             : base(position, team)
         {
+            SetMaxHp(properties._maxHp);
+            SetHp(properties._maxHp);
+
+            _type = properties._type; // TODO: remove this member variable?
+
+            _properties = properties;
             _elapsed = 0;
-            _targetType = TargetUnitType.Any;
-            _type = UnitType.Ground;
             _arena = arena;
 
             _animationPlayer = new AnimationPlayer();
-            _animationPlayer.PlayAnimation(animationMove);
-
-            _animationMove = animationMove;
-            _animationAttack = animationAttack;
+            _animationPlayer.PlayAnimation(_properties._move);
 
             _target = null;
         }
 
         public override void Update(GameTime gameTime)
         {
-            // attack
-            _nextAttack -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _nextAttack -= dt;
+            _elapsed += dt;
 
+            bool attacked = false;
+
+            // If we don't have a target try get a new one
             if (_target == null || _target.IsDead())
             {
                 _target = _arena.AcquireTarget(this);
@@ -75,44 +166,49 @@ namespace TTG
                 Vector2 direction = _target.GetMidPoint() - GetMidPoint();
                 float distance = direction.Length();
 
-                if (distance < _attackRange)
+                // Attack if target is in attack range
+                if (distance < _properties._attackRange)
                 {
-                    // attack
                     while (_nextAttack <= 0)
                     {
-                        _nextAttack += _attackSpeed;
-                        //_target.TakeDamage(_attackDamage);
+                        _nextAttack += _properties._attackSpeed;
                         OnAttack(_target);
                     }
+
+                    attacked = true;
                 }
                 else
                 {
-                    _nextAttack = 0;
-                    if (distance > _followRange)
+                    // If target is now outside follow range we lost it (rarely if ever happens)
+                    if (distance > _properties._followRange)
                     {
-                        // lost target
                         _target = null;
                     }
+                    // Otherwise we have a target in follow range but not attack range so move towards it
                     else
                     {
-                        // follow
                         direction.Normalize();
-                        _position += direction * _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        _animationPlayer.PlayAnimation(_animationMove);
+                        _position += direction * _properties._moveSpeed * dt;
+                        _animationPlayer.PlayAnimation(_properties._move);
                     }
                 }
             }
             
+            // If we have no target default to walking in the spawn direction
             if (_target == null)
             {
-                _nextAttack = Math.Max(0, _nextAttack);
-
                 if (_team == UnitTeam.Player1)
-                    _position.X += (float)gameTime.ElapsedGameTime.TotalSeconds * _moveSpeed;
+                    _position.X += dt * _properties._moveSpeed;
                 else
-                    _position.X -= (float)gameTime.ElapsedGameTime.TotalSeconds * _moveSpeed;
+                    _position.X -= dt * _properties._moveSpeed;
 
-                _animationPlayer.PlayAnimation(_animationMove);
+                _animationPlayer.PlayAnimation(_properties._move);
+            }
+
+            // Prevent "banking" attacks while following a target
+            if (!attacked)
+            {
+                _nextAttack = Math.Max(0, _nextAttack);
             }
 
             _animationPlayer.Update(gameTime);
@@ -149,10 +245,10 @@ namespace TTG
             if (target.Team == _team)
                 return false;
 
-            if (target.Type == UnitType.Air && _targetType == TargetUnitType.GroundOnly)
+            if (target.Type == UnitType.Air && _properties._targetType == TargetUnitType.GroundOnly)
                 return false;
 
-            if (target.Type == UnitType.Ground && _targetType == TargetUnitType.AirOnly)
+            if (target.Type == UnitType.Ground && _properties._targetType == TargetUnitType.AirOnly)
                 return false;
 
             return true;
@@ -160,11 +256,11 @@ namespace TTG
 
         public override Rectangle GetRect()
         {
-            Rectangle r = _animationMove.GetFrameRect(0);
+            Rectangle r = _properties._move.GetFrameRect(0);
             return new Rectangle(0, 0, r.Width, r.Height);
         }
 
-        public override Vector2  GetDrawPosition()
+        public override Vector2 GetDrawPosition()
         {
             Vector2 pos = _position;
 
@@ -185,13 +281,15 @@ namespace TTG
 
         protected virtual void OnAttack(Target target)
         {
-            _animationPlayer.PlayAnimation(_animationAttack);
+            _animationPlayer.PlayAnimation(_properties._attack);
             _animationPlayer.ResetAnimation();
+
+            _properties._attackHandler.OnAttack(this, target);
         }
 
         public override Vector2 GetMidPoint()
         {
-            Rectangle r = _animationMove.GetFrameRect(0);
+            Rectangle r = _properties._move.GetFrameRect(0);
             return _position + new Vector2(r.Width, r.Height);
         }
 
@@ -200,16 +298,18 @@ namespace TTG
             de.Active = true;
             de.RecycleParticles();
             de.pos = GetMidPoint();
+
+            _properties._deathHandler.OnDeath(this);
         }
 
         public int AttackDamage()
         {
-            return _attackDamage;
+            return _properties._attackDamage;
         }
 
         public float FollowRange()
         {
-            return _followRange;
+            return _properties._followRange;
         }
     }
 }

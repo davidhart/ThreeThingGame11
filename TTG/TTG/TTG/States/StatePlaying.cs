@@ -39,11 +39,12 @@ namespace TTG
             arena = new Arena(480, 170, new Vector2(0, 800-200));
             arena.LoadContent(content, graphics);
             
+            /*
             for (int i = 0; i < 7; ++i)
             {
                 arena.AddUnit(UnitEnum.Marine, UnitTeam.Player1);
                 arena.AddUnit(UnitEnum.Ember, UnitTeam.Player2);
-            }
+            }*/
             arenaUI = new UI(UIRectangle);
             arenaUI.Load(content, arena);
 

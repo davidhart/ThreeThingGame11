@@ -10,28 +10,7 @@ namespace TTG
     public abstract class Target
     {
         private int _hitPoints;
-
-        public int HP
-        {
-            get
-            {
-                return _hitPoints;
-            }
-        }
-
-        private int _maxHP;
-        public int MaxHP
-        {
-            get
-            {
-                return _maxHP;
-            }
-            set
-            {
-                _maxHP = value;
-                _hitPoints = _maxHP;
-            }
-        }
+        private int _maxHp;
 
         protected UnitType _type;
         public UnitType Type
@@ -111,6 +90,26 @@ namespace TTG
         public virtual Vector2 GetDrawPosition()
         {
             return _position;
+        }
+
+        public void SetHp(int hp)
+        {
+            _hitPoints = hp;
+        }
+
+        public int GetHp()
+        {
+            return _hitPoints;
+        }
+
+        public void SetMaxHp(int hp)
+        {
+            _maxHp = hp;
+        }
+
+        public int GetMaxHp()
+        {
+            return _maxHp;
         }
     }
 }

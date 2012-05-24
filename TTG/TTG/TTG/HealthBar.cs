@@ -41,7 +41,7 @@ namespace TTG
 
             int barWidth = _width - _barBGLeft.Width - _barBGRight.Width;
 
-            barWidth = (int)(barWidth * (float)_target.HP / _target.MaxHP);
+            barWidth = (int)(barWidth * (float)_target.GetHp() / _target.GetMaxHp());
 
             if (_flip)
             {

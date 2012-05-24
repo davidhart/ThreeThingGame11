@@ -113,12 +113,7 @@
     <Compile Include="Arena\Projectiles\MarineShot.cs" />
     <Compile Include="Arena\Projectiles\Projectile.cs" />
     <Compile Include="Arena\Units\Base.cs" />
-    <Compile Include="Arena\Units\Ember.cs" />
-    <Compile Include="Arena\Units\JetpackMarine.cs" />
-    <Compile Include="Arena\Units\Juggernaught.cs" />
-    <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
-    <Compile Include="Arena\Units\UberEmber.cs" />
     <Compile Include="Particles\EnemyDeathEmitter.cs" />
     <Compile Include="Puzzle\BlockLoader.cs" />
     <Compile Include="States\GameOverState.cs" />

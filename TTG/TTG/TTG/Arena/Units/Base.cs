@@ -14,7 +14,8 @@ namespace TTG
             base(position, team)
         {
             _texture = texture;
-            MaxHP = 10000;
+            SetMaxHp(10000);
+            SetHp(10000);
         }
 
         public override Rectangle GetRect()
