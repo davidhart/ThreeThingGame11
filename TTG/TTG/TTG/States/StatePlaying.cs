@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +15,8 @@ namespace TTG
         SpriteBatch spriteBatch;
         GraphicsDevice _graphics;
         KeyboardState _prevKeyState;
-
+        Stopwatch stopwatch;
+        bool timerStarted = false;
         Arena arena;
         UI arenaUI;
         float elapsed;
@@ -53,6 +54,8 @@ namespace TTG
             _font = content.Load<SpriteFont>("UIFont");
 
             _prevKeyState = Keyboard.GetState();
+
+            stopwatch = new Stopwatch();
         }
 
         public override void Reset()
@@ -61,6 +64,8 @@ namespace TTG
             arena.Reset();
             _puzzleGrid.Reset();
             arenaUI.SetBases(arena.GetBase1(), arena.GetBase2());
+            timerStarted = false;
+            stopwatch.Reset();
         }
 
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
@@ -71,14 +76,24 @@ namespace TTG
             }
             if (arena.GetBase1().IsDead())
             {
-                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton != ButtonState.Pressed)
+                if (!timerStarted)
+                {
+                    stopwatch.Start();
+                    timerStarted = true;
+                }
+                if (stopwatch.ElapsedMilliseconds > 3000)
                 {
                     ChangeScreen(_parent.TitleScreenState);
                 }
             }
             else if (arena.GetBase2().IsDead())
             {
-                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton != ButtonState.Pressed)
+                if (!timerStarted)
+                {
+                    stopwatch.Start();
+                    timerStarted = true;
+                }
+                if (stopwatch.ElapsedMilliseconds > 3000)
                 {
                     ChangeScreen(_parent.TitleScreenState);
                 }
@@ -126,16 +141,16 @@ namespace TTG
             {
                 Vector2 text = _font.MeasureString("GAME OVER");
                 spriteBatch.DrawString(_font, "GAME OVER", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y * 2), Color.White);
-                text = _font.MeasureString("Touch to Continue");
-                spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
+                //text = _font.MeasureString("Touch to Continue");
+                //spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
                 spriteBatch.End();
             }
             else if (arena.GetBase2().IsDead())
             {
                 Vector2 text = _font.MeasureString("YOU WIN");
                 spriteBatch.DrawString(_font, "YOU WIN", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y * 2), Color.White);
-                text = _font.MeasureString("Touch to Continue");
-                spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
+                //text = _font.MeasureString("Touch to Continue");
+                //spriteBatch.DrawString(_font, "Touch to Continue", new Vector2(_graphics.PresentationParameters.BackBufferWidth / 2 - text.X / 2, _graphics.PresentationParameters.BackBufferHeight / 2 - text.Y), Color.White);
                 spriteBatch.End();
             }
             else
