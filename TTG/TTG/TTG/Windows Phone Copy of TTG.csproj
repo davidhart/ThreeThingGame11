@@ -86,6 +86,7 @@
     <Compile Include="Arena\Units\UberEmber.cs" />
     <Compile Include="Particles\EnemyDeathEmitter.cs" />
     <Compile Include="Puzzle\BlockLoader.cs" />
+    <Compile Include="States\Cutscene.cs" />
     <Compile Include="States\GameOverState.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="HealthBar.cs" />

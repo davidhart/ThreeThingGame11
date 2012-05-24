@@ -142,6 +142,7 @@
     <Compile Include="States\WorldMap.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util\BitmapFont.cs" />
+    <Compile Include="States\Cutscene.cs" />
     <Compile Include="Util\FancyText.cs" />
     <Compile Include="Util\UnitLoader.cs" />
     <Compile Include="Util\Util.cs" />
