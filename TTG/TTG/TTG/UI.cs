@@ -153,7 +153,7 @@ namespace TTG
                 new Rectangle(51 * 3, 0, 51, 51),
                 buttonRectangle,
                 arena,
-                UnitEnum.Hydro, 
+                UnitEnum.JetpackMarine, 
                 200);
 
             buttonRectangle.X += buttonPadding + buttonRectangle.Width;

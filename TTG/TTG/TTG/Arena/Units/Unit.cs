@@ -5,27 +5,23 @@ using System;
 
 namespace TTG
 {
+    public class UnitProperties
+    {
+        public Animation _move;
+        public Animation _attack;
+
+        public int _attackDamage;
+        public int _attackRange;
+        public int _followRange;
+
+    }
+
     public abstract class Unit : Target
     {
         protected int _attackDamage;
-        public int AttackDamage
-        {
-            get
-            {
-                return _attackDamage;
-            }
-        }
 
         protected float _attackRange;
         protected float _followRange;
-
-        public float FollowRange
-        {
-            get 
-            { 
-                return _followRange; 
-            }
-        }
 
         protected float _attackSpeed;
         protected float _moveSpeed;
@@ -44,9 +40,12 @@ namespace TTG
         protected MarineDeathEmitter ps;
         protected Vector2 psPosition;
 
+        private float _elapsed;
+
         public Unit(Vector2 position, UnitTeam team, Arena arena, Animation animationMove, Animation animationAttack)
             : base(position, team)
         {
+            _elapsed = 0;
             _targetType = TargetUnitType.Any;
             _type = UnitType.Ground;
             _arena = arena;
@@ -64,6 +63,7 @@ namespace TTG
         {
             // attack
             _nextAttack -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_target == null || _target.IsDead())
             {
@@ -138,7 +138,9 @@ namespace TTG
                     flip = SpriteEffects.None;
             }
 
-            spritebatch.Draw(_animationPlayer.GetCurrentFrameTexture(), new Vector2((float)Math.Floor(_position.X), (float)Math.Floor(_position.Y)), 
+            Vector2 pos = GetDrawPosition();
+
+            spritebatch.Draw(_animationPlayer.GetCurrentFrameTexture(), new Vector2((float)Math.Floor(pos.X), (float)Math.Floor(pos.Y)), 
                 _animationPlayer.GetCurrentFrameRectangle(), GetHitColor(), 0, Vector2.Zero, 1, flip, _position.Y / 600);
         }
 
@@ -162,6 +164,25 @@ namespace TTG
             return new Rectangle(0, 0, r.Width, r.Height);
         }
 
+        public override Vector2  GetDrawPosition()
+        {
+            Vector2 pos = _position;
+
+            if (_type == UnitType.Air)
+            {
+                float offset = (float)Math.Sin(_elapsed * 5.0f);
+
+                float amplitude = 5.0f;
+
+                if (_target != null)
+                    amplitude = 2.0f;
+
+                pos -= new Vector2(0, 40 + offset * amplitude);
+            }
+
+            return pos;
+        }
+
         protected virtual void OnAttack(Target target)
         {
             _animationPlayer.PlayAnimation(_animationAttack);
@@ -179,6 +200,16 @@ namespace TTG
             de.Active = true;
             de.RecycleParticles();
             de.pos = GetMidPoint();
+        }
+
+        public int AttackDamage()
+        {
+            return _attackDamage;
+        }
+
+        public float FollowRange()
+        {
+            return _followRange;
         }
     }
 }

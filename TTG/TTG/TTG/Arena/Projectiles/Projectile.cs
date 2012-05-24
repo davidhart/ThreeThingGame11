@@ -22,9 +22,9 @@ namespace TTG
         public Projectile(Unit attacker, Target target, Texture2D texture)
         {
             _texture = texture;
-            _start = attacker.GetMidPoint() - new Vector2(texture.Width / 2, texture.Height / 2);
+            _start = attacker.GetDrawPosition() - new Vector2(texture.Width / 2, texture.Height / 2);
             Rectangle r = target.GetRect();
-            _end = target.Position + Util.RandVector(r.Width, r.Height); // TODO: random target point
+            _end = target.GetDrawPosition() + Util.RandVector(r.Width, r.Height); // TODO: random target point
             
             _direction = _end - _start;
 
@@ -38,7 +38,7 @@ namespace TTG
             _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_elapsed > _lifetime)
-                _target.TakeDamage(_attacker.AttackDamage);
+                _target.TakeDamage(_attacker.AttackDamage());
         }
 
         public virtual void Draw(SpriteBatch spritebatch)

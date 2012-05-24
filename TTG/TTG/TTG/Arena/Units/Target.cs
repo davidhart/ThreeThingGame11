@@ -107,5 +107,10 @@ namespace TTG
         public abstract Vector2 GetMidPoint();
 
         public abstract void OnDeath(PEmitter de);
+
+        public virtual Vector2 GetDrawPosition()
+        {
+            return _position;
+        }
     }
 }

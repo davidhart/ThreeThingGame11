@@ -14,7 +14,7 @@ namespace TTG
         Marine = 0,
         Ember = 1,
         Juggernaught = 2,
-        Hydro = 4,
+        JetpackMarine = 4,
         Launcher = 5,
         UberEmber = 6,
     };
@@ -174,8 +174,8 @@ namespace TTG
             _animationsAttack[(int)UnitEnum.Marine] = new Animation(unitSpriteSheet, 32, 32, 0, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Marine] = new Animation(unitSpriteSheet, 32, 32, 3, 4, 0.15f, true);
 
-            _animationsAttack[(int)UnitEnum.Hydro] = new Animation(unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
-            _animationsMove[(int)UnitEnum.Hydro] = new Animation(unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
+            _animationsAttack[(int)UnitEnum.JetpackMarine] = new Animation(unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
+            _animationsMove[(int)UnitEnum.JetpackMarine] = new Animation(unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
 
             _animationsAttack[(int)UnitEnum.Juggernaught] = new Animation(unitSpriteSheet, 16, 16, 16, 3, 0.1f, false);
             _animationsMove[(int)UnitEnum.Juggernaught] = new Animation(unitSpriteSheet, 16, 16, 16, 1, 0.1f, true);
@@ -239,48 +239,34 @@ namespace TTG
         public void Update(GameTime gameTime)
         {
             _bgm.Play();
-            foreach (Target target in _units)
+            for (int i = 0; i < _units.Count; ++i)
             {
-                target.Update(gameTime);
+                // Update each target
+                Target unit = _units[i];
+                unit.Update(gameTime);
 
-                if (target.Position.X > _displayWidth + 100)
+                // Kill anything that ended up offscreen (shouldn't happen under normal circumstances)
+                if (unit.Position.X > _displayWidth + 100 || unit.Position.X < -100)
                 {
-                    target.Kill();
-                }
-
-                if (target.Position.X < -100)
-                {
-                    target.Kill();
+                    unit.Kill();
                 }
             }
 
+            // Remove dead units and emit death effects
             for (int i = 0; i < _units.Count; )
             {
                 if (_units[i].IsDead())
                 {
+                    
                     if (_units[i].Team == UnitTeam.Player1)
                     {
-                        for (int j = 0; j < _deadHumanEmitters.Count - 1; ++j)
-                        {
-                            if (!_deadHumanEmitters[j].Active)
-                            {
-                                _units[i].OnDeath(_deadHumanEmitters[j]);
-                                break;
-                            }
-                        }
+                        EmitDeathEffect(_deadHumanEmitters, _units[i]);
                     }
                     else
                     {
-                        for (int j = 0; j < _deadEnemyEmitters.Count - 1; ++j)
-                        {
-                            if (!_deadEnemyEmitters[j].Active)
-                            {
-                                _units[i].OnDeath(_deadEnemyEmitters[j]);
-                                break;
-                            }
-                        }
-
+                        EmitDeathEffect(_deadEnemyEmitters, _units[i]);
                     }
+
                     _units.RemoveAt(i);
                 }
                 else
@@ -289,6 +275,7 @@ namespace TTG
                 }
             }
 
+            // TODO: extract repeated code to method
             for (int i = 0; i < _deadHumanEmitters.Count; ++i)
             {
                 if(_deadHumanEmitters[i].Active)
@@ -303,6 +290,30 @@ namespace TTG
 
             _marineShotBatch.Update(gameTime);
             _projectileBatch.Update(gameTime);
+        }
+
+        // TODO: unify MarineDeathEmitter and EnemyDeathEmitter by configuring base class instead of using derived classes
+        private void EmitDeathEffect(List<MarineDeathEmitter> emitters, Target unit)
+        {
+            for (int j = 0; j < emitters.Count - 1; ++j)
+            {
+                if (!emitters[j].Active)
+                {
+                    unit.OnDeath(emitters[j]);
+                    return;
+                }
+            }
+        }
+        private void EmitDeathEffect(List<EnemyDeathEmitter> emitters, Target unit)
+        {
+            for (int j = 0; j < emitters.Count - 1; ++j)
+            {
+                if (!emitters[j].Active)
+                {
+                    unit.OnDeath(emitters[j]);
+                    return;
+                }
+            }
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -327,6 +338,7 @@ namespace TTG
             _marineShotBatch.Draw();
             spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, RasterizerState.CullNone, null, offset);
 
+            // TODO: unify repeated code
             for (int i = 0; i < _deadHumanEmitters.Count; ++i)
             {
                 if (_deadHumanEmitters[i].Active)
@@ -342,15 +354,9 @@ namespace TTG
             _graphics.SetRenderTarget(null);
         }
 
-        public Vector2 GetSpawnPosition(UnitTeam team, UnitEnum unit)
+        public Vector2 GetSpawnPosition(UnitTeam team)
         {
             float y = 100 + Util.Rand(50);
-
-            if (team == UnitTeam.Player1 && unit == UnitEnum.Hydro)
-            {
-                y = 40;
-                return new Vector2(40, y);
-            }
 
             if (team == UnitTeam.Player1)
             {
@@ -367,26 +373,26 @@ namespace TTG
             Unit u = null;
             if (unit == UnitEnum.Marine)
             {
-                u = new Marine(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
+                u = new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
             }
             else if (unit == UnitEnum.Juggernaught)
             {
-                u = new Juggernaught(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
+                u = new Juggernaught(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
             }
-            else if (unit == UnitEnum.Hydro)
+            else if (unit == UnitEnum.JetpackMarine)
             {
-                u = new Hydro(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Hydro], _animationsAttack[(int)UnitEnum.Hydro], team, this);
+                u = new JetpackMarine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.JetpackMarine], _animationsAttack[(int)UnitEnum.JetpackMarine], team, this);
             }
             else if (unit == UnitEnum.Launcher)
             {
             }
             else if (unit == UnitEnum.Ember)
             {
-                u = new Ember(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this);
+                u = new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this);
             }
             else if (unit == UnitEnum.UberEmber)
             {
-                u = new UberEmber(GetSpawnPosition(team, unit), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
+                u = new UberEmber(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
             }
 
             _units.Add(u);
@@ -405,7 +411,7 @@ namespace TTG
                     Vector2 direction = target.GetMidPoint() - attacker.GetMidPoint();
                     float distance = direction.Length();
 
-                    if (distance < attacker.FollowRange)
+                    if (distance < attacker.FollowRange())
                     {
                         if (closest < 0 || distance < closest)
                         {

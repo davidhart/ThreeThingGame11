@@ -58,9 +58,9 @@ namespace TTG
                 offset = new Vector2(_xPlayer2Offset, _yPlayerOffset);
             }
 
-            _start = attacker.Position + offset;
+            _start = attacker.GetDrawPosition() + offset;
             Rectangle r = target.GetRect();
-            _end = target.Position + Util.RandVector(r.Width, r.Height);
+            _end = target.GetDrawPosition() + Util.RandVector(r.Width, r.Height);
 
             _direction = _end -  _start;
 
@@ -76,7 +76,7 @@ namespace TTG
             _elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_elapsed > _lifetime)
-                _target.TakeDamage(_attacker.AttackDamage);
+                _target.TakeDamage(_attacker.AttackDamage());
         }
 
         public float PercentAlive()
@@ -99,7 +99,6 @@ namespace TTG
             return _elapsed > _lifetime;
         }
     }
-
 
     public class MarineShotBatch
     {

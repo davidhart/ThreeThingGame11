@@ -114,7 +114,7 @@
     <Compile Include="Arena\Projectiles\Projectile.cs" />
     <Compile Include="Arena\Units\Base.cs" />
     <Compile Include="Arena\Units\Ember.cs" />
-    <Compile Include="Arena\Units\Hydro.cs" />
+    <Compile Include="Arena\Units\JetpackMarine.cs" />
     <Compile Include="Arena\Units\Juggernaught.cs" />
     <Compile Include="Arena\Units\Marine.cs" />
     <Compile Include="Arena\Units\Target.cs" />
