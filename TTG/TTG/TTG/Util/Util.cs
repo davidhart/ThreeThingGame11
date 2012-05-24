@@ -101,5 +101,10 @@ namespace TTG
         {
             return (1 - t) * a + t * b;
         }
+
+        public static void PostToTwitter(string inStatus)
+        {
+            
+        }
     }
 }

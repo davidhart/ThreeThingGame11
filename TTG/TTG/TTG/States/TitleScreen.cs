@@ -100,13 +100,13 @@ namespace TTG
             _helpBtn = new TitleButton(
                 content.Load<Texture2D>("HelpbtnSelected"),
                 content.Load<Texture2D>("HelpbtnSelected"),
-                select, new Rectangle(100, 430, 256, 128));
+                select, new Rectangle(100, 570, 256, 128));
             _helpBtn.OnPress += new TitleButton.PressedEventHandler(_helpBtn_OnPress);
 
             _taBtn = new TitleButton(
                 content.Load<Texture2D>("TABtn"),
                 content.Load<Texture2D>("TABtn"),
-                select, new Rectangle(100, 570, 256, 128));
+                select, new Rectangle(100, 430, 256, 128));
             _taBtn.OnPress += new TitleButton.PressedEventHandler(_taBtn_OnPress);
 
             _quitBtn = new TitleButton(
