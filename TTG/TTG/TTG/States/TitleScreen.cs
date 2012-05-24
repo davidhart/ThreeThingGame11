@@ -70,7 +70,7 @@ namespace TTG
         TitleState titleState = TitleState.Main;
         Texture2D _titleTex;
         Rectangle _titleRect;
-        TitleButton _startBtn, _helpBtn, _quitBtn, _campaignBtn, _muteBtn;
+        TitleButton _startBtn, _helpBtn, _quitBtn, _campaignBtn, _muteBtn, _taBtn;
         SpriteBatch _spriteBatch;
 
         public TitleScreen(Game1 parent)
@@ -103,10 +103,16 @@ namespace TTG
                 select, new Rectangle(100, 430, 256, 128));
             _helpBtn.OnPress += new TitleButton.PressedEventHandler(_helpBtn_OnPress);
 
+            _taBtn = new TitleButton(
+                content.Load<Texture2D>("TABtn"),
+                content.Load<Texture2D>("TABtn"),
+                select, new Rectangle(100, 570, 256, 128));
+            _taBtn.OnPress += new TitleButton.PressedEventHandler(_taBtn_OnPress);
+
             _quitBtn = new TitleButton(
                 content.Load<Texture2D>("QuitBtnSelected"),
                 content.Load<Texture2D>("QuitBtnSelected"),
-                select, new Rectangle(100, 570, 256, 128));
+                select, new Rectangle(100, 710, 256, 128));
             _quitBtn.OnPress += new TitleButton.PressedEventHandler(_quitBtn_OnPress);
 
             _muteBtn = new TitleButton(
@@ -133,6 +139,11 @@ namespace TTG
             ChangeScreen(_parent.PlayState);
         }
 
+        void _taBtn_OnPress(object sender, EventArgs e)
+        {
+            ChangeScreen(_parent.TimeAttack);
+        }
+
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
             switch (titleState)
@@ -143,6 +154,7 @@ namespace TTG
                         {
                             _parent.Exit();
                         }
+                        _taBtn.Update(newMouse, oldMouse);
                         _startBtn.Update(newMouse, oldMouse);
                         _helpBtn.Update(newMouse, oldMouse);
                         _quitBtn.Update(newMouse, oldMouse);
@@ -172,6 +184,7 @@ namespace TTG
             {
                 case TitleState.Main:
                     {
+                        _taBtn.Draw(_spriteBatch);
                         _campaignBtn.Draw(_spriteBatch);
                         _startBtn.Draw(_spriteBatch);
                         _helpBtn.Draw(_spriteBatch);

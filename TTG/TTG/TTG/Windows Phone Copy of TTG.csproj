@@ -100,6 +100,7 @@
     <Compile Include="States\SplashScreen.cs" />
     <Compile Include="States\StatePlaying.cs" />
     <Compile Include="States\TitleScreen.cs" />
+    <Compile Include="States\TimeAttack.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Util\BitmapFont.cs" />
     <Compile Include="Util\FancyText.cs" />

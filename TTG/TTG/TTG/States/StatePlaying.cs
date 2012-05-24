@@ -71,6 +71,8 @@ namespace TTG
 
         public override void Update(GameTime gameTime, MouseState newMouse, MouseState oldMouse)
         {
+            arenaUI.isTimeAtk = false;
+            arena.isTimeAtk = false;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
                 ChangeScreen(_parent.TitleScreenState);

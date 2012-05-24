@@ -18,6 +18,8 @@ namespace TTG
         UnitEnum _unitEnum;
         int _energyUse;
 
+        public bool isTimeAttack = false;
+
         Rectangle _sourceRect;
         Rectangle _sourceRectHighlight;
         Texture2D _spriteSheet;
@@ -103,6 +105,7 @@ namespace TTG
         Vector2 _scoreDrawPosition;
 
         Texture2D _UISheet;
+        public bool isTimeAtk = false;
 
         public UI(Rectangle drawPosition)
         {
@@ -205,10 +208,12 @@ namespace TTG
             spritebatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             //spritebatch.Draw(_puzzleBGTex, _puzzleBGRect, Color.White);
             _p1HealthBar.Draw(spritebatch);
-            _p2HealthBar.Draw(spritebatch);
+            if (!isTimeAtk)
+            {
+                _p2HealthBar.Draw(spritebatch);
+                spritebatch.Draw(_rightAvatarTexture, _rightAvatarRectangle, _arena.GetBase2().GetHitColor());
+            }
             spritebatch.Draw(_leftAvatarTexture, _leftAvatarRectangle, _arena.GetBase1().GetHitColor());
-            spritebatch.Draw(_rightAvatarTexture, _rightAvatarRectangle, _arena.GetBase2().GetHitColor());
-
             _marineBtn.Draw(spritebatch);
             _hydroBtn.Draw(spritebatch);
             _juggernaughtBtn.Draw(spritebatch);

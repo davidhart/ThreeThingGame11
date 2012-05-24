@@ -41,7 +41,7 @@ namespace TTG
     public class Arena
     {
         private List<Target> _units;
-
+        public bool isTimeAtk = false;
         private UnitProperties[] _unitProperties;
 
         private Base _p1Base;
