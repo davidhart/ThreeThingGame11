@@ -72,6 +72,15 @@ namespace TTG
             }
         }
 
+        WorldMap _campaignMap;
+        public GameState CampaignMap
+        {
+            get
+            {
+                return _campaignMap;
+            }
+        }
+
         Cutscene _introCutscene;
         public GameState IntroCutscene
         {
@@ -118,22 +127,10 @@ namespace TTG
             _timeAttack = new TimeAttack(this);
             _timeAttack.Load(Content, GraphicsDevice);
 
-            //Cutscene Stuff
-            _introCutscene = new Cutscene(this);
-            _introCutscene.Load(Content, GraphicsDevice);
-            Texture2D intro1 = Content.Load<Texture2D>("Intro1");
-            Texture2D intro2 = Content.Load<Texture2D>("Intro2");
-            _introCutscene.AddFrame(intro1, "Two hours ago, the Earth Council received", 
-                "a message from the terrorist organisation", "known as Zeno.");
-            _introCutscene.AddFrame(intro1, "The message stated that if the Earth Council does not", 
-                "surrender their imprisoned leaders, they will attack", "various Earth colonies around the galaxy");
-            _introCutscene.AddFrame(intro1, "The guys down at Communications managed to track down",  
-                "the source of the message to Volcanis, a fiery planet",  "situated in the delta quadrant");
-            _introCutscene.AddFrame(intro2, "We believe that the remaining Zeno generals are on Volcanis,", 
-                "harnessing the planets abundant resources", "to build an army of fire warriors");
-            _introCutscene.AddFrame(intro2, "Your mission, Commander is for you and your unit",
-                "to travel to Volcanis, capture the remaining Zeno generals", "and destroy the factories creating these fire warriors");
-            _introCutscene.AddFrame(intro2, "That is all.", "Good Luck Commander", "");
+            _campaignMap = new WorldMap(this);
+            _campaignMap.Load(Content, GraphicsDevice);
+
+            SetupCutscenes();
 
             _currentState = _splashScreen;
         }
@@ -165,6 +162,25 @@ namespace TTG
         {
             _currentState = state;
             _currentState.Reset();
+        }
+
+        void SetupCutscenes()
+        {
+            _introCutscene = new Cutscene(this);
+            _introCutscene.Load(Content, GraphicsDevice);
+            Texture2D intro1 = Content.Load<Texture2D>("Intro1");
+            Texture2D intro2 = Content.Load<Texture2D>("Intro2");
+            _introCutscene.AddFrame(intro1, "Two hours ago, the Earth Council received",
+                "a message from the terrorist organisation", "known as Zeno.");
+            _introCutscene.AddFrame(intro1, "The message stated that if the Earth Council does not",
+                "surrender their imprisoned leaders, they will attack", "various Earth colonies around the galaxy");
+            _introCutscene.AddFrame(intro1, "The guys down at Communications managed to track down",
+                "the source of the message to Volcanis, a fiery planet", "situated in the delta quadrant");
+            _introCutscene.AddFrame(intro2, "We believe that the remaining Zeno generals are on Volcanis,",
+                "harnessing the planets abundant resources", "to build an army of fire warriors");
+            _introCutscene.AddFrame(intro2, "Your mission, Commander is for you and your unit",
+                "to travel to Volcanis, capture the remaining Zeno generals", "and destroy the factories creating these fire warriors");
+            _introCutscene.AddFrame(intro2, "That is all.", "Good Luck Commander", "");
         }
     }
 }

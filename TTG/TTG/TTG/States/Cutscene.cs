@@ -27,6 +27,7 @@ namespace TTG
         bool timerStarted = false;
         SpriteBatch _spriteBatch;
         int i = 0;
+        GameState nextScreen;
         Texture2D cutsceneBG;
         public Cutscene(Game1 parent)
             : base(parent)
@@ -46,6 +47,11 @@ namespace TTG
             frame.TextLine2 = line2;
             frame.TextLine3 = line3;
             Frames.Add(frame);
+        }
+
+        public void SetNextScreen(GameState nextState)
+        {
+            nextScreen = nextState;
         }
 
         public override void Reset()
@@ -87,7 +93,7 @@ namespace TTG
                     stopwatch.Reset();
                 }
             }
-            base.Update(gameTime, newMouse, oldMouse);
+            ChangeScreen(nextScreen);
         }
         
     }

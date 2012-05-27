@@ -89,7 +89,7 @@ namespace TTG
                 content.Load<Texture2D>("CampaignBtn"),
                 content.Load<Texture2D>("CampaignBtn"),
                 select, new Rectangle(100, 170, 256, 128));
-            //TODO add event handler here
+            _campaignBtn.OnPress += new TitleButton.PressedEventHandler(_campaignBtn_OnPress);
 
             _startBtn = new TitleButton(
                 content.Load<Texture2D>("IAbtn"),
@@ -124,6 +124,12 @@ namespace TTG
             _spriteBatch = new SpriteBatch(graphics);
         }
 
+        void _campaignBtn_OnPress(object sender, EventArgs e)
+        {
+            //Add cutscene here
+            ChangeScreen(_parent.CampaignMap);
+        }
+
         void _helpBtn_OnPress(object sender, EventArgs e)
         {
             ChangeScreen(_parent.HelpScreen);
@@ -154,6 +160,7 @@ namespace TTG
                         {
                             _parent.Exit();
                         }
+                        _campaignBtn.Update(newMouse, oldMouse);
                         _taBtn.Update(newMouse, oldMouse);
                         _startBtn.Update(newMouse, oldMouse);
                         _helpBtn.Update(newMouse, oldMouse);
