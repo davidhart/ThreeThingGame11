@@ -11,13 +11,13 @@ namespace TTG
 {
     class HealthBar
     {
-        private Target _target;
+        private Unit _target;
         private Vector2 _position;
         private int _width;
         private Texture2D _barBGLeft, _barBGRight, _barBG, _bar;
         private bool _flip;
 
-        public HealthBar(Target target, Vector2 position, int width, bool flip)
+        public HealthBar(Unit target, Vector2 position, int width, bool flip)
         {
             _position = position;
             _target = target;
@@ -53,7 +53,7 @@ namespace TTG
             }
         }
 
-        public void SetBase(Target target)
+        public void SetBase(Unit target)
         {
             _target = target;
         }

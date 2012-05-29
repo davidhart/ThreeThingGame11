@@ -132,7 +132,12 @@ namespace TTG
 
             SetupCutscenes();
 
+// Splashscreen in release only
+#if DEBUG
+            _currentState = _titlescreen;
+#else
             _currentState = _splashScreen;
+#endif
         }
 
         protected override void UnloadContent()

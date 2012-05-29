@@ -33,19 +33,23 @@ namespace TTG
 
     public enum TargetUnitType
     {
-        Any,
-        GroundOnly,
-        AirOnly,
+        Any,        // Can shoot anything
+        GroundOnly, // Can shoot only ground targets
+        AirOnly,    // Can shoot only air targets
+        None,       // Can't shoot anything
     };
 
     public class Arena
     {
-        private List<Target> _units;
+        private List<Unit> _units;
         public bool isTimeAtk = false;
         private UnitProperties[] _unitProperties;
 
-        private Base _p1Base;
-        private Base _p2Base;
+        private UnitProperties _p1BaseProperties;
+        private UnitProperties _p2BaseProperties;
+
+        private Unit _p1Base;
+        private Unit _p2Base;
 
         private int _displayHeight;
         public int DisplayHeight
@@ -111,18 +115,13 @@ namespace TTG
         MarineShotBatch _marineShotBatch, _hydroShotBatch;
         ProjectileBatch _projectileBatch;
         GraphicsDevice _graphics;
+        Texture2D _unitSpriteSheet;
         Texture2D _battleBG;
         Rectangle _bgRect;
 
-        //HealthBar _p1HealthBar;
-        //HealthBar _p2HealthBar;
-
-        Texture2D _base1Texture;
-        Texture2D _base2Texture;
-
         SoundEffect _jugRiderSpawn;
 
-        //Particle
+        //Particles
         List<MarineDeathEmitter> _deadHumanEmitters;
         List<EnemyDeathEmitter> _deadEnemyEmitters;
         Random rand;
@@ -146,7 +145,7 @@ namespace TTG
             _maxEnergy = 2000;
             P1Energy = 200;
             P2Energy = 200;
-            _units = new List<Target>();
+            _units = new List<Unit>();
 
             _displayWidth = displayWidth;
             _displayHeight = displayHeight;
@@ -168,12 +167,37 @@ namespace TTG
             //_renderTarget = new RenderTarget2D(device, _displayWidth, _displayHeight, false, device.PresentationParameters.BackBufferFormat,
                 //device.PresentationParameters.DepthStencilFormat);
 
-            Texture2D unitSpriteSheet = content.Load<Texture2D>("UnitsSpriteSheet");
+            _unitSpriteSheet = content.Load<Texture2D>("UnitsSpriteSheet");
+
+            // Configure p1 base
+            _p1BaseProperties = new UnitProperties();
+            _p1BaseProperties._attack = new Animation(_unitSpriteSheet, 8, 8, 2, 1, 1, true);
+            _p1BaseProperties._move = _p1BaseProperties._attack;
+            _p1BaseProperties._maxHp = 10000;
+            _p1BaseProperties._moveSpeed = 0;
+            _p1BaseProperties._attackSpeed = 0.0f;
+            _p1BaseProperties._attackDamage = 0;
+            _p1BaseProperties._attackRange = 0;
+            _p1BaseProperties._followRange = 0;
+            _p1BaseProperties._targetType = TargetUnitType.None;
+            _p1BaseProperties._type = UnitType.Ground;
+
+            _p2BaseProperties = new UnitProperties();
+            _p2BaseProperties._attack = new Animation(_unitSpriteSheet, 8, 8, 3, 1, 1, true);
+            _p2BaseProperties._move = _p2BaseProperties._attack;
+            _p2BaseProperties._maxHp = 10000;
+            _p2BaseProperties._moveSpeed = 0;
+            _p2BaseProperties._attackSpeed = 0.0f;
+            _p2BaseProperties._attackDamage = 0;
+            _p2BaseProperties._attackRange = 0;
+            _p2BaseProperties._followRange = 0;
+            _p2BaseProperties._targetType = TargetUnitType.None;
+            _p2BaseProperties._type = UnitType.Ground;
 
             // Configure marines
             UnitProperties marineProperties = new UnitProperties();
-            marineProperties._attack = new Animation(unitSpriteSheet, 32, 32, 0, 3, 0.1f, false);
-            marineProperties._move = new Animation(unitSpriteSheet, 32, 32, 3, 4, 0.15f, true);
+            marineProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 0, 3, 0.1f, false);
+            marineProperties._move = new Animation(_unitSpriteSheet, 32, 32, 3, 4, 0.15f, true);
             marineProperties._maxHp = 50;
             marineProperties._moveSpeed = 50.0f;
             marineProperties._attackSpeed = 0.3f;
@@ -189,13 +213,13 @@ namespace TTG
 
             // Configure jetpack marines
             UnitProperties jetpackProperties = new UnitProperties();
-            jetpackProperties._attack = new Animation(unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
-            jetpackProperties._move = new Animation(unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
+            jetpackProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
+            jetpackProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
             jetpackProperties._maxHp = 70;
             jetpackProperties._moveSpeed = 50.0f;
             jetpackProperties._attackSpeed = 0.3f;
             jetpackProperties._attackDamage = 9;
-            jetpackProperties._attackRange = 150;
+            jetpackProperties._attackRange = 100;
             jetpackProperties._followRange = 160;
             jetpackProperties._targetType = TargetUnitType.GroundOnly;
             jetpackProperties._type = UnitType.Air;
@@ -206,8 +230,8 @@ namespace TTG
             
             // Configure juggernaught
             UnitProperties juggernaughtProperties = new UnitProperties();
-            juggernaughtProperties._attack = new Animation(unitSpriteSheet, 16, 16, 16, 3, 0.1f, false);
-            juggernaughtProperties._move = new Animation(unitSpriteSheet, 16, 16, 16, 1, 0.1f, true);
+            juggernaughtProperties._attack = new Animation(_unitSpriteSheet, 16, 16, 16, 3, 0.1f, false);
+            juggernaughtProperties._move = new Animation(_unitSpriteSheet, 16, 16, 16, 1, 0.1f, true);
             juggernaughtProperties._maxHp = 1600;
             juggernaughtProperties._moveSpeed = 20;
             juggernaughtProperties._attackSpeed = 0.1f;
@@ -218,14 +242,15 @@ namespace TTG
             juggernaughtProperties._type = UnitType.Ground;
             juggernaughtProperties._attackHandler = new BulletAttackHandler(this, Color.Red, Color.Orange);
             juggernaughtProperties._deathHandler = new JuggernaughtDeathHandler(this);
+            juggernaughtProperties._isLarge = true;
 
             _unitProperties[(int)UnitEnum.Juggernaught] = juggernaughtProperties;
 
 
             // Configure ember
             UnitProperties emberProperties = new UnitProperties();
-            emberProperties._attack = new Animation(unitSpriteSheet, 32, 32, 32 * 4, 3, 0.1f, false);
-            emberProperties._move = new Animation(unitSpriteSheet, 32, 32, 32 * 4 + 3, 4, 0.15f, true);
+            emberProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 * 4, 3, 0.1f, false);
+            emberProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 * 4 + 3, 4, 0.15f, true);
             emberProperties._maxHp = 35;
             emberProperties._moveSpeed = 50;
             emberProperties._attackSpeed = 0.4f;
@@ -241,8 +266,8 @@ namespace TTG
 
             // Configure uberember
             UnitProperties uberEmberProperties = new UnitProperties();
-            uberEmberProperties._attack = new Animation(unitSpriteSheet, 32, 32, 32 * 5, 3, 0.1f, false);
-            uberEmberProperties._move = new Animation(unitSpriteSheet, 32, 32, 32 * 5 + 3, 4, 0.15f, true);
+            uberEmberProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 * 5, 3, 0.1f, false);
+            uberEmberProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 * 5 + 3, 4, 0.15f, true);
             uberEmberProperties._maxHp = 100;
             uberEmberProperties._moveSpeed = 100;
             uberEmberProperties._attackSpeed = 5.0f;
@@ -264,9 +289,6 @@ namespace TTG
             _marineShotBatch = new MarineShotBatch(device, _displayWidth, _displayHeight, _drawPosition); 
             _hydroShotBatch = new MarineShotBatch(device, _displayWidth, _displayHeight, _drawPosition);
             _projectileBatch = new ProjectileBatch();
-
-            _base1Texture = content.Load<Texture2D>("base");
-            _base2Texture = content.Load<Texture2D>("VolcanoBase");
 
             Reset();
 
@@ -294,8 +316,12 @@ namespace TTG
         {
             _units.Clear();
 
-            _p1Base = new Base(new Vector2(0, _displayHeight / 2 - _base1Texture.Height / 2), UnitTeam.Player1, _base1Texture);
-            _p2Base = new Base(new Vector2(_displayWidth - _base2Texture.Width, _displayHeight / 2 - _base2Texture.Height / 2), UnitTeam.Player2, _base2Texture);
+            Rectangle p1Rect = _p1BaseProperties._attack.GetFrameRect(0);
+            _p1Base = new Unit(_p1BaseProperties, new Vector2(0, _displayHeight / 2 - p1Rect.Height / 2), UnitTeam.Player1, this);
+
+            Rectangle p2Rect = _p2BaseProperties._attack.GetFrameRect(0);
+            _p2Base = new Unit(_p2BaseProperties, new Vector2(_displayWidth - p2Rect.Width, _displayHeight / 2 - p2Rect.Height / 2),
+                UnitTeam.Player2, this);
 
             _units.Add(_p1Base);
             _units.Add(_p2Base);
@@ -310,11 +336,11 @@ namespace TTG
             for (int i = 0; i < _units.Count; ++i)
             {
                 // Update each target
-                Target unit = _units[i];
+                Unit unit = _units[i];
                 unit.Update(gameTime);
 
                 // Kill anything that ended up offscreen (shouldn't happen under normal circumstances)
-                if (unit.Position.X > _displayWidth + 100 || unit.Position.X < -100)
+                if (unit.GetPosition().X > _displayWidth + 100 || unit.GetPosition().X < -100)
                 {
                     unit.Kill();
                 }
@@ -326,7 +352,7 @@ namespace TTG
                 if (_units[i].IsDead())
                 {
                     
-                    if (_units[i].Team == UnitTeam.Player1)
+                    if (_units[i].GetTeam() == UnitTeam.Player1)
                     {
                         EmitDeathEffect(_deadHumanEmitters, _units[i]);
                     }
@@ -361,7 +387,7 @@ namespace TTG
         }
 
         // TODO: unify MarineDeathEmitter and EnemyDeathEmitter by configuring base class instead of using derived classes
-        private void EmitDeathEffect(List<MarineDeathEmitter> emitters, Target unit)
+        private void EmitDeathEffect(List<MarineDeathEmitter> emitters, Unit  unit)
         {
             for (int j = 0; j < emitters.Count - 1; ++j)
             {
@@ -372,7 +398,7 @@ namespace TTG
                 }
             }
         }
-        private void EmitDeathEffect(List<EnemyDeathEmitter> emitters, Target unit)
+        private void EmitDeathEffect(List<EnemyDeathEmitter> emitters, Unit unit)
         {
             for (int j = 0; j < emitters.Count - 1; ++j)
             {
@@ -392,8 +418,19 @@ namespace TTG
             spritebatch.Draw(_battleBG, _bgRect, Color.White);
             spritebatch.End();
 
+            // TODO: Draw unit shadow circles
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, null, RasterizerState.CullNone, null, offset);
+            
+            for (int i = 0; i < _units.Count; ++i)
+            {
+                _units[i].DrawShadow(spritebatch, _unitSpriteSheet);
+                    
+            }
+            spritebatch.End();
+
             spritebatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, RasterizerState.CullNone, null, offset);
 
+            // Draw units
             for (int i = 0; i < _units.Count; ++i)
             {
                 _units[i].Draw(spritebatch);
@@ -440,46 +477,17 @@ namespace TTG
         {
             Unit u = new Unit(_unitProperties[(int)unit], GetSpawnPosition(team), team, this);
 
-            if (_unitProperties[(int)unit]._move == null)
-            {
-                Console.WriteLine("Waah");
-            }
-
-            /*
-            if (unit == UnitEnum.Marine)
-            {
-                u = new Marine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Marine], _animationsAttack[(int)UnitEnum.Marine], team, this);
-            }
-            else if (unit == UnitEnum.Juggernaught)
-            {
-                u = new Juggernaught(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Juggernaught], _animationsAttack[(int)UnitEnum.Juggernaught], team, this);
-            }
-            else if (unit == UnitEnum.JetpackMarine)
-            {
-                u = new JetpackMarine(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.JetpackMarine], _animationsAttack[(int)UnitEnum.JetpackMarine], team, this);
-            }
-            else if (unit == UnitEnum.Launcher)
-            {
-            }
-            else if (unit == UnitEnum.Ember)
-            {
-                u = new Ember(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.Ember], _animationsAttack[(int)UnitEnum.Ember], team, this);
-            }
-            else if (unit == UnitEnum.UberEmber)
-            {
-                u = new UberEmber(GetSpawnPosition(team), _animationsMove[(int)UnitEnum.UberEmber], _animationsAttack[(int)UnitEnum.UberEmber], team, this, _emberProjectile2);
-            }*/
-
             _units.Add(u);
+
             return u;
         }
 
-        public Target AcquireTarget(Unit attacker)
+        public Unit AcquireTarget(Unit attacker)
         {
-            Target bestTarget = null;
+            Unit bestTarget = null;
             float closest = -1;
 
-            foreach (Target target in _units)
+            foreach (Unit target in _units)
             {
                 if (attacker.CanTarget(target))
                 {
@@ -500,17 +508,17 @@ namespace TTG
             return bestTarget;
         }
 
-        public void AddMarineShot(Unit attacker, Target target, Color color1, Color color2)
+        public void AddMarineShot(Unit attacker, Unit target, Color color1, Color color2)
         {
             _marineShotBatch.AddShot(attacker, target, color1, color2);
         }
 
-        public Base GetBase1()
+        public Unit GetBase1()
         {
             return _p1Base;
         }
 
-        public Base GetBase2()
+        public Unit GetBase2()
         {
             return _p2Base;
         }

@@ -252,7 +252,7 @@ namespace TTG
             _prevKeyState = state;
         }
 
-        public void SetBases(Base p1Base, Base p2Base)
+        public void SetBases(Unit p1Base, Unit p2Base)
         {
             _p1HealthBar.SetBase(p1Base);
             _p2HealthBar.SetBase(p2Base);

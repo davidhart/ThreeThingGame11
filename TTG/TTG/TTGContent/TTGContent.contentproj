@@ -122,13 +122,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="base.png">
-      <Name>base</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="HumanCommander.png">
       <Name>HumanCommander</Name>
       <Importer>TextureImporter</Importer>
@@ -184,13 +177,6 @@
   <ItemGroup>
     <Compile Include="BattleBG.png">
       <Name>BattleBG</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="VolcanoBase.png">
-      <Name>VolcanoBase</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

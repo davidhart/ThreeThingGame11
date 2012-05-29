@@ -69,8 +69,8 @@ namespace TTG
             }
         }
 
-        protected List<Target> _targets = new List<Target>();
-        public List<Target> Targets
+        protected List<Unit> _targets = new List<Unit>();
+        public List<Unit> Targets
         {
             get
             {

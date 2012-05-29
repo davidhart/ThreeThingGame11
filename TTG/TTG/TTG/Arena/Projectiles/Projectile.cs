@@ -15,11 +15,11 @@ namespace TTG
         private Vector2 _start;
         private Vector2 _end;
         private Vector2 _direction;
-        private Target _target;
+        private Unit _target;
         private Unit _attacker;
         private Texture2D _texture;
 
-        public Projectile(Unit attacker, Target target, Texture2D texture)
+        public Projectile(Unit attacker, Unit target, Texture2D texture)
         {
             _texture = texture;
             _start = attacker.GetDrawPosition() - new Vector2(texture.Width / 2, texture.Height / 2);

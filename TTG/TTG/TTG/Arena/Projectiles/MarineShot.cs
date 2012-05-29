@@ -18,7 +18,7 @@ namespace TTG
         private Vector2 _start;
         private Vector2 _end;
         private Vector2 _direction;
-        private Target _target;
+        private Unit _target;
         private Unit _attacker;
 
         Color _color1;
@@ -49,10 +49,10 @@ namespace TTG
             }
         }
 
-        public MarineShot(Unit attacker, Target target, Color color1, Color color2)
+        public MarineShot(Unit attacker, Unit target, Color color1, Color color2)
         {
             Vector2 offset = new Vector2(0, _yPlayerOffset);
-            if (attacker.Team == UnitTeam.Player2) 
+            if (attacker.GetTeam() == UnitTeam.Player2) 
             {
                 // TODO: Give units a bullet attachment point
                 offset = new Vector2(_xPlayer2Offset, _yPlayerOffset);
@@ -127,7 +127,7 @@ namespace TTG
             _effect.View = viewMatrix;
         }
 
-        public void AddShot(Unit attacker, Target target, Color color1, Color color2)
+        public void AddShot(Unit attacker, Unit target, Color color1, Color color2)
         {
             _shots.Add(new MarineShot(attacker, target, color1, color2));
         }
