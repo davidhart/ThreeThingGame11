@@ -281,7 +281,7 @@ namespace TTG
             _unitProperties[(int)UnitEnum.UberEmber] = uberEmberProperties;
 
 
-            _battleBG = content.Load<Texture2D>("BattleBG");
+            _battleBG = content.Load<Texture2D>("BattleBG2");
 
             _bgRect = new Rectangle(0, 30, _battleBG.Width, _battleBG.Height);
 
