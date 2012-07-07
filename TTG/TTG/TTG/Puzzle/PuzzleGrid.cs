@@ -50,11 +50,11 @@ namespace TTG
         float _fallMaxDist;
         float _fallTime;
 
-        const float _fallAnimationLength = 0.75f;
-        const float _fadeOutTime = 0.3f;
-        const float _shimmerEffectWidth = 1.75f;
-        const float _shimmerAnimationLength = 1.8f;
-        const float _shimmerAnimationStart = 4.5f;
+        readonly float _fallAnimationLength = 0.75f;
+        readonly float _fadeOutTime = 0.3f;
+        readonly float _shimmerEffectWidth = 1.75f;
+        readonly float _shimmerAnimationLength = 1.8f;
+        readonly float _shimmerAnimationStart = 4.5f;
 
         public PuzzleGrid(int gr, int gc, Vector2 drawPosition, Arena arena)
         {

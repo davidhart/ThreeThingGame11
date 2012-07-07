@@ -151,10 +151,6 @@
     <None Include="Properties\WMAppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
-    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_45.sap" />
-    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_43_53.sap" />
-    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_45_39.sap" />
-    <None Include="Windows_Phone_Copy_of_TTG_2012_05_04_20_47_54.sap" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />

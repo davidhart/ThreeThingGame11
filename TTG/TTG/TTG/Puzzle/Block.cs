@@ -10,9 +10,20 @@ namespace TTG
     class Block
     {
         int _id;
+        public int ID
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
         bool _remove;
         int _fallDistance;
-        const int _energy = 10;
+        readonly int _energy = 10;
 
         public int FallDistance
         {

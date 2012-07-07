@@ -66,44 +66,176 @@ namespace TTG
         
         public override void OnDeath(Unit unit)
         {
-            Unit u = _arena.AddUnit(UnitEnum.Marine, unit.GetTeam());
-            u.SetPosition(unit.GetPosition());
+            Unit u = _arena.AddUnit(UnitEnum.Marine, unit.Team);
+            u.Position = unit.Position;
         }
     }
 
     public class UnitProperties
     {
         // Unit animations
-        public Animation _move;
-        public Animation _attack;
+        private Animation _move;
+        public Animation MoveAnim
+        {
+            get
+            {
+                return _move;
+            }
+            set
+            {
+                _move = value;
+            }
+        }
+        private Animation _attack;
+        public Animation AtkAnim
+        {
+            get
+            {
+                return _attack;
+            }
+            set
+            {
+                _attack = value;
+            }
+        }
 
         // Amount of damage per attack
-        public int _attackDamage;
+        private int _attackDamage;
+        public int AttackDamage
+        {
+            get
+            {
+                return _attackDamage;
+            }
+            set
+            {
+                _attackDamage = value;
+            }
+        }
 
         // Total hitpoints
-        public int _maxHp;
+        private int _maxHp;
+        public int MaxHp
+        {
+            get
+            {
+                return _maxHp;
+            }
+            set
+            {
+                _maxHp = value;
+            }
+        }
 
         // Attack frequency (number of attacks per second)
-        public float _attackSpeed;
+        private float _attackSpeed;
+        public float AttackSpeed
+        {
+            get
+            {
+                return _attackSpeed;
+            }
+            set
+            {
+                _attackSpeed = value;
+            }
+        }
 
         // Range to start attacking an enemy
         public float _attackRange;
+        public float AttackRange
+        {
+            get
+            {
+                return _attackRange;
+            }
+            set
+            {
+                _attackRange = value;
+            }
+        }
 
         // Range to start following an enemy
-        public float _followRange;
+        private float _followRange;
+        public float FollowRange
+        {
+            get
+            {
+                return _followRange;
+            }
+            set
+            {
+                _followRange = value;
+            }
+        }
 
         // Speed to move towards target in pixels per second
-        public float _moveSpeed;
+        private float _moveSpeed;
+        public float MoveSpeed
+        {
+            get
+            {
+                return _moveSpeed;
+            }
+            set
+            {
+                _moveSpeed = value;
+            }
+        }
 
         // What type of unit is this (flying / ground)
-        public UnitType _type;
+        private UnitType _type;
+        public UnitType Type
+        {
+            get
+            {
+                return _type;
+            }
+            set
+            {
+                _type = value;
+            }
+        }
 
         // What type of unit can be targetted
-        public TargetUnitType _targetType;
+        private TargetUnitType _targetType;
+        public TargetUnitType TargetType
+        {
+            get
+            {
+                return _targetType;
+            }
+            set
+            {
+                _targetType = value;
+            }
+        }
 
         // Handler for specific behaviours for this type of unit
-        public AttackHandler _attackHandler;
-        public DeathHandler _deathHandler;
+        private AttackHandler _attackHandler;
+        public AttackHandler AttackHandler
+        {
+            get
+            {
+                return _attackHandler;
+            }
+            set
+            {
+                _attackHandler = value;
+            }
+        }
+        private DeathHandler _deathHandler;
+        public DeathHandler DeathHandler
+        {
+            get
+            {
+                return _deathHandler;
+            }
+            set
+            {
+                _deathHandler = value;
+            }
+        }
 
         public bool _isLarge;
 
@@ -118,7 +250,7 @@ namespace TTG
 
     public class Unit
     {
-        private const int FLY_OFFSET = 60;
+        private readonly int FLY_OFFSET = 60;
 
         private UnitProperties _properties;
 
@@ -126,23 +258,89 @@ namespace TTG
 
         // Time remaining to next attack
         private float _nextAttack;
+        public float NextAttack
+        {
+            get
+            {
+                return _nextAttack;
+            }
+            set
+            {
+                _nextAttack = value;
+            }
+        }
 
         // Current target
         private Unit _target;
+        public Unit Target
+        {
+            get
+            {
+                return _target;
+            }
+            set
+            {
+                _target = value;
+            }
+        }
 
         // Elapsed time since unit creation (for bobbing animation of flying units)
         private float _elapsed;
+        public float Elapsed
+        {
+            get
+            {
+                return _elapsed;
+            }
+            set
+            {
+                _elapsed = value;
+            }
+        }
 
         private AnimationPlayer _animationPlayer;
 
         private int _hitPoints;
+        public int HitPoints
+        {
+            get
+            {
+                return _hitPoints;
+            }
+            set
+            {
+                _hitPoints = value;
+            }
+        }
 
         private UnitTeam _team;
+        public UnitTeam Team
+        {
+            get
+            {
+                return _team;
+            }
+            set
+            {
+                _team = value;
+            }
+        }
 
         private Vector2 _position;
+        public Vector2 Position
+        {
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                _position = value;
+            }
+        }
 
         private float _hitCooldown;
-        private const float _hitDuration = 0.1f;
+        private readonly float _hitDuration = 0.1f;
 
         public Unit(UnitProperties properties, Vector2 position, UnitTeam team, Arena arena)
         {
@@ -151,12 +349,12 @@ namespace TTG
             _properties = properties;
             _position = position;
 
-            _hitPoints = properties._maxHp;
+            _hitPoints = properties.MaxHp;
 
             _elapsed = 0;
 
             _animationPlayer = new AnimationPlayer();
-            _animationPlayer.PlayAnimation(_properties._move);
+            _animationPlayer.PlayAnimation(_properties.MoveAnim);
 
             _target = null;
         }
@@ -173,7 +371,7 @@ namespace TTG
             bool attacked = false;
 
             // If this unit can shoot
-            if (_properties._targetType != TargetUnitType.None)
+            if (_properties.TargetType != TargetUnitType.None)
             {
                 // If we don't have a target try get a new one
                 if (_target == null || _target.IsDead())
@@ -191,7 +389,7 @@ namespace TTG
                     {
                         while (_nextAttack <= 0)
                         {
-                            _nextAttack += _properties._attackSpeed;
+                            _nextAttack += _properties.AttackSpeed;
                             OnAttack(_target);
                         }
 
@@ -200,7 +398,7 @@ namespace TTG
                     else
                     {
                         // If target is now outside follow range we lost it (rarely if ever happens)
-                        if (distance > _properties._followRange)
+                        if (distance > _properties.FollowRange)
                         {
                             _target = null;
                         }
@@ -208,8 +406,8 @@ namespace TTG
                         else
                         {
                             direction.Normalize();
-                            _position += direction * _properties._moveSpeed * dt;
-                            _animationPlayer.PlayAnimation(_properties._move);
+                            _position += direction * _properties.MoveSpeed * dt;
+                            _animationPlayer.PlayAnimation(_properties.MoveAnim);
                         }
                     }
                 }
@@ -219,11 +417,11 @@ namespace TTG
             if (_target == null)
             {
                 if (_team == UnitTeam.Player1)
-                    _position.X += dt * _properties._moveSpeed;
+                    _position.X += dt * _properties.MoveSpeed;
                 else
-                    _position.X -= dt * _properties._moveSpeed;
+                    _position.X -= dt * _properties.MoveSpeed;
 
-                _animationPlayer.PlayAnimation(_properties._move);
+                _animationPlayer.PlayAnimation(_properties.MoveAnim);
             }
 
             // Prevent "banking" attacks while following a target
@@ -246,7 +444,7 @@ namespace TTG
 
             if (_target != null && !_target.IsDead())
             {
-                float targetDir = _target.GetPosition().X - _position.X;
+                float targetDir = _target.Position.X - _position.X;
 
                 if (targetDir < 0)
                     flip = SpriteEffects.FlipHorizontally;
@@ -278,13 +476,13 @@ namespace TTG
 
         public bool CanTarget(Unit target)
         {
-            if (target.GetTeam() == _team)
+            if (target.Team == _team)
                 return false;
 
-            if (target.GetUnitType() == UnitType.Air && _properties._targetType == TargetUnitType.GroundOnly)
+            if (target.GetUnitType() == UnitType.Air && _properties.TargetType == TargetUnitType.GroundOnly)
                 return false;
 
-            if (target.GetUnitType() == UnitType.Ground && _properties._targetType == TargetUnitType.AirOnly)
+            if (target.GetUnitType() == UnitType.Ground && _properties.TargetType == TargetUnitType.AirOnly)
                 return false;
 
             return true;
@@ -292,7 +490,7 @@ namespace TTG
 
         public Rectangle GetRect()
         {
-            Rectangle r = _properties._move.GetFrameRect(0);
+            Rectangle r = _properties.MoveAnim.GetFrameRect(0);
             return new Rectangle(0, 0, r.Width, r.Height);
         }
 
@@ -300,7 +498,7 @@ namespace TTG
         {
             Vector2 pos = _position;
 
-            if (_properties._type == UnitType.Air)
+            if (_properties.Type == UnitType.Air)
             {
                 float offset = (float)Math.Sin(_elapsed * 5.0f);
 
@@ -317,15 +515,15 @@ namespace TTG
 
         private void OnAttack(Unit target)
         {
-            _animationPlayer.PlayAnimation(_properties._attack);
+            _animationPlayer.PlayAnimation(_properties.AtkAnim);
             _animationPlayer.ResetAnimation();
 
-            _properties._attackHandler.OnAttack(this, target);
+            _properties.AttackHandler.OnAttack(this, target);
         }
 
         public Vector2 GetMidPoint()
         {
-            Rectangle r = _properties._move.GetFrameRect(0);
+            Rectangle r = _properties.MoveAnim.GetFrameRect(0);
             return _position + new Vector2(r.Width, r.Height);
         }
 
@@ -335,17 +533,17 @@ namespace TTG
             de.RecycleParticles();
             de.pos = GetMidPoint();
 
-            _properties._deathHandler.OnDeath(this);
+            _properties.DeathHandler.OnDeath(this);
         }
 
         public int AttackDamage()
         {
-            return _properties._attackDamage;
+            return _properties.AttackDamage;
         }
 
         public float FollowRange()
         {
-            return _properties._followRange;
+            return _properties.FollowRange;
         }
 
         public void TakeDamage(int damage)
@@ -369,34 +567,14 @@ namespace TTG
             return Color.Lerp(Color.White, Color.IndianRed, _hitCooldown / _hitDuration);
         }
 
-        public Vector2 GetPosition()
-        {
-            return _position;
-        }
-
-        public void SetPosition(Vector2 position)
-        {
-            _position = position;
-        }
-
-        public UnitTeam GetTeam()
-        {
-            return _team;
-        }
-
-        public int GetHp()
-        {
-            return _hitPoints;
-        }
-
         public int GetMaxHp()
         {
-            return _properties._maxHp;
+            return _properties.MaxHp;
         }
 
         public UnitType GetUnitType()
         {
-            return _properties._type;
+            return _properties.Type;
         }
     }
 }

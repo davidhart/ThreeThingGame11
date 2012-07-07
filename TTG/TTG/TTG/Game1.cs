@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -132,12 +132,15 @@ namespace TTG
 
             SetupCutscenes();
 
-// Splashscreen in release only
-#if DEBUG
-            _currentState = _titlescreen;
-#else
+            // Splashscreen in release only
             _currentState = _splashScreen;
-#endif
+            TurnOffSplashInDebug();
+        }
+
+        [Conditional("DEBUG")]
+        private void TurnOffSplashInDebug()
+        {
+            _currentState = _titlescreen;
         }
 
         protected override void UnloadContent()

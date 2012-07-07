@@ -171,77 +171,78 @@ namespace TTG
 
             // Configure p1 base
             _p1BaseProperties = new UnitProperties();
-            _p1BaseProperties._attack = new Animation(_unitSpriteSheet, 8, 8, 2, 1, 1, true);
-            _p1BaseProperties._move = _p1BaseProperties._attack;
-            _p1BaseProperties._maxHp = 10000;
-            _p1BaseProperties._moveSpeed = 0;
-            _p1BaseProperties._attackSpeed = 0.0f;
-            _p1BaseProperties._attackDamage = 0;
-            _p1BaseProperties._attackRange = 0;
-            _p1BaseProperties._followRange = 0;
-            _p1BaseProperties._targetType = TargetUnitType.None;
-            _p1BaseProperties._type = UnitType.Ground;
+            _p1BaseProperties.AtkAnim = new Animation(_unitSpriteSheet, 8, 8, 2, 1, 1, true);
+            _p1BaseProperties.MoveAnim = _p1BaseProperties.AtkAnim;
+            _p1BaseProperties.MaxHp = 10000;
+            _p1BaseProperties.MoveSpeed = 0;
+            _p1BaseProperties.AttackSpeed = 0.0f;
+            _p1BaseProperties.AttackDamage = 0;
+            _p1BaseProperties.AttackRange = 0;
+            _p1BaseProperties.FollowRange = 0;
+            _p1BaseProperties.TargetType = TargetUnitType.None;
+            _p1BaseProperties.Type = UnitType.Ground;
 
             _p2BaseProperties = new UnitProperties();
-            _p2BaseProperties._attack = new Animation(_unitSpriteSheet, 8, 8, 3, 1, 1, true);
-            _p2BaseProperties._move = _p2BaseProperties._attack;
-            _p2BaseProperties._maxHp = 10000;
-            _p2BaseProperties._moveSpeed = 0;
-            _p2BaseProperties._attackSpeed = 0.0f;
-            _p2BaseProperties._attackDamage = 0;
-            _p2BaseProperties._attackRange = 0;
-            _p2BaseProperties._followRange = 0;
-            _p2BaseProperties._targetType = TargetUnitType.None;
-            _p2BaseProperties._type = UnitType.Ground;
+            _p2BaseProperties.AtkAnim = new Animation(_unitSpriteSheet, 8, 8, 3, 1, 1, true);
+            _p2BaseProperties.MoveAnim = _p2BaseProperties.AtkAnim;
+            _p2BaseProperties.MaxHp = 10000;
+            _p2BaseProperties.MoveSpeed = 0;
+            _p2BaseProperties.AttackSpeed = 0.0f;
+            _p2BaseProperties.AttackDamage = 0;
+            _p2BaseProperties.AttackRange = 0;
+            _p2BaseProperties.FollowRange = 0;
+            _p2BaseProperties.TargetType = TargetUnitType.None;
+            _p2BaseProperties.Type = UnitType.Ground;
 
+            //This stuff should be loaded from XML
             // Configure marines
             UnitProperties marineProperties = new UnitProperties();
-            marineProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 0, 3, 0.1f, false);
-            marineProperties._move = new Animation(_unitSpriteSheet, 32, 32, 3, 4, 0.15f, true);
-            marineProperties._maxHp = 50;
-            marineProperties._moveSpeed = 50.0f;
-            marineProperties._attackSpeed = 0.3f;
-            marineProperties._attackDamage = 3;
-            marineProperties._attackRange = 40;
-            marineProperties._followRange = 70;
-            marineProperties._targetType = TargetUnitType.Any;
-            marineProperties._type = UnitType.Ground;
-            marineProperties._attackHandler = new BulletAttackHandler(this, Color.White, Color.CornflowerBlue);
+            marineProperties.AtkAnim = new Animation(_unitSpriteSheet, 32, 32, 0, 3, 0.1f, false);
+            marineProperties.MoveAnim = new Animation(_unitSpriteSheet, 32, 32, 3, 4, 0.15f, true);
+            marineProperties.MaxHp = 50;
+            marineProperties.MoveSpeed = 50.0f;
+            marineProperties.AttackSpeed = 0.3f;
+            marineProperties.AttackDamage = 3;
+            marineProperties.AttackRange = 40;
+            marineProperties.FollowRange = 70;
+            marineProperties.TargetType = TargetUnitType.Any;
+            marineProperties.Type = UnitType.Ground;
+            marineProperties.AttackHandler = new BulletAttackHandler(this, Color.White, Color.CornflowerBlue);
 
             _unitProperties[(int)UnitEnum.Marine] = marineProperties;
 
 
             // Configure jetpack marines
             UnitProperties jetpackProperties = new UnitProperties();
-            jetpackProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
-            jetpackProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
-            jetpackProperties._maxHp = 70;
-            jetpackProperties._moveSpeed = 50.0f;
-            jetpackProperties._attackSpeed = 0.3f;
-            jetpackProperties._attackDamage = 9;
-            jetpackProperties._attackRange = 100;
-            jetpackProperties._followRange = 160;
-            jetpackProperties._targetType = TargetUnitType.GroundOnly;
-            jetpackProperties._type = UnitType.Air;
-            jetpackProperties._attackHandler = new BulletAttackHandler(this, Color.White, Color.CornflowerBlue);
+            jetpackProperties.AtkAnim = new Animation(_unitSpriteSheet, 32, 32, 32 + 0, 3, 0.1f, false);
+            jetpackProperties.MoveAnim = new Animation(_unitSpriteSheet, 32, 32, 32 + 3, 4, 0.15f, true);
+            jetpackProperties.MaxHp = 70;
+            jetpackProperties.MoveSpeed = 50.0f;
+            jetpackProperties.AttackSpeed = 0.3f;
+            jetpackProperties.AttackDamage = 9;
+            jetpackProperties.AttackRange = 100;
+            jetpackProperties.FollowRange = 160;
+            jetpackProperties.TargetType = TargetUnitType.GroundOnly;
+            jetpackProperties.Type = UnitType.Air;
+            jetpackProperties.AttackHandler = new BulletAttackHandler(this, Color.White, Color.CornflowerBlue);
 
             _unitProperties[(int)UnitEnum.JetpackMarine] = jetpackProperties;
 
             
             // Configure juggernaught
             UnitProperties juggernaughtProperties = new UnitProperties();
-            juggernaughtProperties._attack = new Animation(_unitSpriteSheet, 16, 16, 16, 3, 0.1f, false);
-            juggernaughtProperties._move = new Animation(_unitSpriteSheet, 16, 16, 16, 1, 0.1f, true);
-            juggernaughtProperties._maxHp = 1600;
-            juggernaughtProperties._moveSpeed = 20;
-            juggernaughtProperties._attackSpeed = 0.1f;
-            juggernaughtProperties._attackDamage = 4;
-            juggernaughtProperties._attackRange = 50;
-            juggernaughtProperties._followRange = 100;
-            juggernaughtProperties._targetType = TargetUnitType.GroundOnly;
-            juggernaughtProperties._type = UnitType.Ground;
-            juggernaughtProperties._attackHandler = new BulletAttackHandler(this, Color.Red, Color.Orange);
-            juggernaughtProperties._deathHandler = new JuggernaughtDeathHandler(this);
+            juggernaughtProperties.AtkAnim = new Animation(_unitSpriteSheet, 16, 16, 16, 3, 0.1f, false);
+            juggernaughtProperties.MoveAnim = new Animation(_unitSpriteSheet, 16, 16, 16, 1, 0.1f, true);
+            juggernaughtProperties.MaxHp = 1600;
+            juggernaughtProperties.MoveSpeed = 20;
+            juggernaughtProperties.AttackSpeed = 0.1f;
+            juggernaughtProperties.AttackDamage = 4;
+            juggernaughtProperties.AttackRange = 50;
+            juggernaughtProperties.FollowRange = 100;
+            juggernaughtProperties.TargetType = TargetUnitType.GroundOnly;
+            juggernaughtProperties.Type = UnitType.Ground;
+            juggernaughtProperties.AttackHandler = new BulletAttackHandler(this, Color.Red, Color.Orange);
+            juggernaughtProperties.DeathHandler = new JuggernaughtDeathHandler(this);
             juggernaughtProperties._isLarge = true;
 
             _unitProperties[(int)UnitEnum.Juggernaught] = juggernaughtProperties;
@@ -249,34 +250,34 @@ namespace TTG
 
             // Configure ember
             UnitProperties emberProperties = new UnitProperties();
-            emberProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 * 4, 3, 0.1f, false);
-            emberProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 * 4 + 3, 4, 0.15f, true);
-            emberProperties._maxHp = 35;
-            emberProperties._moveSpeed = 50;
-            emberProperties._attackSpeed = 0.4f;
-            emberProperties._attackDamage = 6;
-            emberProperties._attackRange = 50;
-            emberProperties._followRange = 80;
-            emberProperties._targetType = TargetUnitType.Any;
-            emberProperties._type = UnitType.Ground;
-            emberProperties._attackHandler = new BulletAttackHandler(this, Color.Yellow, Color.Green);
+            emberProperties.AtkAnim = new Animation(_unitSpriteSheet, 32, 32, 32 * 4, 3, 0.1f, false);
+            emberProperties.MoveAnim = new Animation(_unitSpriteSheet, 32, 32, 32 * 4 + 3, 4, 0.15f, true);
+            emberProperties.MaxHp = 35;
+            emberProperties.MoveSpeed = 50;
+            emberProperties.AttackSpeed = 0.4f;
+            emberProperties.AttackDamage = 6;
+            emberProperties.AttackRange = 50;
+            emberProperties.FollowRange = 80;
+            emberProperties.TargetType = TargetUnitType.Any;
+            emberProperties.Type = UnitType.Ground;
+            emberProperties.AttackHandler = new BulletAttackHandler(this, Color.Yellow, Color.Green);
 
             _unitProperties[(int)UnitEnum.Ember] = emberProperties;
 
 
             // Configure uberember
             UnitProperties uberEmberProperties = new UnitProperties();
-            uberEmberProperties._attack = new Animation(_unitSpriteSheet, 32, 32, 32 * 5, 3, 0.1f, false);
-            uberEmberProperties._move = new Animation(_unitSpriteSheet, 32, 32, 32 * 5 + 3, 4, 0.15f, true);
-            uberEmberProperties._maxHp = 100;
-            uberEmberProperties._moveSpeed = 100;
-            uberEmberProperties._attackSpeed = 5.0f;
-            uberEmberProperties._attackDamage = 60;
-            uberEmberProperties._attackRange = 50;
-            uberEmberProperties._followRange = 80;
-            uberEmberProperties._targetType = TargetUnitType.GroundOnly;
-            uberEmberProperties._type = UnitType.Ground;
-            uberEmberProperties._attackHandler = new ProjectileAttackHandler(this, content.Load<Texture2D>("ember_proj2"));
+            uberEmberProperties.AtkAnim = new Animation(_unitSpriteSheet, 32, 32, 32 * 5, 3, 0.1f, false);
+            uberEmberProperties.MoveAnim = new Animation(_unitSpriteSheet, 32, 32, 32 * 5 + 3, 4, 0.15f, true);
+            uberEmberProperties.MaxHp = 100;
+            uberEmberProperties.MoveSpeed = 100;
+            uberEmberProperties.AttackSpeed = 5.0f;
+            uberEmberProperties.AttackDamage = 60;
+            uberEmberProperties.AttackRange = 50;
+            uberEmberProperties.FollowRange = 80;
+            uberEmberProperties.TargetType = TargetUnitType.GroundOnly;
+            uberEmberProperties.Type = UnitType.Ground;
+            uberEmberProperties.AttackHandler = new ProjectileAttackHandler(this, content.Load<Texture2D>("ember_proj2"));
 
             _unitProperties[(int)UnitEnum.UberEmber] = uberEmberProperties;
 
@@ -316,10 +317,10 @@ namespace TTG
         {
             _units.Clear();
 
-            Rectangle p1Rect = _p1BaseProperties._attack.GetFrameRect(0);
+            Rectangle p1Rect = _p1BaseProperties.AtkAnim.GetFrameRect(0);
             _p1Base = new Unit(_p1BaseProperties, new Vector2(0, _displayHeight / 2 - p1Rect.Height / 2), UnitTeam.Player1, this);
 
-            Rectangle p2Rect = _p2BaseProperties._attack.GetFrameRect(0);
+            Rectangle p2Rect = _p2BaseProperties.AtkAnim.GetFrameRect(0);
             _p2Base = new Unit(_p2BaseProperties, new Vector2(_displayWidth - p2Rect.Width, _displayHeight / 2 - p2Rect.Height / 2),
                 UnitTeam.Player2, this);
 
@@ -340,7 +341,7 @@ namespace TTG
                 unit.Update(gameTime);
 
                 // Kill anything that ended up offscreen (shouldn't happen under normal circumstances)
-                if (unit.GetPosition().X > _displayWidth + 100 || unit.GetPosition().X < -100)
+                if (unit.Position.X > _displayWidth + 100 || unit.Position.X < -100)
                 {
                     unit.Kill();
                 }
@@ -352,7 +353,7 @@ namespace TTG
                 if (_units[i].IsDead())
                 {
                     
-                    if (_units[i].GetTeam() == UnitTeam.Player1)
+                    if (_units[i].Team == UnitTeam.Player1)
                     {
                         EmitDeathEffect(_deadHumanEmitters, _units[i]);
                     }

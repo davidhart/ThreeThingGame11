@@ -9,10 +9,10 @@ namespace TTG
 {
     public class MarineShot
     {
-        const float _lifetime = 0.2f;
-        const float _lineEndMod = 0.2f;
-        const int _yPlayerOffset = 8;
-        const int _xPlayer2Offset = 16;
+        readonly float _lifetime = 0.2f;
+        readonly float _lineEndMod = 0.2f;
+        readonly int _yPlayerOffset = 8;
+        readonly int _xPlayer2Offset = 16;
         private float _elapsed;
 
         private Vector2 _start;
@@ -52,7 +52,7 @@ namespace TTG
         public MarineShot(Unit attacker, Unit target, Color color1, Color color2)
         {
             Vector2 offset = new Vector2(0, _yPlayerOffset);
-            if (attacker.GetTeam() == UnitTeam.Player2) 
+            if (attacker.Team == UnitTeam.Player2) 
             {
                 // TODO: Give units a bullet attachment point
                 offset = new Vector2(_xPlayer2Offset, _yPlayerOffset);

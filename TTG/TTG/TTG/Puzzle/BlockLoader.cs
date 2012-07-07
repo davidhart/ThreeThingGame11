@@ -13,7 +13,7 @@ namespace TTG
     {
         Texture2D blockSpritesheet;
         Rectangle[] sheetRect = new Rectangle[6];
-        const int blockSize = 51;
+        readonly int blockSize = 51;
 
         public BlockLoader(Texture2D blocks)
         {
