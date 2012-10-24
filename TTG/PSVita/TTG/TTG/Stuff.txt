@@ -1,0 +1,11 @@
+﻿TODO
+1) Graphics/Layout/Optimizing graphics (one spritesheet)
+2) Units
+3) Redo sound
+4) Balancing, Simplifying Unit Class and Editor
+6) Phone input
+7) Help Screen
+8) Multiple levels?
+
+Idea
+1) Big match gives expensive unit/expensive commander ability
